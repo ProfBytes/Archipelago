@@ -29,7 +29,8 @@ class TestEntranceRando(unittest.TestCase):
     def test_entrance_randomization(self):
         for option, flag in [(options.EntranceRandomization.option_pelican_town, RandomizationFlag.PELICAN_TOWN),
                              (options.EntranceRandomization.option_non_progression, RandomizationFlag.NON_PROGRESSION),
-                             (options.EntranceRandomization.option_buildings, RandomizationFlag.BUILDINGS)]:
+                             (options.EntranceRandomization.option_buildings, RandomizationFlag.BUILDINGS),
+                             (options.EntranceRandomization.option_insanity, RandomizationFlag.BUILDINGS)]:
             seed = random.randrange(sys.maxsize)
             with self.subTest(flag=flag, msg=f"Seed: {seed}"):
                 rand = random.Random(seed)
@@ -52,7 +53,8 @@ class TestEntranceRando(unittest.TestCase):
     def test_entrance_randomization_without_island(self):
         for option, flag in [(options.EntranceRandomization.option_pelican_town, RandomizationFlag.PELICAN_TOWN),
                              (options.EntranceRandomization.option_non_progression, RandomizationFlag.NON_PROGRESSION),
-                             (options.EntranceRandomization.option_buildings, RandomizationFlag.BUILDINGS)]:
+                             (options.EntranceRandomization.option_buildings, RandomizationFlag.BUILDINGS),
+                             (options.EntranceRandomization.option_insanity, RandomizationFlag.BUILDINGS)]:
             with self.subTest(option=option, flag=flag):
                 seed = random.randrange(sys.maxsize)
                 rand = random.Random(seed)

@@ -155,7 +155,7 @@ class EntranceRandomization(Choice):
     option_pelican_town = 1
     option_non_progression = 2
     option_buildings = 3
-    # option_everything = 4
+    option_insanity = 4
     option_chaos = 5
     # option_buildings_one_way = 6
     # option_everything_one_way = 7
