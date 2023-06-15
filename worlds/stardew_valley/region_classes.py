@@ -13,7 +13,7 @@ class RandomizationFlag(IntFlag):
     EVERYTHING = 0b11000
     CHAOS = 0b10000
     GINGER_ISLAND = 0b0100000
-    LEAD_TO_OPEN_AREA = 0b1000000
+    NORTH_FACING = 0b1000000
 
 
 @dataclass(frozen=True)
@@ -45,9 +45,9 @@ class ConnectionData:
         if connector_keyword in self.name:
             origin, destination = self.name.split(connector_keyword)
             if self.reverse is None:
+                super().__setattr__("origin",f"{origin}")
                 super().__setattr__("reverse", f"{destination}{connector_keyword}{origin}")
-
-
+    
 @dataclass(frozen=True)
 class ModRegionData:
     mod_name: str
