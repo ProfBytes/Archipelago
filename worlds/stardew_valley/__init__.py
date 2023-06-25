@@ -11,8 +11,8 @@ from .logic import StardewLogic, StardewRule, True_, MAX_MONTHS
 from .options import stardew_valley_options, StardewOptions, fetch_options
 from .regions import create_regions
 from .rules import set_rules
+from worlds.generic.Rules import set_rule
 from .mods.mod_data import mod_versions
-from ..generic.Rules import set_rule
 
 client_version = 0
 

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Set, List, FrozenSet, Tuple, Dict, Optional
+from typing import List, Tuple, Optional, Dict
 from .region_data import SVRegion
 from ..mods.mod_data import ModNames
 

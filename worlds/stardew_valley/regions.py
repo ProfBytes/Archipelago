@@ -446,8 +446,10 @@ def randomize_connections(random: Random, world_options: StardewOptions, regions
             randomized_data_for_mod[connection.name] = connection.name
             randomized_data_for_mod[connection.reverse] = connection.reverse
         return final_connections, randomized_data_for_mod
-
-    connections_to_randomize = exclude_island_if_necessary(connections_to_randomize, world_options)
+    exclude_island = world_options[options.ExcludeGingerIsland] == options.ExcludeGingerIsland.option_true
+    if exclude_island:
+        connections_to_randomize = [connection for connection in connections_to_randomize if
+                                    RandomizationFlag.GINGER_ISLAND not in connection.flag]
     random.shuffle(connections_to_randomize)
     destination_pool = list(connections_to_randomize)
     random.shuffle(destination_pool)
@@ -497,7 +499,6 @@ def create_data_for_mod(randomized_connections: Dict[ConnectionData, ConnectionD
         destination = randomized_connections[connection]
         add_to_mod_data(connection, destination, randomized_data_for_mod)
     return randomized_data_for_mod
-
 
 def add_to_mod_data(connection: ConnectionData, destination: ConnectionData, randomized_data_for_mod: Dict[str, str]):
     randomized_data_for_mod[connection.name] = destination.name
