@@ -223,7 +223,7 @@ vanilla_connections = [
     ConnectionData(SVEntrance.enter_secret_woods, SVRegion.secret_woods),
     ConnectionData(SVEntrance.forest_to_sewers, SVRegion.sewers, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
     ConnectionData(SVEntrance.buy_from_traveling_merchant, SVRegion.traveling_cart),
-    
+
     ConnectionData(SVEntrance.town_to_sewers, SVRegion.sewers, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
     ConnectionData(SVEntrance.enter_mutant_bug_lair, SVRegion.mutant_bug_lair, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
     ConnectionData(SVEntrance.mountain_to_railroad, SVRegion.railroad),
@@ -244,7 +244,7 @@ vanilla_connections = [
     ConnectionData(SVEntrance.mountain_to_town, SVRegion.town),
     ConnectionData(SVEntrance.town_to_community_center, SVRegion.community_center,
                    flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
-    
+
     ConnectionData(SVEntrance.access_crafts_room, SVRegion.crafts_room),
     ConnectionData(SVEntrance.access_pantry, SVRegion.pantry),
     ConnectionData(SVEntrance.access_fish_tank, SVRegion.fish_tank),
@@ -690,6 +690,17 @@ def create_data_for_mod_insanity(randomized_connections: Dict[ConnectionData, Co
         destination = randomized_connections[connection]
         randomized_data_for_mod[connection.name] = destination.name
     return randomized_data_for_mod
+
+def create_data_for_mod_insanity(randomized_connections: Dict[ConnectionData, ConnectionData],
+                        connections_to_randomize: List[ConnectionData]) -> Dict[str, str]:
+    randomized_data_for_mod = {}
+    for connection in randomized_connections:
+        if connection not in connections_to_randomize:
+            continue
+        destination = randomized_connections[connection]
+        randomized_data_for_mod[connection.name] = destination.name
+    return randomized_data_for_mod
+
 
 def add_to_mod_data(connection: ConnectionData, destination: ConnectionData, randomized_data_for_mod: Dict[str, str]):
     randomized_data_for_mod[connection.name] = destination.name
