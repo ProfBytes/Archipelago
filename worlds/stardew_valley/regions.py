@@ -1,4 +1,5 @@
 import random
+import logging
 from dataclasses import dataclass, field
 from enum import IntFlag
 from random import Random
@@ -11,6 +12,7 @@ from .data.region_data import SVRegion
 from .region_classes import RegionData, ConnectionData, RandomizationFlag
 from .options import StardewOptions
 from .mods.mod_regions import ModDataList
+from asyncio.log import logger
 
 
 class RegionFactory(Protocol):
@@ -44,17 +46,15 @@ vanilla_regions = [
                [SVEntrance.mountain_to_railroad, SVEntrance.mountain_to_tent, SVEntrance.mountain_to_carpenter_shop,
                 SVEntrance.mountain_to_the_mines, SVEntrance.enter_quarry, SVEntrance.mountain_to_adventurer_guild,
                 SVEntrance.mountain_to_town, SVEntrance.mountain_to_maru_room, SVEntrance.mountain_to_backwoods]),
-    RegionData(SVRegion.maru_room, [SVEntrance.maru_room_to_mountain]),
+    RegionData(SVRegion.maru_room, [SVEntrance.maru_room_to_mountain, SVEntrance.maru_room_to_carpenter]),
     RegionData(SVRegion.tunnel_entrance, [SVEntrance.enter_tunnel, SVEntrance.tunnel_entrance_to_bus_stop]),
     RegionData(SVRegion.tunnel, [SVEntrance.leave_tunnel]),
     RegionData(SVRegion.town,
                [SVEntrance.town_to_community_center, SVEntrance.town_to_beach, SVEntrance.town_to_hospital,
                 SVEntrance.town_to_pierre_general_store, SVEntrance.town_to_saloon, SVEntrance.town_to_alex_house,
-                SVEntrance.town_to_trailer,
-                SVEntrance.town_to_mayor_manor,
+                SVEntrance.town_to_trailer, SVEntrance.town_to_mayor_manor,
                 SVEntrance.town_to_sam_house, SVEntrance.town_to_haley_house, SVEntrance.town_to_sewers,
-                SVEntrance.town_to_clint_blacksmith,
-                SVEntrance.town_to_museum,
+                SVEntrance.town_to_clint_blacksmith, SVEntrance.town_to_museum,
                 SVEntrance.town_to_jojamart, SVEntrance.town_to_bus_stop, SVEntrance.town_to_forest, SVEntrance.town_to_mountain]),
     RegionData(SVRegion.beach,
                [SVEntrance.beach_to_willy_fish_shop, SVEntrance.enter_elliott_house, SVEntrance.enter_tide_pools, SVEntrance.beach_to_town]),
@@ -66,7 +66,7 @@ vanilla_regions = [
     RegionData(SVRegion.wizard_tower, [SVEntrance.enter_wizard_basement, SVEntrance.wizard_tower_to_forest]),
     RegionData(SVRegion.wizard_basement, [SVEntrance.leave_wizard_basement]),
     RegionData(SVRegion.tent, [SVEntrance.tent_to_mountain]),
-    RegionData(SVRegion.carpenter, [SVEntrance.enter_sebastian_room, SVEntrance.carpenter_shop_to_mountain]),
+    RegionData(SVRegion.carpenter, [SVEntrance.enter_sebastian_room, SVEntrance.carpenter_shop_to_mountain, SVEntrance.carpenter_to_maru_room]),
     RegionData(SVRegion.sebastian_room, [SVEntrance.leave_sebastian_room]),
     RegionData(SVRegion.adventurer_guild, [SVEntrance.adventurer_guild_to_mountain]),
     RegionData(SVRegion.community_center,
@@ -131,7 +131,8 @@ vanilla_regions = [
                                        SVEntrance.parrot_express_volcano_to_dig_site,
                                        SVEntrance.parrot_express_volcano_to_jungle,
                                        SVEntrance.parrot_express_volcano_to_docks, SVEntrance.island_north_to_south]),
-    RegionData(SVRegion.volcano, [SVEntrance.climb_to_volcano_5, SVEntrance.volcano_to_island_north]),
+    RegionData(SVRegion.volcano, [SVEntrance.climb_to_volcano_5, SVEntrance.volcano_to_island_north, SVEntrance.volcano_to_secret_beach]),
+    RegionData(SVRegion.volcano_secret_beach, [SVEntrance.secret_beach_to_volcano]),
     RegionData(SVRegion.volcano_floor_5, [SVEntrance.climb_to_volcano_10]),
     RegionData(SVRegion.volcano_floor_10),
     RegionData(SVRegion.island_trader),
@@ -192,14 +193,14 @@ vanilla_regions = [
 
 # Exits and where they lead
 vanilla_connections = [
-    ConnectionData(SVEntrance.to_stardew_valley, SVRegion.stardew_valley),
-    ConnectionData(SVEntrance.to_farmhouse, SVRegion.farm_house),
-    ConnectionData(SVEntrance.farm_to_farmhouse, SVRegion.farm_house, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
+    ConnectionData(SVEntrance.to_stardew_valley, SVRegion.stardew_valley, flag=RandomizationFlag.ITEMLESS_ENTRANCE),
+    ConnectionData(SVEntrance.to_farmhouse, SVRegion.farm_house, flag=RandomizationFlag.ITEMLESS_ENTRANCE),
+    ConnectionData(SVEntrance.farm_to_farmhouse, SVRegion.farm_house, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.downstairs_to_cellar, SVRegion.cellar),
     ConnectionData(SVEntrance.farm_to_backwoods, SVRegion.backwoods),
     ConnectionData(SVEntrance.farm_to_bus_stop, SVRegion.bus_stop),
     ConnectionData(SVEntrance.farm_to_forest, SVRegion.forest),
-    ConnectionData(SVEntrance.farm_to_farmcave, SVRegion.farm_cave, flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.NORTH_FACING),
+    ConnectionData(SVEntrance.farm_to_farmcave, SVRegion.farm_cave, flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.enter_greenhouse, SVRegion.greenhouse),
     ConnectionData(SVEntrance.use_desert_obelisk, SVRegion.desert),
     ConnectionData(SVEntrance.use_island_obelisk, SVRegion.island_south),
@@ -213,35 +214,36 @@ vanilla_connections = [
     
     ConnectionData(SVEntrance.forest_to_town, SVRegion.town),
     ConnectionData(SVEntrance.forest_to_wizard_tower, SVRegion.wizard_tower,
-                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.enter_wizard_basement, SVRegion.wizard_basement, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
     ConnectionData(SVEntrance.forest_to_marnie_ranch, SVRegion.ranch,
-                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.forest_to_leah_cottage, SVRegion.leah_house,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.enter_secret_woods, SVRegion.secret_woods),
-    ConnectionData(SVEntrance.forest_to_sewers, SVRegion.sewers),
+    ConnectionData(SVEntrance.forest_to_sewers, SVRegion.sewers, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
     ConnectionData(SVEntrance.buy_from_traveling_merchant, SVRegion.traveling_cart),
     
-    ConnectionData(SVEntrance.town_to_sewers, SVRegion.sewers),
-    ConnectionData(SVEntrance.enter_mutant_bug_lair, SVRegion.mutant_bug_lair),
+    ConnectionData(SVEntrance.town_to_sewers, SVRegion.sewers, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
+    ConnectionData(SVEntrance.enter_mutant_bug_lair, SVRegion.mutant_bug_lair, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
     ConnectionData(SVEntrance.mountain_to_railroad, SVRegion.railroad),
     ConnectionData(SVEntrance.mountain_to_tent, SVRegion.tent,
-                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.mountain_to_carpenter_shop, SVRegion.carpenter,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.mountain_to_maru_room, SVRegion.maru_room,
                    flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
-    ConnectionData(SVEntrance.enter_sebastian_room, SVRegion.sebastian_room, flag=RandomizationFlag.BUILDINGS),
+    ConnectionData(SVEntrance.carpenter_to_maru_room, SVRegion.maru_room),
+    ConnectionData(SVEntrance.enter_sebastian_room, SVRegion.sebastian_room, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.mountain_to_adventurer_guild, SVRegion.adventurer_guild,
                    flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
     ConnectionData(SVEntrance.enter_quarry, SVRegion.quarry),
     ConnectionData(SVEntrance.enter_quarry_mine_entrance, SVRegion.quarry_mine_entrance,
                    flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
-    ConnectionData(SVEntrance.enter_quarry_mine, SVRegion.quarry_mine),
+    ConnectionData(SVEntrance.enter_quarry_mine, SVRegion.quarry_mine, flag=RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.mountain_to_town, SVRegion.town),
     ConnectionData(SVEntrance.town_to_community_center, SVRegion.community_center,
-                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     
     ConnectionData(SVEntrance.access_crafts_room, SVRegion.crafts_room),
     ConnectionData(SVEntrance.access_pantry, SVRegion.pantry),
@@ -251,15 +253,15 @@ vanilla_connections = [
     ConnectionData(SVEntrance.access_vault, SVRegion.vault),
 
     ConnectionData(SVEntrance.town_to_hospital, SVRegion.hospital,
-                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.enter_harvey_room, SVRegion.harvey_room, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
     ConnectionData(SVEntrance.town_to_pierre_general_store, SVRegion.pierre_store,
-                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.enter_sunroom, SVRegion.sunroom, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
     ConnectionData(SVEntrance.town_to_clint_blacksmith, SVRegion.blacksmith,
-                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.town_to_saloon, SVRegion.saloon,
-                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     
     ConnectionData(SVEntrance.play_journey_of_the_prairie_king, SVRegion.jotpk_world_1),
     ConnectionData(SVEntrance.reach_jotpk_world_2, SVRegion.jotpk_world_2),
@@ -269,25 +271,25 @@ vanilla_connections = [
     ConnectionData(SVEntrance.reach_junimo_kart_3, SVRegion.junimo_kart_3),
 
     ConnectionData(SVEntrance.town_to_sam_house, SVRegion.sam_house,
-                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.town_to_haley_house, SVRegion.haley_house,
-                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.town_to_mayor_manor, SVRegion.mayor_house,
-                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.town_to_alex_house, SVRegion.alex_house,
-                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.town_to_trailer, SVRegion.trailer,
-                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.town_to_museum, SVRegion.museum,
-                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.town_to_jojamart, SVRegion.jojamart,
-                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     
     ConnectionData(SVEntrance.town_to_beach, SVRegion.beach),
     ConnectionData(SVEntrance.enter_elliott_house, SVRegion.elliott_house,
                    flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
     ConnectionData(SVEntrance.beach_to_willy_fish_shop, SVRegion.fish_shop,
-                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     
     ConnectionData(SVEntrance.fish_shop_to_boat_tunnel, SVRegion.boat_tunnel,
                    flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING),
@@ -296,7 +298,7 @@ vanilla_connections = [
     
     ConnectionData(SVEntrance.enter_tide_pools, SVRegion.tide_pools),
     ConnectionData(SVEntrance.mountain_to_the_mines, SVRegion.mines,
-                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     
     ConnectionData(SVEntrance.dig_to_mines_floor_5, SVRegion.mines_floor_5),
     ConnectionData(SVEntrance.dig_to_mines_floor_10, SVRegion.mines_floor_10),
@@ -324,9 +326,9 @@ vanilla_connections = [
     ConnectionData(SVEntrance.dig_to_mines_floor_120, SVRegion.mines_floor_120),
     
     ConnectionData(SVEntrance.enter_skull_cavern_entrance, SVRegion.skull_cavern_entrance,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.enter_oasis, SVRegion.oasis,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.enter_casino, SVRegion.casino, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
     ConnectionData(SVEntrance.enter_skull_cavern, SVRegion.skull_cavern),
     ConnectionData(SVEntrance.mine_to_skull_cavern_floor_25, SVRegion.skull_cavern_25),
@@ -337,9 +339,9 @@ vanilla_connections = [
     ConnectionData(SVEntrance.enter_witch_hut, SVRegion.witch_hut, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
     
     ConnectionData(SVEntrance.enter_bathhouse_entrance, SVRegion.bathhouse_entrance,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
-    ConnectionData(SVEntrance.enter_locker_room, SVRegion.locker_room, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
-    ConnectionData(SVEntrance.enter_public_bath, SVRegion.public_bath, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
+    ConnectionData(SVEntrance.enter_locker_room, SVRegion.locker_room, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
+    ConnectionData(SVEntrance.enter_public_bath, SVRegion.public_bath, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     
     ConnectionData(SVEntrance.island_south_to_west, SVRegion.island_west, flag=RandomizationFlag.GINGER_ISLAND),
     ConnectionData(SVEntrance.island_south_to_north, SVRegion.island_north, flag=RandomizationFlag.GINGER_ISLAND),
@@ -351,21 +353,25 @@ vanilla_connections = [
     ConnectionData(SVEntrance.island_west_to_gourmand_cave, SVRegion.gourmand_frog_cave,
                    flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING),
     ConnectionData(SVEntrance.island_west_to_crystals_cave, SVRegion.colored_crystals_cave,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.island_west_to_shipwreck, SVRegion.shipwreck,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.island_west_to_qi_walnut_room, SVRegion.qi_walnut_room,
                    flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING),
     ConnectionData(SVEntrance.island_east_to_leo_hut, SVRegion.leo_hut,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.island_east_to_island_shrine, SVRegion.island_shrine,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.island_southeast_to_pirate_cove, SVRegion.pirate_cove,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.island_north_to_field_office, SVRegion.field_office,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING),
-    ConnectionData(SVEntrance.island_north_to_dig_site, SVRegion.dig_site, flag=RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
+    ConnectionData(SVEntrance.island_north_to_dig_site, SVRegion.dig_site, flag=RandomizationFlag.GINGER_ISLAND),
     ConnectionData(SVEntrance.island_north_to_volcano, SVRegion.volcano,
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
+    ConnectionData(SVEntrance.volcano_to_secret_beach, SVRegion.volcano_secret_beach,
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND),
+    ConnectionData(SVEntrance.secret_beach_to_volcano, SVRegion.volcano,
                    flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.NORTH_FACING),
     ConnectionData(SVEntrance.talk_to_island_trader, SVRegion.island_trader, flag=RandomizationFlag.GINGER_ISLAND),
     
@@ -388,12 +394,12 @@ vanilla_connections = [
 #Reversed connections to allow decoupled
 #vanilla_reversed_connections = [
     
-    ConnectionData(SVEntrance.farmhouse_to_farm, SVRegion.farm, flag=RandomizationFlag.BUILDINGS),
+    ConnectionData(SVEntrance.farmhouse_to_farm, SVRegion.farm, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.cellar_to_upstairs, SVRegion.farm_house),
     ConnectionData(SVEntrance.backwoods_to_farm, SVRegion.farm),
     ConnectionData(SVEntrance.bus_stop_to_farm, SVRegion.farm),
     ConnectionData(SVEntrance.forest_to_farm, SVRegion.farm),
-    ConnectionData(SVEntrance.farmcave_to_farm, SVRegion.farm, flag=RandomizationFlag.NON_PROGRESSION),
+    ConnectionData(SVEntrance.farmcave_to_farm, SVRegion.farm, flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.leave_greenhouse, SVRegion.farm),
     
     ConnectionData(SVEntrance.mountain_to_backwoods, SVRegion.backwoods),
@@ -404,76 +410,77 @@ vanilla_connections = [
     
     ConnectionData(SVEntrance.town_to_forest, SVRegion.forest),
     ConnectionData(SVEntrance.wizard_tower_to_forest, SVRegion.forest,
-                   flag=RandomizationFlag.NON_PROGRESSION),
-    ConnectionData(SVEntrance.leave_wizard_basement, SVRegion.wizard_tower, flag=RandomizationFlag.BUILDINGS),
+                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.ITEMLESS_ENTRANCE),
+    ConnectionData(SVEntrance.leave_wizard_basement, SVRegion.wizard_tower, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.marnie_ranch_to_forest, SVRegion.forest,
-                   flag=RandomizationFlag.NON_PROGRESSION),
+                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.leah_cottage_to_forest, SVRegion.forest,
-                   flag=RandomizationFlag.BUILDINGS),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.leave_secret_woods, SVRegion.forest),
-    ConnectionData(SVEntrance.sewers_to_forest, SVRegion.forest),
+    ConnectionData(SVEntrance.sewers_to_forest, SVRegion.forest, flag=RandomizationFlag.ITEMLESS_ENTRANCE | RandomizationFlag.BUILDINGS),
     
-    ConnectionData(SVEntrance.sewers_to_town, SVRegion.town),
-    ConnectionData(SVEntrance.leave_mutant_bug_lair, SVRegion.sewers),
+    ConnectionData(SVEntrance.sewers_to_town, SVRegion.town, flag=RandomizationFlag.ITEMLESS_ENTRANCE | RandomizationFlag.BUILDINGS),
+    ConnectionData(SVEntrance.leave_mutant_bug_lair, SVRegion.sewers, flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEntrance.railroad_to_mountain, SVRegion.mountain),
     ConnectionData(SVEntrance.tent_to_mountain, SVRegion.mountain,
-                   flag=RandomizationFlag.NON_PROGRESSION),
+                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.carpenter_shop_to_mountain, SVRegion.mountain,
-                   flag=RandomizationFlag.BUILDINGS),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
+    ConnectionData(SVEntrance.maru_room_to_carpenter, SVRegion.carpenter),
     ConnectionData(SVEntrance.maru_room_to_mountain, SVRegion.mountain,
-                   flag=RandomizationFlag.BUILDINGS),
-    ConnectionData(SVEntrance.leave_sebastian_room, SVRegion.carpenter, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
+    ConnectionData(SVEntrance.leave_sebastian_room, SVRegion.carpenter, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.NORTH_FACING | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.adventurer_guild_to_mountain, SVRegion.mountain,
-                   flag=RandomizationFlag.BUILDINGS),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.leave_quarry, SVRegion.mountain),
     ConnectionData(SVEntrance.leave_quarry_mine_entrance, SVRegion.quarry,
-                   flag=RandomizationFlag.BUILDINGS),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.leave_quarry_mine, SVRegion.quarry_mine_entrance),
     ConnectionData(SVEntrance.town_to_mountain, SVRegion.mountain),
     ConnectionData(SVEntrance.community_center_to_town, SVRegion.community_center,
-                   flag=RandomizationFlag.PELICAN_TOWN),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.ITEMLESS_ENTRANCE),
     
     ConnectionData(SVEntrance.hospital_to_town, SVRegion.hospital,
-                   flag=RandomizationFlag.PELICAN_TOWN),
-    ConnectionData(SVEntrance.leave_harvey_room, SVRegion.hospital, flag=RandomizationFlag.BUILDINGS),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.ITEMLESS_ENTRANCE),
+    ConnectionData(SVEntrance.leave_harvey_room, SVRegion.hospital, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.pierre_general_store_to_town, SVRegion.town,
-                   flag=RandomizationFlag.PELICAN_TOWN),
-    ConnectionData(SVEntrance.leave_sunroom, SVRegion.pierre_store, flag=RandomizationFlag.BUILDINGS),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.ITEMLESS_ENTRANCE),
+    ConnectionData(SVEntrance.leave_sunroom, SVRegion.pierre_store, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.clint_blacksmith_to_town, SVRegion.blacksmith,
-                   flag=RandomizationFlag.PELICAN_TOWN),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.saloon_to_town, SVRegion.saloon,
-                   flag=RandomizationFlag.PELICAN_TOWN),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.ITEMLESS_ENTRANCE),
     
     ConnectionData(SVEntrance.sam_house_to_town, SVRegion.town,
-                   flag=RandomizationFlag.PELICAN_TOWN),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.haley_house_to_town, SVRegion.town,
-                   flag=RandomizationFlag.PELICAN_TOWN),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.mayor_manor_to_town, SVRegion.town,
-                   flag=RandomizationFlag.PELICAN_TOWN),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.alex_house_to_town, SVRegion.town,
-                   flag=RandomizationFlag.PELICAN_TOWN),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.trailer_to_town, SVRegion.town,
-                   flag=RandomizationFlag.PELICAN_TOWN),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.museum_to_town, SVRegion.town,
-                   flag=RandomizationFlag.PELICAN_TOWN),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.jojamart_to_town, SVRegion.town,
-                   flag=RandomizationFlag.PELICAN_TOWN),
+                   flag=RandomizationFlag.PELICAN_TOWN | RandomizationFlag.ITEMLESS_ENTRANCE),
     
     ConnectionData(SVEntrance.beach_to_town, SVRegion.town),
     ConnectionData(SVEntrance.leave_elliott_house, SVRegion.beach,
                    flag=RandomizationFlag.BUILDINGS),
     ConnectionData(SVEntrance.willy_fish_shop_to_beach, SVRegion.beach,
-                   flag=RandomizationFlag.BUILDINGS),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
     
     ConnectionData(SVEntrance.boat_tunnel_to_fish_shop, SVRegion.fish_shop,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.the_mines_to_mountain, SVRegion.mountain,
                    flag=RandomizationFlag.NON_PROGRESSION),
     
     ConnectionData(SVEntrance.leave_skull_cavern_entrance, SVRegion.desert,
-                   flag=RandomizationFlag.BUILDINGS),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.leave_oasis, SVRegion.desert,
-                   flag=RandomizationFlag.BUILDINGS),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.leave_casino, SVRegion.oasis, flag=RandomizationFlag.BUILDINGS),
     
     ConnectionData(SVEntrance.leave_witch_warp_cave, SVRegion.railroad, flag=RandomizationFlag.BUILDINGS),
@@ -481,9 +488,9 @@ vanilla_connections = [
     ConnectionData(SVEntrance.leave_witch_hut, SVRegion.witch_swamp, flag=RandomizationFlag.BUILDINGS),
     
     ConnectionData(SVEntrance.leave_bathhouse, SVRegion.railroad,
-                   flag=RandomizationFlag.BUILDINGS),
-    ConnectionData(SVEntrance.leave_locker_room, SVRegion.bathhouse_entrance, flag=RandomizationFlag.BUILDINGS),
-    ConnectionData(SVEntrance.leave_public_bath, SVRegion.locker_room, flag=RandomizationFlag.BUILDINGS),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
+    ConnectionData(SVEntrance.leave_locker_room, SVRegion.bathhouse_entrance, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
+    ConnectionData(SVEntrance.leave_public_bath, SVRegion.locker_room, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ITEMLESS_ENTRANCE),
     
     ConnectionData(SVEntrance.island_west_to_south, SVRegion.island_south, flag=RandomizationFlag.GINGER_ISLAND),
     ConnectionData(SVEntrance.island_north_to_south, SVRegion.island_south, flag=RandomizationFlag.GINGER_ISLAND),
@@ -491,27 +498,30 @@ vanilla_connections = [
     ConnectionData(SVEntrance.island_southeast_to_south, SVRegion.island_south,
                    flag=RandomizationFlag.GINGER_ISLAND),
     ConnectionData(SVEntrance.islandfarmhouse_to_west, SVRegion.island_west,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.gourmand_cave_to_island_west, SVRegion.island_west,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.crystals_cave_to_island_west, SVRegion.island_west,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.shipwreck_to_island_west, SVRegion.island_west,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.qi_walnut_room_to_island_west, SVRegion.island_west,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.leo_hut_to_island_east, SVRegion.island_east,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.island_shrine_to_island_east, SVRegion.island_east,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.pirate_cove_to_island_southeast, SVRegion.island_south_east,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.field_office_to_island_north, SVRegion.island_north,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.ITEMLESS_ENTRANCE),
     ConnectionData(SVEntrance.volcano_to_island_north, SVRegion.island_north,
-                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND),
+                   flag=RandomizationFlag.BUILDINGS | RandomizationFlag.GINGER_ISLAND | RandomizationFlag.ITEMLESS_ENTRANCE),
     ]
 
+vanilla_outside_regions = [SVRegion.farm, SVRegion.town, SVRegion.beach, SVRegion.mountain, SVRegion.forest, SVRegion.bus_stop,
+                           SVRegion.backwoods, SVRegion.railroad, SVRegion.desert, SVRegion.island_east,
+                           SVRegion.island_north, SVRegion.island_west]
 
 def create_final_regions(world_options: StardewOptions) -> List[RegionData]:
     final_regions = []
@@ -530,7 +540,21 @@ def create_final_regions(world_options: StardewOptions) -> List[RegionData]:
                 continue
 
             final_regions.append(mod_region.get_clone())
+            
     return final_regions
+
+def create_outside_regions(world_options: StardewOptions) -> List[RegionData]:
+    outside_regions = []
+    outside_regions.extend(vanilla_outside_regions)
+    if world_options[options.Mods] is None:
+        return outside_regions
+    for mod in world_options[options.Mods]:
+        if mod not in ModDataList:
+            continue
+        if ModDataList[mod].outside_regions:
+            outside_regions.extend(ModDataList[mod].outside_regions)
+            
+    return outside_regions
 
 
 def create_final_connections(world_options: StardewOptions) -> List[ConnectionData]:
@@ -561,6 +585,7 @@ def create_regions(region_factory: RegionFactory, random: Random, world_options:
         if connection.name in entrances:
             entrances[connection.name].connect(regions[connection.destination])
 
+    logging.warning(randomized_data)
     return regions.values(), randomized_data
 
 
@@ -568,6 +593,7 @@ def randomize_connections(random: Random, world_options: StardewOptions, regions
     List[ConnectionData], Dict[str, str]]:
     connections_to_randomize = []
     final_connections = create_final_connections(world_options)
+    outside_regions = create_outside_regions(world_options)
     connections_by_name: Dict[str, ConnectionData] = {connection.name: connection for connection in final_connections}
     #reversed_connections_by_name: Dict[str, ConnectionData] = {connection.name: connection for connection in vanilla_reversed_connections}
     #connections_by_name.update(reversed_connections_by_name)
@@ -606,7 +632,10 @@ def randomize_connections(random: Random, world_options: StardewOptions, regions
         add_reverse_connections(final_connections, randomized_connections)
     add_non_randomized_connections(final_connections, connections_to_randomize, randomized_connections)
 
-    swap_connections_until_valid(regions_by_name, connections_by_name, randomized_connections, random)
+    if world_options[options.EntranceRandomization] == options.EntranceRandomization.option_insanity:
+        swap_connections_until_valid_insanity(regions_by_name, connections_by_name, outside_regions, randomized_connections, connections_to_randomize, random)
+    else:
+        swap_connections_until_valid(regions_by_name, connections_by_name, outside_regions, randomized_connections, connections_to_randomize, random)
     randomized_connections_for_generation = create_connections_for_generation(randomized_connections)
     if world_options[options.EntranceRandomization] == options.EntranceRandomization.option_insanity:
         randomized_data_for_mod = create_data_for_mod_insanity(randomized_connections, connections_to_randomize)
@@ -688,17 +717,48 @@ def find_reversed_connection(connections, connection: ConnectionData):
         if(connection.reverse == reversed.name):
             return reversed
 
-def swap_connections_until_valid(regions_by_name, connections_by_name,
-                                 randomized_connections: Dict[ConnectionData, ConnectionData], random: Random):
+def swap_connections_until_valid(regions_by_name, connections_by_name, outside_regions, randomized_connections: Dict[ConnectionData, ConnectionData],
+                                 connections_to_randomize: List[ConnectionData], random: Random):
     while True:
-        reachable_regions, unreachable_regions = find_reachable_regions(regions_by_name, connections_by_name, randomized_connections)
+        reachable_regions, unreachable_regions = find_reachable_regions(regions_by_name, connections_by_name, outside_regions, randomized_connections)
         if not unreachable_regions:
             return randomized_connections
         swap_one_connection(regions_by_name, connections_by_name, randomized_connections, reachable_regions,
-                            unreachable_regions, random)
+                            unreachable_regions, connections_to_randomize, random)
+
+def swap_connections_until_valid_insanity(regions_by_name, connections_by_name, outside_regions, randomized_connections: Dict[ConnectionData, ConnectionData],
+                                          connections_to_randomize: List[ConnectionData], random: Random):
+    while True:
+        reachable_regions, unreachable_regions = find_reachable_regions(regions_by_name, connections_by_name, outside_regions, randomized_connections)
+        if not unreachable_regions and not has_self_connection(randomized_connections):
+            return randomized_connections
+        if unreachable_regions:
+            swap_one_connection(regions_by_name, connections_by_name, randomized_connections, reachable_regions,
+                                unreachable_regions, connections_to_randomize, random)
+        swap_self_connections(randomized_connections, random)
 
 
-def find_reachable_regions(regions_by_name, connections_by_name,
+def swap_self_connections(randomized_connections: Dict[ConnectionData, ConnectionData], random: Random):
+     for origin, destination in randomized_connections.items():
+         if not RandomizationFlag.BUILDINGS in origin.flag:
+             continue
+         if origin.reverse == destination.name:
+            new_origin, new_destination = random.choice(list(randomized_connections.items()))
+            while not RandomizationFlag.BUILDINGS in new_origin.flag:
+                new_origin, new_destination = random.choice(list(randomized_connections.items()))
+            randomized_connections[origin] = new_destination
+            randomized_connections[new_origin] = destination
+
+
+def has_self_connection(randomized_connections: Dict[ConnectionData, ConnectionData]):
+    for origin, destination in randomized_connections.items():
+        if origin.reverse == destination.name and RandomizationFlag.BUILDINGS in origin.flag:
+            return True
+    return False
+        
+
+
+def find_reachable_regions(regions_by_name, connections_by_name, outside_regions,
                            randomized_connections: Dict[ConnectionData, ConnectionData]):
     connections = {}
     for connection in randomized_connections:
@@ -709,8 +769,29 @@ def find_reachable_regions(regions_by_name, connections_by_name,
     unreachable_regions = {region for region in regions_by_name.keys()}
     unreachable_regions.remove(SVRegion.menu)
     exits_to_explore = list(regions_by_name[SVRegion.menu].exits)
+    item_exits = list()
+    found_outside = False
+    
     while exits_to_explore:
         exit_name = exits_to_explore.pop()
+        exit_connection = connections_by_name[exit_name]
+        replaced_connection = connections[exit_connection]
+        target_region_name = replaced_connection.destination
+        if target_region_name in reachable_regions:
+            continue
+
+        if RandomizationFlag.ITEMLESS_ENTRANCE in exit_connection.flag or found_outside:
+            target_region = regions_by_name[target_region_name]
+            reachable_regions.add(target_region_name)
+            unreachable_regions.remove(target_region_name)
+            exits_to_explore.extend(target_region.exits)
+            if target_region_name in outside_regions:
+                found_outside = True
+        else:
+            item_exits.extend([exit_name])
+            
+    while item_exits and found_outside:
+        exit_name = item_exits.pop()
         exit_connection = connections_by_name[exit_name]
         replaced_connection = connections[exit_connection]
         target_region_name = replaced_connection.destination
@@ -720,23 +801,26 @@ def find_reachable_regions(regions_by_name, connections_by_name,
         target_region = regions_by_name[target_region_name]
         reachable_regions.add(target_region_name)
         unreachable_regions.remove(target_region_name)
-        exits_to_explore.extend(target_region.exits)
+        item_exits.extend(target_region.exits)
+        
     return reachable_regions, unreachable_regions
 
 
-def swap_one_connection(regions_by_name, connections_by_name,
-                        randomized_connections: Dict[ConnectionData, ConnectionData],
-                        reachable_regions: Set[str], unreachable_regions: Set[str], random: Random):
+def swap_one_connection(regions_by_name, connections_by_name,randomized_connections: Dict[ConnectionData, ConnectionData],
+                        reachable_regions: Set[str], unreachable_regions: Set[str],
+                        connections_to_randomize: List[ConnectionData], random: Random):
     randomized_connections_already_shuffled = {connection: randomized_connections[connection]
                                                for connection in randomized_connections
                                                if connection != randomized_connections[connection]}
-    unreachable_regions_leading_somewhere = tuple([region for region in unreachable_regions
+    unreachable_regions_names_leading_somewhere = tuple([region for region in unreachable_regions
                                                    if len(regions_by_name[region].exits) > 0])
-    chosen_unreachable_region_name = random.choice(unreachable_regions_leading_somewhere)
-    chosen_unreachable_region = regions_by_name[chosen_unreachable_region_name]
-    chosen_unreachable_entrance_name = random.choice(chosen_unreachable_region.exits)
-    chosen_unreachable_entrance = connections_by_name[chosen_unreachable_entrance_name]
+    unreachable_regions_leading_somewhere = [regions_by_name[region_name] for region_name in unreachable_regions_names_leading_somewhere]
+    unreachable_regions_exits_names = [exit_name for region in unreachable_regions_leading_somewhere for exit_name in region.exits]
+    unreachable_connections = [connections_by_name[exit_name] for exit_name in unreachable_regions_exits_names]
+    unreachable_connections_that_can_be_randomized = [connection for connection in unreachable_connections if connection in connections_to_randomize]
 
+    chosen_unreachable_entrance = random.choice(unreachable_connections_that_can_be_randomized)
+    
     chosen_reachable_entrance = None
     while chosen_reachable_entrance is None or chosen_reachable_entrance not in randomized_connections_already_shuffled:
         chosen_reachable_region_name = random.choice(tuple(reachable_regions))

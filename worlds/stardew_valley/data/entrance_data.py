@@ -63,6 +63,8 @@ class SVEntrance:
     carpenter_shop_to_mountain= "Carpenter Shop to Mountain"
     mountain_to_maru_room = "Mountain to Maru's Room"
     maru_room_to_mountain = "Maru's Room to Mountain"
+    carpenter_to_maru_room = "Carpenter to Maru's Room"
+    maru_room_to_carpenter = "Maru's Room to Carpenter"
     mountain_to_the_mines = "Mountain to The Mines"
     the_mines_to_mountain = "The Mines to Mountain"
     enter_quarry = "Mountain to Quarry"
@@ -224,7 +226,8 @@ class SVEntrance:
     island_north_to_dig_site = "Island North to Dig Site"
     island_north_to_volcano = "Island North to Volcano Entrance"
     volcano_to_secret_beach = "Volcano River to Secret Beach"
-    volcano_to_island_north = "Volcano to Island North"
+    volcano_to_island_north = "Volcano Entrance to Island North"
+    secret_beach_to_volcano = "Secret Beach to Volcano River"
 
     talk_to_island_trader = "Talk to Island Trader"
     climb_to_volcano_5 = "Climb to Volcano Floor 5"

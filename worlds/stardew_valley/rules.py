@@ -137,7 +137,11 @@ def set_entrance_rules(logic, multi_world, player, world_options: StardewOptions
                              logic.received("Beach Bridge") | (logic.can_blink()).simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.enter_quarry, player),
                              logic.received("Bridge Repair") | (logic.can_blink()).simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.leave_quarry, player),
+                             logic.received("Bridge Repair") | (logic.can_blink()).simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.enter_secret_woods, player),
+                             logic.has_tool("Axe", "Iron") | (logic.can_blink()).simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.leave_secret_woods, player),
                              logic.has_tool("Axe", "Iron") | (logic.can_blink()).simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.forest_to_sewers, player),
                              logic.has_rusty_key().simplify())
@@ -164,14 +168,24 @@ def set_entrance_rules(logic, multi_world, player, world_options: StardewOptions
                              logic.received("Adventurer's Guild"))
     MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.mountain_to_railroad, player),
                              logic.has_lived_months(2))
+    MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.railroad_to_mountain, player),
+                             logic.has_lived_months(2))
     MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.enter_witch_warp_cave, player),
                              logic.received("Dark Talisman") | (logic.can_blink()).simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.leave_witch_warp_cave, player),
+                             logic.received("Dark Talisman") | (logic.can_blink()).simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.enter_witch_hut, player),
+                             (logic.has("Void Mayonnaise") | logic.can_blink()).simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.leave_witch_hut, player),
                              (logic.has("Void Mayonnaise") | logic.can_blink()).simplify())
 
     MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.enter_harvey_room, player),
                              logic.has_relationship("Harvey", 2))
     MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.mountain_to_maru_room, player),
+                             logic.has_relationship("Maru", 2))
+    MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.carpenter_to_maru_room, player),
+                             logic.has_relationship("Maru", 2))
+    MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.maru_room_to_carpenter, player),
                              logic.has_relationship("Maru", 2))
     MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.enter_sebastian_room, player),
                              (logic.has_relationship("Sebastian", 2) | logic.can_blink()).simplify())
@@ -185,6 +199,8 @@ def set_entrance_rules(logic, multi_world, player, world_options: StardewOptions
                              logic.has_relationship("Wizard", 4))
     if ModNames.alec in world_options[options.Mods]:
         MultiWorldRules.set_rule(multi_world.get_entrance(AlecEntrance.petshop_to_bedroom, player),
+                                 (logic.has_relationship("Alec", 2) | logic.can_blink()).simplify())
+        MultiWorldRules.set_rule(multi_world.get_entrance(AlecEntrance.bedroom_to_petshop, player),
                                  (logic.has_relationship("Alec", 2) | logic.can_blink()).simplify())
 
 
@@ -214,7 +230,11 @@ def set_island_entrances_rules(logic: StardewLogic, multi_world, player):
                              boat_repaired)
     MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.island_south_to_west, player),
                              logic.received("Island West Turtle").simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.island_west_to_south, player),
+                             logic.received("Island West Turtle").simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.island_south_to_north, player),
+                             logic.received("Island North Turtle").simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.island_north_to_south, player),
                              logic.received("Island North Turtle").simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.island_west_to_islandfarmhouse, player),
                              logic.received("Island Farmhouse").simplify())
@@ -225,6 +245,8 @@ def set_island_entrances_rules(logic: StardewLogic, multi_world, player):
     MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.talk_to_island_trader, player),
                              logic.received("Island Trader").simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.island_south_to_southeast, player),
+                             logic.received("Island Resort").simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.island_southeast_to_south, player),
                              logic.received("Island Resort").simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance(SVEntrance.island_west_to_qi_walnut_room, player),
                              logic.received("Qi Walnut Room").simplify())

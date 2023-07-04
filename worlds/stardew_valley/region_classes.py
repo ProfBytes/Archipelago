@@ -14,6 +14,7 @@ class RandomizationFlag(IntFlag):
     CHAOS = 0b10000
     GINGER_ISLAND = 0b0100000
     NORTH_FACING = 0b1000000
+    ITEMLESS_ENTRANCE = 0b10000000
 
 
 @dataclass(frozen=True)
@@ -53,6 +54,7 @@ class ModRegionData:
     mod_name: str
     regions: List[RegionData]
     connections: List[ConnectionData]
+    outside_regions: Optional[List[RegionData]] = None
 
 
 
