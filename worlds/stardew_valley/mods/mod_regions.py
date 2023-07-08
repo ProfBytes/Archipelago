@@ -20,7 +20,7 @@ deep_woods_regions = [
                                                     DeepWoodsEntrance.deep_woods_depth_100]),
     RegionData(Region.secret_woods, [DeepWoodsEntrance.secret_woods_to_deep_woods]),
     RegionData(DeepWoodsRegion.main_lichtung, [DeepWoodsEntrance.deep_woods_house]),
-    RegionData(DeepWoodsRegion.abandoned_home),
+    RegionData(DeepWoodsRegion.abandoned_home, [DeepWoodsEntrance.leave_deep_woods_house]),
     RegionData(DeepWoodsRegion.floor_10),
     RegionData(DeepWoodsRegion.floor_20),
     RegionData(DeepWoodsRegion.floor_30),
@@ -37,7 +37,8 @@ deep_woods_entrances = [
     ConnectionData(DeepWoodsEntrance.use_woods_obelisk, DeepWoodsRegion.woods_obelisk_menu),
     ConnectionData(DeepWoodsEntrance.secret_woods_to_deep_woods, DeepWoodsRegion.main_lichtung),
     ConnectionData(DeepWoodsEntrance.deep_woods_house, DeepWoodsRegion.abandoned_home,
-                   flag=RandomizationFlag.NON_PROGRESSION),
+                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.ENTRANCE),
+    ConnectionData(DeepWoodsEntrance.leave_deep_woods_house, DeepWoodsRegion.main_lichtung, flag=RandomizationFlag.NON_PROGRESSION),
     ConnectionData(DeepWoodsEntrance.deep_woods_depth_1, DeepWoodsRegion.main_lichtung),
     ConnectionData(DeepWoodsEntrance.deep_woods_depth_10, DeepWoodsRegion.floor_10),
     ConnectionData(DeepWoodsEntrance.deep_woods_depth_20, DeepWoodsRegion.floor_20),
@@ -53,14 +54,16 @@ deep_woods_entrances = [
 
 eugene_regions = [
     RegionData(Region.forest, [EugeneEntrance.forest_to_garden]),
-    RegionData(EugeneRegion.eugene_garden, [EugeneEntrance.garden_to_bedroom]),
-    RegionData(EugeneRegion.eugene_bedroom)
+    RegionData(EugeneRegion.eugene_garden, [EugeneEntrance.garden_to_bedroom, EugeneEntrance.garden_to_forest]),
+    RegionData(EugeneRegion.eugene_bedroom, [EugeneEntrance.bedroom_to_garden])
 ]
 
 eugene_entrances = [
     ConnectionData(EugeneEntrance.forest_to_garden, EugeneRegion.eugene_garden,
-                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.LEAD_TO_OPEN_AREA),
-    ConnectionData(EugeneEntrance.garden_to_bedroom, EugeneRegion.eugene_bedroom, flag=RandomizationFlag.BUILDINGS)
+                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.ENTRANCE),
+    ConnectionData(EugeneEntrance.garden_to_bedroom, EugeneRegion.eugene_bedroom, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ENTRANCE),
+    ConnectionData(EugeneEntrance.garden_to_forest, Region.forest, flag=RandomizationFlag.NON_PROGRESSION),
+    ConnectionData(EugeneEntrance.bedroom_to_garden, EugeneRegion.eugene_bedroom, flag=RandomizationFlag.BUILDINGS)
 ]
 
 magic_regions = [
@@ -74,71 +77,80 @@ magic_entrances = [
 
 jasper_regions = [
     RegionData(Region.museum, [JasperEntrance.museum_to_bedroom]),
-    RegionData(JasperRegion.jasper_bedroom)
+    RegionData(JasperRegion.jasper_bedroom, [JasperEntrance.bedroom_to_museum])
 ]
 
 jasper_entrances = [
-    ConnectionData(JasperEntrance.museum_to_bedroom, JasperRegion.jasper_bedroom, flag=RandomizationFlag.BUILDINGS)
+    ConnectionData(JasperEntrance.museum_to_bedroom, JasperRegion.jasper_bedroom, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ENTRANCE),
+    ConnectionData(JasperEntrance.bedroom_to_museum, Region.museum, flag=RandomizationFlag.BUILDINGS)
 ]
+
 alec_regions = [
     RegionData(Region.forest, [AlecEntrance.forest_to_petshop]),
-    RegionData(AlecRegion.pet_store, [AlecEntrance.petshop_to_bedroom]),
-    RegionData(AlecRegion.alec_bedroom)
+    RegionData(AlecRegion.pet_store, [AlecEntrance.petshop_to_bedroom, AlecEntrance.petshop_to_forest]),
+    RegionData(AlecRegion.alec_bedroom, [AlecEntrance.bedroom_to_petshop])
 ]
 
 alec_entrances = [
     ConnectionData(AlecEntrance.forest_to_petshop, AlecRegion.pet_store,
-                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.LEAD_TO_OPEN_AREA),
-    ConnectionData(AlecEntrance.petshop_to_bedroom, AlecRegion.alec_bedroom, flag=RandomizationFlag.BUILDINGS)
+                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.ENTRANCE),
+    ConnectionData(AlecEntrance.petshop_to_bedroom, AlecRegion.alec_bedroom, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ENTRANCE),
+    ConnectionData(AlecEntrance.petshop_to_forest, Region.forest, flag=RandomizationFlag.NON_PROGRESSION),
+    ConnectionData(AlecEntrance.bedroom_to_petshop, AlecRegion.pet_store, flag=RandomizationFlag.BUILDINGS)
 ]
 
 yoba_regions = [
     RegionData(Region.secret_woods, [YobaEntrance.secret_woods_to_clearing]),
-    RegionData(YobaRegion.yoba_clearing)
+    RegionData(YobaRegion.yoba_clearing, [YobaEntrance.clearing_to_secret_woods])
 ]
 
 yoba_entrances = [
-    ConnectionData(YobaEntrance.secret_woods_to_clearing, YobaRegion.yoba_clearing, flag=RandomizationFlag.BUILDINGS)
+    ConnectionData(YobaEntrance.secret_woods_to_clearing, YobaRegion.yoba_clearing, flag=RandomizationFlag.BUILDINGS | RandomizationFlag.ENTRANCE),
+    ConnectionData(YobaEntrance.clearing_to_secret_woods, Region.secret_woods, flag=RandomizationFlag.BUILDINGS)
 ]
 
 juna_regions = [
     RegionData(Region.forest, [JunaEntrance.forest_to_juna_cave]),
-    RegionData(JunaRegion.juna_cave)
+    RegionData(JunaRegion.juna_cave, [JunaEntrance.juna_cave_to_forest])
 ]
 
 juna_entrances = [
     ConnectionData(JunaEntrance.forest_to_juna_cave, JunaRegion.juna_cave,
-                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.LEAD_TO_OPEN_AREA)
+                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.ENTRANCE),
+    ConnectionData(JunaEntrance.juna_cave_to_forest, Region.forest, flag=RandomizationFlag.NON_PROGRESSION)
 ]
 
 ayeisha_regions = [
     RegionData(Region.bus_stop, [AyeishaEntrance.bus_stop_to_mail_van]),
-    RegionData(AyeishaRegion.mail_van)
+    RegionData(AyeishaRegion.mail_van, [AyeishaEntrance.mail_van_to_bus_stop])
 ]
 
 ayeisha_entrances = [
     ConnectionData(AyeishaEntrance.bus_stop_to_mail_van, AyeishaRegion.mail_van,
-                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.LEAD_TO_OPEN_AREA)
+                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.ENTRANCE),
+    ConnectionData(AyeishaEntrance.mail_van_to_bus_stop, Region.bus_stop, flag=RandomizationFlag.NON_PROGRESSION)
 ]
 
 riley_regions = [
     RegionData(Region.town, [RileyEntrance.town_to_riley]),
-    RegionData(RileyRegion.riley_house)
+    RegionData(RileyRegion.riley_house, [RileyEntrance.riley_to_town])
 ]
 
 riley_entrances = [
     ConnectionData(RileyEntrance.town_to_riley, RileyRegion.riley_house,
-                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.LEAD_TO_OPEN_AREA)
+                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.ENTRANCE | RandomizationFlag.ITEMLESS_ENTRANCE),
+    ConnectionData(RileyEntrance.riley_to_town, Region.town,
+                   flag=RandomizationFlag.NON_PROGRESSION | RandomizationFlag.ITEMLESS_ENTRANCE)
 ]
 
 ModDataList = {
-    ModNames.deepwoods: ModRegionData(ModNames.deepwoods, deep_woods_regions, deep_woods_entrances),
-    ModNames.eugene: ModRegionData(ModNames.eugene, eugene_regions, eugene_entrances),
-    ModNames.jasper: ModRegionData(ModNames.jasper, jasper_regions, jasper_entrances),
-    ModNames.alec: ModRegionData(ModNames.alec, alec_regions, alec_entrances),
-    ModNames.yoba: ModRegionData(ModNames.yoba, yoba_regions, yoba_entrances),
-    ModNames.juna: ModRegionData(ModNames.juna, juna_regions, juna_entrances),
-    ModNames.magic: ModRegionData(ModNames.magic, magic_regions, magic_entrances),
-    ModNames.ayeisha: ModRegionData(ModNames.ayeisha, ayeisha_regions, ayeisha_entrances),
-    ModNames.riley: ModRegionData(ModNames.riley, riley_regions, riley_entrances),
+    ModNames.deepwoods: ModRegionData(ModNames.deepwoods, deep_woods_regions, deep_woods_entrances, []),
+    ModNames.eugene: ModRegionData(ModNames.eugene, eugene_regions, eugene_entrances, []),
+    ModNames.jasper: ModRegionData(ModNames.jasper, jasper_regions, jasper_entrances, []),
+    ModNames.alec: ModRegionData(ModNames.alec, alec_regions, alec_entrances, []),
+    ModNames.yoba: ModRegionData(ModNames.yoba, yoba_regions, yoba_entrances, []),
+    ModNames.juna: ModRegionData(ModNames.juna, juna_regions, juna_entrances, []),
+    ModNames.magic: ModRegionData(ModNames.magic, magic_regions, magic_entrances, []),
+    ModNames.ayeisha: ModRegionData(ModNames.ayeisha, ayeisha_regions, ayeisha_entrances, []),
+    ModNames.riley: ModRegionData(ModNames.riley, riley_regions, riley_entrances, []),
 }

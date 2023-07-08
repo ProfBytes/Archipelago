@@ -194,12 +194,18 @@ def set_entrance_rules(logic, multi_world, player, world_options: StardewOptions
                              ((logic.has_rusty_key() & logic.can_reach_region(Region.railroad) &
                                logic.can_meet(NPC.krobus) | magic.can_blink(logic)).simplify()))
 
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_harvey_room, player),
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.hospital_to_front, player),
+                             logic.has_relationship(NPC.harvey, 2))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.hospital_to_back, player),
                              logic.has_relationship(NPC.harvey, 2))
     MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.mountain_to_maru_room, player),
                              logic.has_relationship(NPC.maru, 2))
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_sebastian_room, player),
-                             (logic.has_relationship(NPC.sebastian, 2) | magic.can_blink(logic)).simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.carpenter_to_maru_room, player),
+                             logic.has_relationship(NPC.maru, 2))
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.maru_room_to_carpenter, player),
+                             logic.has_relationship(NPC.maru, 2))
+    #MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_sebastian_room, player),
+    #                         (logic.has_relationship(NPC.sebastian, 2) | magic.can_blink(logic)).simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.forest_to_leah_cottage, player),
                              logic.has_relationship(NPC.leah, 2))
     MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.enter_elliott_house, player),
@@ -266,7 +272,9 @@ def set_island_entrances_rules(logic: StardewLogic, multi_world, player):
     MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.island_north_to_volcano, player),
                              (logic.can_water(0) | logic.received("Volcano Bridge") |
                               magic.can_blink(logic)).simplify())
-    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.volcano_to_secret_beach, player),
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.volcano_entrance_to_river, player),
+                             logic.can_water(2).simplify())
+    MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.volcano_river_to_entrance, player),
                              logic.can_water(2).simplify())
     MultiWorldRules.set_rule(multi_world.get_entrance(Entrance.climb_to_volcano_5, player),
                              (logic.can_mine_perfectly() & logic.can_water(1)).simplify())

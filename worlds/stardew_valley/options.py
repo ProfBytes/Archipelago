@@ -156,7 +156,8 @@ class EntranceRandomization(Choice):
     option_non_progression = 2
     option_buildings = 3
     # option_everything = 4
-    option_chaos = 5
+    option_insanity = 5
+    option_chaos = 6
     # option_buildings_one_way = 6
     # option_everything_one_way = 7
     # option_chaos_one_way = 8

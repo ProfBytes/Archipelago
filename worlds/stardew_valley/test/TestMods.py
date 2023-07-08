@@ -64,6 +64,14 @@ class TestGenerateModsOptions(SVTestBase):
                     basic_checks(self, multiworld)
                     check_stray_mod_items(mod, self, multiworld)
 
+    #def test_insanity_randomizer(self):
+    #    for mod in mod_list:
+    #        with self.subTest(f"{EntranceRandomization}: 5, Mod: {mod}"):
+    #            print(f"Mod: {mod}")
+    #            multiworld = setup_solo_multiworld({EntranceRandomization.internal_name: EntranceRandomization.options["insanity"], Mods: mod})
+    #            basic_checks(self, multiworld)
+    #            check_stray_mod_items(mod, self, multiworld)
+
     def test_given_mod_names_when_generate_paired_with_other_options_then_basic_checks(self):
         if self.skip_long_tests:
             return
@@ -150,7 +158,8 @@ class TestModEntranceRando(unittest.TestCase):
 
         for option, flag in [(options.EntranceRandomization.option_pelican_town, RandomizationFlag.PELICAN_TOWN),
                              (options.EntranceRandomization.option_non_progression, RandomizationFlag.NON_PROGRESSION),
-                             (options.EntranceRandomization.option_buildings, RandomizationFlag.BUILDINGS)]:
+                             (options.EntranceRandomization.option_buildings, RandomizationFlag.BUILDINGS),
+                             (options.EntranceRandomization.option_insanity, RandomizationFlag.BUILDINGS)]:
             with self.subTest(option=option, flag=flag):
                 seed = random.randrange(sys.maxsize)
                 rand = random.Random(seed)
@@ -173,7 +182,7 @@ class TestModEntranceRando(unittest.TestCase):
                                       f"Connection {connection.reverse} should be randomized but it is not in the output. Seed = {seed}")
 
                 self.assertEqual(len(set(randomized_connections.values())), len(randomized_connections.values()),
-                                 f"Connections are duplicated in randomization. Seed = {seed}")
+                                 f"Connections are duplicated in randomization. Seed = {seed} Connections = {randomized_connections.values()}")
 
 
 class TestModTraps(SVTestBase):

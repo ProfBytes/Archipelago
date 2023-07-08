@@ -131,6 +131,9 @@ class Region:
     mines_floor_115 = "The Mines - Floor 115"
     mines_floor_120 = "The Mines - Floor 120"
 
+    hospital_back_area = "Hospital Back Area"
+    volcano_river = "Volcano River"
+
 
 class DeepWoodsRegion:
     main_lichtung = "Entrance to the Deep Woods"
