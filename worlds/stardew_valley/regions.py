@@ -301,7 +301,7 @@ def swap_connections_until_valid_insanity(regions_by_name, connections_by_name, 
     while True:
         reachable_regions, unreachable_regions = find_reachable_regions(regions_by_name, connections_by_name,
                                                                         outside_regions, randomized_connections)
-        print(unreachable_regions)
+
         if not unreachable_regions and not has_self_connection(randomized_connections):
             return randomized_connections
         if unreachable_regions:
@@ -317,6 +317,7 @@ def swap_one_connection_insanity(regions_by_name, connections_by_name,
     randomized_connections_already_shuffled = {connection: randomized_connections[connection]
                                                for connection in randomized_connections
                                                if connection != randomized_connections[connection]}
+    # TODO make this work better
     unreachable_connections = [connection for connection in connections_to_randomize if
                                connection.destination in unreachable_regions]
     unreachable_connections_that_can_be_randomized = [connection for connection in unreachable_connections if
