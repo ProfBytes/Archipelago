@@ -1,0 +1,20 @@
+Evoline packs
+Make a DB of the packs, including number and name like below
+https://github.com/PrimePentad/Pokemon-TCG-Rando-Alpha/blob/main/evo_booster_lines.txt
+
+Location table
+https://github.com/PrimePentad/Pokemon-TCG-Rando-Alpha/blob/main/locations_reference
+
+Get list of ROM addresses
+Write to ROM addresses
+
+Have Murray and Ken's requirements (medals and card count with defaults of 4 and 300) scale based off of the medal requirements for E4
+Setting in the future to set them to specific values
+Add dialogue saying what the requirement is
+
+Basically improved would be decks that are a bit more streamlined.  Cutting out bad pokemon to increase the density of good cards in the deck already.
+Competitive would be a new deck that fits the theme of the club entirely (science would still have poison types, etc.) that are better.
+Competitive would be the best decks we can make that don't break the theme.  We're talking 4 full copies of Bill, Oak, etc. in all these decks
+Then Haymaker is just all haymaker all the time.
+
+Plando starting deck
