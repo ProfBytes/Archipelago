@@ -51,7 +51,7 @@ class StartingDeck3(Choice):
 
 
 @dataclass
-class PokemonRBOptions(PerGameCommonOptions):
+class PokemonTCGOptions(PerGameCommonOptions):
     accessibility: ItemsAccessibility
     pack_type: PackType
     medal_sanity: MedalSanity

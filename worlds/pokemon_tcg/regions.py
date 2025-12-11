@@ -64,6 +64,9 @@ def create_region(multiworld: MultiWorld, player: int, name: str, locations_per_
     locations_per_region[name] = []
     return ret
 
+def is_pack(original_item):
+    return original_item in "Energy Pack", "Mystery Pack", "Laboratory Pack", "Colosseum Pack", "Evolution Pack"
+
 def create_regions(world):
     multiworld = world.multiworld
     player = world.player
@@ -79,54 +82,17 @@ def create_regions(world):
             location_object = PokemonTCGLocation(player, location.name, location.address, location.rom_address,
                                                 location.type, location.level, location.level_address)
             locations_per_region[location.region].append(location_object)
-            if location.type in ("Item", "Trainer Parties"):
-                event = location.event
-                if world.options.exp_all
-
-                if location.original_item is None:
-                    item = world.create_filler()
-                elif location.original_item == "Exp. All" and world.options.exp_all == "remove":
-                    item = world.create_filler()
-                elif location.original_item == "Pokedex":
-                    if world.options.randomize_pokedex == "vanilla":
-                        location_object.event = True
-                        event = True
-                    item = world.create_item("Pokedex")
-                elif location.original_item == "Moon Stone" and world.options.stonesanity:
-                    stone = stones.pop()
-                    item = world.create_item(stone)
-                elif location.original_item.startswith("TM"):
-                    if world.options.randomize_tm_moves:
-                        item = world.create_item(location.original_item.split(" ")[0])
-                    else:
-                        item = world.create_item(location.original_item)
-                elif location.original_item == "Card Key" and world.options.split_card_key == "on":
-                    item = world.create_item("Card Key 3F")
-                elif "Card Key" in location.original_item and world.options.split_card_key == "progressive":
-                    item = world.create_item("Progressive Card Key")
-                else:
-                    item = world.create_item(location.original_item)
-                    if (item.classification == ItemClassification.filler and world.random.randint(1, 100)
-                            <= world.options.trap_percentage.value and combined_traps != 0):
-                        item = world.create_item(world.select_trap())
-
-                if (world.options.key_items_only and (location.original_item != "Exp. All")
-                        and not (location.event or item.advancement)):
-                    continue
-
-                if item.name in start_inventory and start_inventory[item.name] > 0 and \
-                        location.original_item in item_groups["Unique"]:
-                    start_inventory[location.original_item] -= 1
-                    item = world.create_filler()
-
-                if event:
-                    location_object.place_locked_item(item)
-                    if location.type == "Trainer Parties":
-                        location_object.party_data = deepcopy(location.party_data)
-                else:
-                    world.item_pool.append(item)
+            if location.event:
+                location_object.place_locked_item(location.item)
+            elif world.options.pack_type and is_pack(location.original_item):
+                world.item_pool.append(world.create_item(world.next_evoline))
+            else:
+                world.item_pool.append(world.create_item(location.original_item))
 
     world.random.shuffle(world.item_pool)
+
+
+    
     if not world.options.key_items_only:
         def acceptable_item(item):
             return ("Badge" not in item.name and "Trap" not in item.name and item.name != "Pokedex"
