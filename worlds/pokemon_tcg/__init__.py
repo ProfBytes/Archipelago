@@ -13,12 +13,12 @@ from Fill import fill_restrictive, FillError, sweep_from_pool
 from worlds.AutoWorld import World, WebWorld
 from worlds.generic.Rules import add_item_rule
 from .items import item_table, item_groups
-from .locations import location_data, PokemonRBLocation
+from .locations import location_data, PokemonTCGLocation
 from .regions import create_regions
-from .options import PokemonRBOptions
+from .options import PokemonTCGOptions
 from .rom_addresses import rom_addresses
 from .text import encode_text
-from .rom import generate_output, PokemonTCGProcedurePatch, PokemonBlueProcedurePatch
+from .rom import generate_output, PokemonTCGProcedurePatch
 from .pokemon import process_pokemon_data, process_move_data, verify_hm_moves
 from .encounters import process_pokemon_locations, process_trainer_data
 from .rules import set_rules
@@ -26,6 +26,7 @@ from .level_scaling import level_scaling
 from . import logic
 from . import poke_data
 from . import client
+from data import card_list
 
 
 class PokemonSettings(settings.Group):
@@ -48,16 +49,7 @@ class PokemonWebWorld(WebWorld):
         ["ProfBytes"]
     )
 
-    setup_es = Tutorial(
-        setup_en.tutorial_name,
-        setup_en.description,
-        "Español",
-        "setup_es.md",
-        "setup/es",
-        ["Shiny"]
-    )
-
-    tutorials = [setup_en, setup_es]
+    tutorials = [setup_en]
 
 
 class PokemonTCGWorld(World):
@@ -67,8 +59,8 @@ class PokemonTCGWorld(World):
     # -MuffinJets#4559
     game = "Pokemon TCG"
 
-    options_dataclass = PokemonRBOptions
-    options: PokemonRBOptions
+    options_dataclass = PokemonTCGOptions
+    options: PokemonTCGOptions
 
     settings: typing.ClassVar[PokemonSettings]
 
@@ -86,145 +78,155 @@ class PokemonTCGWorld(World):
     def __init__(self, multiworld: MultiWorld, player: int):
         super().__init__(multiworld, player)
         self.item_pool = []
-        self.total_key_items = None
-        self.fly_map = None
-        self.fly_map_code = None
-        self.town_map_fly_map = None
-        self.town_map_fly_map_code = None
-        self.extra_badges = {}
-        self.type_chart = None
-        self.local_poke_data = None
-        self.local_move_data = None
-        self.local_tms = None
-        self.learnsets = None
-        self.trainer_name = None
-        self.rival_name = None
-        self.traps = None
-        self.trade_mons = {}
-        self.finished_level_scaling = threading.Event()
-        self.dexsanity_table = []
-        self.trainersanity_table = []
         self.local_locs = []
-        self.pc_item = None
+        self.water_club_trade = None
+        self.grass_club_trade = None
+        self.fighting_club_trade = None
+        self.ishihara_1_trade = None
+        self.ishihara_2_trade = None
+        self.ishihara_3_trade = None
+        self.lightning_club_trade = None
+        self.fire_club_trade = None
+        self.psychic_club_trade = None
+
+        self.water_club_door = None
+        self.fire_club_door = None
+        self.lightning_club_door = None
+        self.science_club_door = None
+        self.psychic_club_door = None
+        self.grass_club_door = None
+        self.rock_club_door = None
+        self.fighting_club_door = None
+
+        self.psychic_medal_count = 4
+        self.fire_card_count = 650
+        self.goal_medal_count = 8
+
+        self.starting_deck_type_1 = "Fire"
+        self.starting_deck_type_2 = "Water"
+        self.starting_deck_type_3 = "Grass"
+
+        self.pack_types = "Evoline"
+        self.trade_rando = "vanilla"
 
     @classmethod
     def stage_generate_early(cls, multiworld: MultiWorld):
 
         seed_groups = {}
-        pokemon_rb_worlds = multiworld.get_game_worlds("Pokemon TCG")
+        pokemon_tcg_worlds = multiworld.get_game_worlds("Pokemon TCG")
 
-        for world in pokemon_rb_worlds:
-            if not (world.options.type_chart_seed.value.isdigit() or world.options.type_chart_seed.value == "random"):
-                seed_groups[world.options.type_chart_seed.value] = seed_groups.get(world.options.type_chart_seed.value,
-                                                                                   []) + [world]
+        # for world in pokemon_TCG_worlds:
+        #     if not (world.options.type_chart_seed.value.isdigit() or world.options.type_chart_seed.value == "random"):
+        #         seed_groups[world.options.type_chart_seed.value] = seed_groups.get(world.options.type_chart_seed.value,
+        #                                                                            []) + [world]
 
-        copy_chart_worlds = {}
+        # copy_chart_worlds = {}
+        #
+        # for worlds in seed_groups.values():
+        #     chosen_world = multiworld.random.choice(worlds)
+        #     for world in worlds:
+        #         if world is not chosen_world:
+        #             copy_chart_worlds[world.player] = chosen_world
+        #
+        # for world in pokemon_TCG_worlds:
+        #     if world.player in copy_chart_worlds:
+        #         continue
+        #     tc_random = world.random
+        #     if world.options.type_chart_seed.value.isdigit():
+        #         tc_random = random.Random()
+        #         tc_random.seed(int(world.options.type_chart_seed.value))
+        #
+        #     if world.options.randomize_type_chart == "vanilla":
+        #         chart = deepcopy(poke_data.type_chart)
+        #     elif world.options.randomize_type_chart == "randomize":
+        #         types = poke_data.type_names.values()
+        #         matchups = []
+        #         for type1 in types:
+        #             for type2 in types:
+        #                 matchups.append([type1, type2])
+        #         tc_random.shuffle(matchups)
+        #         immunities = world.options.immunity_matchups.value
+        #         super_effectives = world.options.super_effective_matchups.value
+        #         not_very_effectives = world.options.not_very_effective_matchups.value
+        #         normals = world.options.normal_matchups.value
+        #         while super_effectives + not_very_effectives + normals < 225 - immunities:
+        #             if super_effectives == not_very_effectives == normals == 0:
+        #                 super_effectives = 225
+        #                 not_very_effectives = 225
+        #                 normals = 225
+        #             else:
+        #                 super_effectives += world.options.super_effective_matchups.value
+        #                 not_very_effectives += world.options.not_very_effective_matchups.value
+        #                 normals += world.options.normal_matchups.value
+        #         if super_effectives + not_very_effectives + normals > 225 - immunities:
+        #             total = super_effectives + not_very_effectives + normals
+        #             excess = total - (225 - immunities)
+        #             subtract_amounts = (
+        #                 int((excess / (super_effectives + not_very_effectives + normals)) * super_effectives),
+        #                 int((excess / (super_effectives + not_very_effectives + normals)) * not_very_effectives),
+        #                 int((excess / (super_effectives + not_very_effectives + normals)) * normals))
+        #             super_effectives -= subtract_amounts[0]
+        #             not_very_effectives -= subtract_amounts[1]
+        #             normals -= subtract_amounts[2]
+        #             while super_effectives + not_very_effectives + normals > 225 - immunities:
+        #                 r = tc_random.randint(0, 2)
+        #                 if r == 0 and super_effectives:
+        #                     super_effectives -= 1
+        #                 elif r == 1 and not_very_effectives:
+        #                     not_very_effectives -= 1
+        #                 elif normals:
+        #                     normals -= 1
+        #         chart = []
+        #         for matchup_list, matchup_value in zip([immunities, normals, super_effectives, not_very_effectives],
+        #                                                [0, 10, 20, 5]):
+        #             for _ in range(matchup_list):
+        #                 matchup = matchups.pop()
+        #                 matchup.append(matchup_value)
+        #                 chart.append(matchup)
+        #     elif world.options.randomize_type_chart == "chaos":
+        #         types = poke_data.type_names.values()
+        #         matchups = []
+        #         for type1 in types:
+        #             for type2 in types:
+        #                 matchups.append([type1, type2])
+        #         chart = []
+        #         values = list(range(21))
+        #         tc_random.shuffle(matchups)
+        #         tc_random.shuffle(values)
+        #         for matchup in matchups:
+        #             value = values.pop(0)
+        #             values.append(value)
+        #             matchup.append(value)
+        #             chart.append(matchup)
+        #     # sort so that super-effective matchups occur first, to prevent dual "not very effective" / "super effective"
+        #     # matchups from leading to damage being ultimately divided by 2 and then multiplied by 2, which can lead to
+        #     # damage being TCGuced by 1 which leads to a "not very effective" message appearing due to my changes
+        #     # to the way effectiveness messages are generated.
+        #     world.type_chart = sorted(chart, key=lambda matchup: -matchup[2])
 
-        for worlds in seed_groups.values():
-            chosen_world = multiworld.random.choice(worlds)
-            for world in worlds:
-                if world is not chosen_world:
-                    copy_chart_worlds[world.player] = chosen_world
-
-        for world in pokemon_rb_worlds:
-            if world.player in copy_chart_worlds:
-                continue
-            tc_random = world.random
-            if world.options.type_chart_seed.value.isdigit():
-                tc_random = random.Random()
-                tc_random.seed(int(world.options.type_chart_seed.value))
-
-            if world.options.randomize_type_chart == "vanilla":
-                chart = deepcopy(poke_data.type_chart)
-            elif world.options.randomize_type_chart == "randomize":
-                types = poke_data.type_names.values()
-                matchups = []
-                for type1 in types:
-                    for type2 in types:
-                        matchups.append([type1, type2])
-                tc_random.shuffle(matchups)
-                immunities = world.options.immunity_matchups.value
-                super_effectives = world.options.super_effective_matchups.value
-                not_very_effectives = world.options.not_very_effective_matchups.value
-                normals = world.options.normal_matchups.value
-                while super_effectives + not_very_effectives + normals < 225 - immunities:
-                    if super_effectives == not_very_effectives == normals == 0:
-                        super_effectives = 225
-                        not_very_effectives = 225
-                        normals = 225
-                    else:
-                        super_effectives += world.options.super_effective_matchups.value
-                        not_very_effectives += world.options.not_very_effective_matchups.value
-                        normals += world.options.normal_matchups.value
-                if super_effectives + not_very_effectives + normals > 225 - immunities:
-                    total = super_effectives + not_very_effectives + normals
-                    excess = total - (225 - immunities)
-                    subtract_amounts = (
-                        int((excess / (super_effectives + not_very_effectives + normals)) * super_effectives),
-                        int((excess / (super_effectives + not_very_effectives + normals)) * not_very_effectives),
-                        int((excess / (super_effectives + not_very_effectives + normals)) * normals))
-                    super_effectives -= subtract_amounts[0]
-                    not_very_effectives -= subtract_amounts[1]
-                    normals -= subtract_amounts[2]
-                    while super_effectives + not_very_effectives + normals > 225 - immunities:
-                        r = tc_random.randint(0, 2)
-                        if r == 0 and super_effectives:
-                            super_effectives -= 1
-                        elif r == 1 and not_very_effectives:
-                            not_very_effectives -= 1
-                        elif normals:
-                            normals -= 1
-                chart = []
-                for matchup_list, matchup_value in zip([immunities, normals, super_effectives, not_very_effectives],
-                                                       [0, 10, 20, 5]):
-                    for _ in range(matchup_list):
-                        matchup = matchups.pop()
-                        matchup.append(matchup_value)
-                        chart.append(matchup)
-            elif world.options.randomize_type_chart == "chaos":
-                types = poke_data.type_names.values()
-                matchups = []
-                for type1 in types:
-                    for type2 in types:
-                        matchups.append([type1, type2])
-                chart = []
-                values = list(range(21))
-                tc_random.shuffle(matchups)
-                tc_random.shuffle(values)
-                for matchup in matchups:
-                    value = values.pop(0)
-                    values.append(value)
-                    matchup.append(value)
-                    chart.append(matchup)
-            # sort so that super-effective matchups occur first, to prevent dual "not very effective" / "super effective"
-            # matchups from leading to damage being ultimately divided by 2 and then multiplied by 2, which can lead to
-            # damage being TCGuced by 1 which leads to a "not very effective" message appearing due to my changes
-            # to the way effectiveness messages are generated.
-            world.type_chart = sorted(chart, key=lambda matchup: -matchup[2])
-
-        for player in copy_chart_worlds:
-            multiworld.worlds[player].type_chart = copy_chart_worlds[player].type_chart
+        #for player in copy_chart_worlds:
+        #    multiworld.worlds[player].type_chart = copy_chart_worlds[player].type_chart
 
     def generate_early(self): # Set the starting deck types here if there's overlap
         # Use self.random for consistency
-        def encode_name(name, t):
-            try:
-                if len(encode_text(name)) > 7:
-                    raise IndexError(f"{t} name too long for player {self.multiworld.player_name[self.player]}. Must be 7 characters or fewer.")
-                return encode_text(name, length=8, whitespace="@", safety=True)
-            except KeyError as e:
-                raise KeyError(f"Invalid character(s) in {t} name for player {self.multiworld.player_name[self.player]}") from e
-        if self.options.trainer_name == "choose_in_game":
-            self.trainer_name = "choose_in_game"
-        else:
-            self.trainer_name = encode_name(self.options.trainer_name.value, "Player")
-        if self.options.rival_name == "choose_in_game":
-            self.rival_name = "choose_in_game"
-        else:
-            self.rival_name = encode_name(self.options.rival_name.value, "Rival")
+        # def encode_name(name, t):
+        #     try:
+        #         if len(encode_text(name)) > 7:
+        #             raise IndexError(f"{t} name too long for player {self.multiworld.player_name[self.player]}. Must be 7 characters or fewer.")
+        #         return encode_text(name, length=8, whitespace="@", safety=True)
+        #     except KeyError as e:
+        #         raise KeyError(f"Invalid character(s) in {t} name for player {self.multiworld.player_name[self.player]}") from e
+        # if self.options.trainer_name == "choose_in_game":
+        #     self.trainer_name = "choose_in_game"
+        # else:
+        #     self.trainer_name = encode_name(self.options.trainer_name.value, "Player")
+        # if self.options.rival_name == "choose_in_game":
+        #     self.rival_name = "choose_in_game"
+        # else:
+        #     self.rival_name = encode_name(self.options.rival_name.value, "Rival")
 
-        if not self.options.badgesanity:
-            self.options.non_local_items.value -= self.item_name_groups["Badges"]
+        if not self.options.medalsanity:
+            self.options.non_local_items.value -= self.item_name_groups["Medals"]
 
         if self.options.key_items_only:
             self.options.trainersanity.value = 0
@@ -576,7 +578,7 @@ class PokemonTCGWorld(World):
         set_rules(self.multiworld, self, self.player)
 
     def create_item(self, name: str) -> Item:
-        return PokemonRBItem(name, self.player)
+        return PokemonTCGItem(name, self.player)
 
     @classmethod
     def stage_generate_output(cls, multiworld, output_directory):
@@ -716,13 +718,13 @@ class PokemonTCGWorld(World):
 
         return ret
 
-class PokemonRBItem(Item):
+class PokemonTCGItem(Item):
     game = "Pokemon TCG"
     type = None
 
     def __init__(self, name, player: int = None):
         item_data = item_table[name]
-        super(PokemonRBItem, self).__init__(
+        super(PokemonTCGItem, self).__init__(
             name,
             item_data.classification,
             item_data.id, player

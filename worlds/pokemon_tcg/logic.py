@@ -1,8 +1,9 @@
 from items import packs, medals, pack_counts, doors, masters_talkable
+from data import evoline
 
 def has_type(state, world, player, type, number):
     return (len([item for item in packs[type] if state.has(item, player)]) + starting_deck_has_type(type) >= number) or \
-        (world.options.pack_types.value == 'vanilla' and has_enough_packs(state, world, player, number))
+        (world.options.pack_types.value == 'vanilla' and has_enough_packs(state, world, player, number*number))
 
 def has_enough_packs(state, world, player, number):
     return number <= (state.count("Colosseum Pack") + state.count("Mystery Pack") +
@@ -50,3 +51,10 @@ def good_trainer_count(state, world, player):
     total += state.count("Super Energy Removal Pack")
     total += state.count("Double Colorless Energy Pack")
     return total
+
+def has_card(state, world, player, card):
+    if world.options.pack_types == "Evoline":
+        packs = evoline[card]
+        return any([pack == "Starter Deck" or state.has(pack) for pack in packs])
+    else:
+        return False

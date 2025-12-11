@@ -110,7 +110,7 @@ item_table = {
     "Seadra Pack": ItemData(1, ItemClassification.progression, ["Water", "Pack"]),
     "Seaking Pack": ItemData(1, ItemClassification.progression, ["Water", "Pack"]),
     "Slowbrow Pack": ItemData(1, ItemClassification.progression, ["Water", "Pack"]),
-    "Slowpoke Promo Pack": ItemData(1, ItemClassification.progression, ["Water", "Pack"]),
+    "Slowpoke Promo Pack": ItemData(1, ItemClassification.progression, ["Pack"]),
     "Starmie Pack": ItemData(1, ItemClassification.progression, ["Water", "Pack"]),
     "Tentacruel Pack": ItemData(1, ItemClassification.progression, ["Water", "Pack"]),
     "Vaporeon 1 Pack": ItemData(1, ItemClassification.progression, ["Water", "Pack"]),
