@@ -120,4 +120,4 @@ class PokemonTCGOptions(PerGameCommonOptions):
     psychic_club_unlock: PsychicClubUnlock
     science_club_unlock: ScienceClubUnlock
     grand_master_medal_count: GrandMasterMedalCount
-    open_doors: OpenDoor
+    open_doors: OpenDoors
