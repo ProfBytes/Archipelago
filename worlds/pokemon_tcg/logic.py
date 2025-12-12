@@ -1,3 +1,4 @@
+import items
 from items import packs, medals, pack_counts, doors, masters_talkable
 from data import evoline
 
@@ -58,3 +59,10 @@ def has_card(state, world, player, card):
         return any([pack == "Starter Deck" or state.has(pack) for pack in packs])
     else:
         return False
+
+def has_item(state, world, player, item):
+    if item == "Nothing":
+        return True
+    if item in items.medals:
+        return state.has(item)
+    return has_card(state, world, player, item)

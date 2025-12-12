@@ -6,40 +6,41 @@ from . import logic
 from . import poke_data
 
 map_ids = {
-    "Overworld": 0x00,
-    "Mason Laboratory Center Room": 0x00,
-    "Mason Laboratory Right Room": 0x00,
-    "Ishihara's House": 0x00,
-    "Water Club Lobby": 0x00,
-    "Water Club Lounge": 0x00,
-    "Water Club Main Hall": 0x00,
-    "Fire Club Lobby": 0x00,
-    "Fire Club Lounge": 0x00,
-    "Fire Club Main Hall": 0x00,
-    "Lightning Club Lobby": 0x00,
-    "Lightning Club Lounge": 0x00,
-    "Lightning Club Main Hall": 0x00,
-    "Grass Club Lobby": 0x00,
-    "Grass Club Lounge": 0x00,
-    "Grass Club Main Hall": 0x00,
-    "Rock Club Lobby": 0x00,
-    "Rock Club Lounge": 0x00,
-    "Rock Club Main Hall": 0x00,
-    "Fighting Club Lobby": 0x00,
-    "Fighting Club Lounge": 0x00,
-    "Fighting Club Main Hall": 0x00,
-    "Psychic Club Lobby": 0x00,
-    "Psychic Club Lounge": 0x00,
-    "Psychic Club Main Hall": 0x00,
-    "Science Club Lobby": 0x00,
-    "Science Club Lounge": 0x00,
-    "Science Club Main Hall": 0x00,
-    "Challenge Hall Lobby": 0x00,
-    "Challenge Hall Lounge": 0x00,
-    "Challenge Hall Main Hall": 0x00,
-    "Pokemon Dome Lobby": 0x00,
-    "Pokemon Dome Main Hall": 0x00,
-    "Pokemon Dome Hall of Honor": 0x00,
+    "Overworld": 0x01,
+    "Mason Laboratory Center Room": 0x02,
+    "Mason Laboratory Right Room": 0x03,
+    "Ishihara's House": 0x04,
+    "Water Club Lobby": 0x05,
+    "Water Club Lounge": 0x06,
+    "Water Club Main Hall": 0x07,
+    "Fire Club Lobby": 0x08,
+    "Fire Club Lounge": 0x09,
+    "Fire Club Main Hall": 0x0A,
+    "Lightning Club Lobby": 0x0B,
+    "Lightning Club Lounge": 0x0C,
+    "Lightning Club Main Hall": 0x0D,
+    "Grass Club Lobby": 0x0E,
+    "Grass Club Lounge": 0x10,
+    "Grass Club Main Hall": 0x11,
+    "Rock Club Lobby": 0x12,
+    "Rock Club Lounge": 0x13,
+    "Rock Club Main Hall": 0x14,
+    "Fighting Club Lobby": 0x15,
+    "Fighting Club Lounge": 0x16,
+    "Fighting Club Main Hall": 0x17,
+    "Psychic Club Lobby": 0x18,
+    "Psychic Club Lounge": 0x19,
+    "Psychic Club Main Hall": 0x1A,
+    "Science Club Lobby": 0x1B,
+    "Science Club Lounge": 0x1C,
+    "Science Club Main Hall": 0x1D,
+    "Challenge Hall Lobby": 0x1E,
+    "Challenge Hall Lounge": 0x20,
+    "Challenge Hall Main Hall": 0x21,
+    "Pokemon Dome Lobby": 0x22,
+    "Pokemon Dome Main Hall": 0x23,
+    "Pokemon Dome Hall of Honor": 0x24,
+}
 
 def pair(a, b):
     return f"{a} to {b}", f"{b} to {a}"
@@ -91,59 +92,43 @@ def create_regions(world):
 
     world.random.shuffle(world.item_pool)
 
-
-    
-    if not world.options.key_items_only:
-        def acceptable_item(item):
-            return ("Badge" not in item.name and "Trap" not in item.name and item.name != "Pokedex"
-                    and "Coins" not in item.name and "Progressive" not in item.name
-                    and ("Player's House 2F - Player's PC" not in world.options.exclude_locations or item.excludable)
-                    and ("Player's House 2F - Player's PC" in world.options.exclude_locations or
-                         "Player's House 2F - Player's PC" not in world.options.priority_locations or item.advancement))
-        for i, item in enumerate(world.item_pool):
-            if acceptable_item(item) and (item.name not in world.options.non_local_items.value):
-                world.pc_item = world.item_pool.pop(i)
-                break
-        else:
-            for i, item in enumerate(world.item_pool):
-                if acceptable_item(item):
-                    world.pc_item = world.item_pool.pop(i)
-                    break
-
-
-    advancement_items = [item.name for item in world.item_pool if item.advancement] \
-                        + [item.name for item in world.multiworld.precollected_items[world.player] if
-                           item.advancement]
-    world.total_key_items = len(
-        # The stonesanity items are not checked for here and instead just always added as the `+ 4`
-        # They will always exist, but if stonesanity is off, then only as events.
-        # We don't want to just add 4 if stonesanity is off while still putting them in this list in case
-        # the player puts stones in their start inventory, in which case they would be double-counted here.
-        [item for item in ["Bicycle", "Silph Scope", "Item Finder", "Super Rod", "Good Rod",
-                           "Old Rod", "Lift Key", "Card Key", "Town Map", "Coin Case", "S.S. Ticket",
-                           "Secret Key", "Poke Flute", "Mansion Key", "Safari Pass", "Plant Key",
-                           "Hideout Key", "Card Key 2F", "Card Key 3F", "Card Key 4F", "Card Key 5F",
-                           "Card Key 6F", "Card Key 7F", "Card Key 8F", "Card Key 9F", "Card Key 10F",
-                           "Card Key 11F", "Exp. All", "Moon Stone", "Oak's Parcel", "Helix Fossil", "Dome Fossil",
-                           "Old Amber", "Tea", "Gold Teeth", "Bike Voucher"] if item in advancement_items]) + 4
-    if "Progressive Card Key" in advancement_items:
-        world.total_key_items += 10
-
-    world.options.cerulean_cave_key_items_condition.total = \
-        int((world.total_key_items / 100) * world.options.cerulean_cave_key_items_condition.value)
-
-    world.options.elite_four_key_items_condition.total = \
-        int((world.total_key_items / 100) * world.options.elite_four_key_items_condition.value)
-
     regions = [create_region(multiworld, player, region, locations_per_region) for region in warp_data]
     multiworld.regions += regions
     if __debug__:
         for region in locations_per_region:
             assert not locations_per_region[region], f"locations not assigned to region {region}"
 
-    connect(multiworld, player, "Menu", "Pallet Town", one_way=True)
-    connect(multiworld, player, "Menu", "Pokedex", one_way=True)
-    connect(multiworld, player, "Menu", "Evolution", one_way=True)
+    connect(multiworld, player, "Menu", "Mason Laboratory Center Room", one_way=True)
+    connect(multiworld, player, "Mason Laboratory Center Room", "Overworld")
+    connect(multiworld, player, "Mason Laboratory Center Room", "Mason Laboratory Right Room")
+    connect(multiworld, player, "Overworld", "Ishihara's House")
+    connect(multiworld, player, "Overworld", "Water Club Lobby")
+    connect(multiworld, player, "Water Club Lobby", "Water Club Lounge")
+    connect(multiworld, player, "Water Club Lobby", "Water Club Main Hall", lambda state: logic.has_item(state, world.options.water_club_unlock))
+    connect(multiworld, player, "Overworld", "Fire Club Lobby")
+    connect(multiworld, player, "Fire Club Lobby", "Fire Club Lounge")
+    connect(multiworld, player, "Fire Club Lobby", "Fire Club Main Hall", lambda state: logic.has_item(state, world.options.fire_club_unlock))
+    connect(multiworld, player, "Overworld", "Lightning Club Lobby")
+    connect(multiworld, player, "Lightning Club Lobby", "Lightning Club Lounge")
+    connect(multiworld, player, "Lightning Club Lobby", "Lightning Club Main Hall", lambda state: logic.has_item(state, world.options.lightning_club_unlock))
+    connect(multiworld, player, "Overworld", "Grass Club Lobby")
+    connect(multiworld, player, "Grass Club Lobby", "Grass Club Lounge")
+    connect(multiworld, player, "Grass Club Lobby", "Grass Club Main Hall", lambda state: logic.has_item(state, world.options.grass_club_unlock))
+    connect(multiworld, player, "Overworld", "Rock Club Lobby")
+    connect(multiworld, player, "Rock Club Lobby", "Rock Club Lounge")
+    connect(multiworld, player, "Rock Club Lobby", "Rock Club Main Hall", lambda state: logic.has_item(state, world.options.rock_club_unlock))
+    connect(multiworld, player, "Overworld", "Fighting Club Lobby")
+    connect(multiworld, player, "Fighting Club Lobby", "Fighting Club Lounge")
+    connect(multiworld, player, "Fighting Club Lobby", "Fighting Club Main Hall", lambda state: logic.has_item(state, world.options.fighting_club_unlock))
+    connect(multiworld, player, "Overworld", "Psychic Club Lobby")
+    connect(multiworld, player, "Psychic Club Lobby", "Psychic Club Lounge")
+    connect(multiworld, player, "Psychic Club Lobby", "Psychic Club Main Hall", lambda state: logic.has_item(state, world.options.psychic_club_unlock))
+    connect(multiworld, player, "Overworld", "Science Club Lobby")
+    connect(multiworld, player, "Science Club Lobby", "Science Club Lounge")
+    connect(multiworld, player, "Science Club Lobby", "Science Club Main Hall", lambda state: logic.has_item(state, world.options.science_club_unlock))
+    connect(multiworld, player, "Overworld", "Pokemon Dome Lobby")
+    connect(multiworld, player, "Pokemon Dome Lobby", "Pokemon Dome Main Hall", lambda state: logic.medal_count(state) >= world.options.grand_master_medal_count)
+    connect(multiworld, player, "Pokemon Dome Main Hall", "Pokemon Dome Hall of Honor", lambda state: state.has("Become Champion"))
     connect(multiworld, player, "Menu", "Fossil", lambda state: logic.fossil_checks(state,
         world.options.second_fossil_check_condition.value, player), one_way=True)
     connect(multiworld, player, "Pallet Town", "Route 1")

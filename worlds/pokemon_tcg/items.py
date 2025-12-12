@@ -204,6 +204,48 @@ item_table = {
 
     "Energy Pack": ItemData(180, ItemClassification.filler, ["Energy", "Pack"]),
 
+    "Beat Sam": ItemData(None, ItemClassification.progression, []),
+    "Beat Aaron LF": ItemData(None, ItemClassification.progression, []),
+    "Beat Aaron WF": ItemData(None, ItemClassification.progression, []),
+    "Beat Aaron GP": ItemData(None, ItemClassification.progression, []),
+    "Beat Heather": ItemData(None, ItemClassification.progression, []),
+    "Beat Kristin": ItemData(None, ItemClassification.progression, []),
+    "Beat Brittany": ItemData(None, ItemClassification.progression, []),
+    "Beat Nikki": ItemData(None, ItemClassification.progression, []),
+    "Beat Joseph": ItemData(None, ItemClassification.progression, []),
+    "Beat David": ItemData(None, ItemClassification.progression, []),
+    "Beat Erik": ItemData(None, ItemClassification.progression, []),
+    "Beat Rick": ItemData(None, ItemClassification.progression, []),
+    "Beat Jonathan": ItemData(None, ItemClassification.progression, []),
+    "Beat Adam": ItemData(None, ItemClassification.progression, []),
+    "Beat John": ItemData(None, ItemClassification.progression, []),
+    "Beat Ken": ItemData(None, ItemClassification.progression, []),
+    "Beat Joshua": ItemData(None, ItemClassification.progression, []),
+    "Beat Amanda": ItemData(None, ItemClassification.progression, []),
+    "Beat Sara": ItemData(None, ItemClassification.progression, []),
+    "Beat Amy": ItemData(None, ItemClassification.progression, []),
+    "Beat Nicholas": ItemData(None, ItemClassification.progression, []),
+    "Beat Brandon": ItemData(None, ItemClassification.progression, []),
+    "Beat Jennifer": ItemData(None, ItemClassification.progression, []),
+    "Beat Isaac": ItemData(None, ItemClassification.progression, []),
+    "Beat Daniel": ItemData(None, ItemClassification.progression, []),
+    "Beat Stephanie": ItemData(None, ItemClassification.progression, []),
+    "Beat Robert": ItemData(None, ItemClassification.progression, []),
+    "Beat Murray": ItemData(None, ItemClassification.progression, []),
+    "Beat Ryan": ItemData(None, ItemClassification.progression, []),
+    "Beat Andrew": ItemData(None, ItemClassification.progression, []),
+    "Beat Matthew": ItemData(None, ItemClassification.progression, []),
+    "Beat Gene": ItemData(None, ItemClassification.progression, []),
+    "Beat Jessica": ItemData(None, ItemClassification.progression, []),
+    "Beat Michael": ItemData(None, ItemClassification.progression, []),
+    "Beat Chris": ItemData(None, ItemClassification.progression, []),
+    "Beat Mitch": ItemData(None, ItemClassification.progression, []),
+    "Beat Courtney": ItemData(None, ItemClassification.progression, []),
+    "Beat Steve": ItemData(None, ItemClassification.progression, []),
+    "Beat Jack": ItemData(None, ItemClassification.progression, []),
+    "Beat Rod": ItemData(None, ItemClassification.progression, []),
+    "Become Champion": ItemData(None, ItemClassification.progression, []),
+
     # Colosseum packs
     # Nidoran♂, Nidorino
     # Tangela
@@ -722,19 +764,6 @@ pack_counts = {
     "Super Energy Removal Pack": 4,
     "Double Colorless Energy Pack": 4,
 }
-
-item_table.update({f"TM{str(i).zfill(2)}": ItemData(i + 456, ItemClassification.filler, ["Unique", "TMs"])
-                   for i in range(1, 51)})
-
-item_table.update(
-    {pokemon: ItemData(None, ItemClassification.progression, []) for pokemon in pokemon_data.keys()}
-)
-item_table.update(
-    {f"Missable {pokemon}": ItemData(None, ItemClassification.useful, []) for pokemon in pokemon_data.keys()}
-)
-item_table.update(
-    {f"Static {pokemon}": ItemData(None, ItemClassification.progression, []) for pokemon in pokemon_data.keys()}
-)
 
 
 item_groups = {}

@@ -32,8 +32,8 @@ from data import card_list
 class PokemonSettings(settings.Group):
     class TCGRomFile(settings.UserFilePath):
         """File names of the Pokemon TCG rom"""
-        description = "Pokemon TCG (UE) ROM File"
-        copy_to = "Pokemon TCG (UE) [S][!].gb"
+        description = "Pokemon Trading Card Game ROM File"
+        copy_to = "Pokemon Trading Card Game.gbc"
         md5s = [PokemonTCGProcedurePatch.hash]
 
     TCG_rom_file: TCGRomFile = TCGRomFile(TCGRomFile.copy_to)
@@ -46,7 +46,7 @@ class PokemonWebWorld(WebWorld):
         "English",
         "setup_en.md",
         "setup/en",
-        ["ProfBytes"]
+        ["PrimePentad", "ProfBytes"]
     )
 
     tutorials = [setup_en]
@@ -101,6 +101,7 @@ class PokemonTCGWorld(World):
         self.psychic_medal_count = 4
         self.fire_card_count = 650
         self.goal_medal_count = 8
+        self.doors_open = 0
 
         self.starting_deck_type_1 = "Fire"
         self.starting_deck_type_2 = "Water"

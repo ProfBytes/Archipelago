@@ -49,6 +49,59 @@ class StartingDeck3(Choice):
     option_fighting = 5
     default = 2
 
+class GrandMasterMedalCount(Range):
+    """"""
+    display_name = "Grand Master Medal Count"
+    range_start = 0
+    range_end = 8
+    default = 8
+
+class OpenDoors(Range):
+    """How many of the Club doors start unlocked"""
+    display_name = "Open Club Door Count"
+    range_start = 0
+    range_end = 8
+    default = 0
+
+class WaterClubUnlock(FreeText):
+    """"""
+    visibility = Visibility.all & ~Visibility.simple_ui
+    default = "random"
+
+class FireClubUnlock(FreeText):
+    """"""
+    visibility = Visibility.all & ~Visibility.simple_ui
+    default = "random"
+
+class GrassClubUnlock(FreeText):
+    """"""
+    visibility = Visibility.all & ~Visibility.simple_ui
+    default = "random"
+
+class LightningClubUnlock(FreeText):
+    """"""
+    visibility = Visibility.all & ~Visibility.simple_ui
+    default = "random"
+
+class RockClubUnlock(FreeText):
+    """"""
+    visibility = Visibility.all & ~Visibility.simple_ui
+    default = "random"
+
+class FightingClubUnlock(FreeText):
+    """"""
+    visibility = Visibility.all & ~Visibility.simple_ui
+    default = "random"
+
+class PsychicClubUnlock(FreeText):
+    """"""
+    visibility = Visibility.all & ~Visibility.simple_ui
+    default = "random"
+
+class ScienceClubUnlock(FreeText):
+    """"""
+    visibility = Visibility.all & ~Visibility.simple_ui
+    default = "random"
 
 @dataclass
 class PokemonTCGOptions(PerGameCommonOptions):
@@ -58,3 +111,13 @@ class PokemonTCGOptions(PerGameCommonOptions):
     starting_deck_1: StartingDeck1
     starting_deck_2: StartingDeck2
     starting_deck_3: StartingDeck3
+    water_club_unlock: WaterClubUnlock
+    fire_club_unlock: FireClubUnlock
+    grass_club_unlock: GrassClubUnlock
+    rock_club_unlock: RockClubUnlock
+    lightning_club_unlock: LightningClubUnlock
+    fighting_club_unlock: FightingClubUnlock
+    psychic_club_unlock: PsychicClubUnlock
+    science_club_unlock: ScienceClubUnlock
+    grand_master_medal_count: GrandMasterMedalCount
+    open_doors: OpenDoor
