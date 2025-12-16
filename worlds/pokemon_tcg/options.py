@@ -17,7 +17,8 @@ class PackType(Choice):
     default = 1
 
 class StartingDeck1(Choice):
-    """"""
+    """Select the primary type for your starting deck.
+    Selecting the same type multiple times will randomize the secondary or tertiary type"""
     display_name = "Pack Types"
     option_fire = 0
     option_grass = 1
@@ -28,7 +29,8 @@ class StartingDeck1(Choice):
     default = 0
 
 class StartingDeck2(Choice):
-    """"""
+    """Select the secondary type for your starting deck.
+    Selecting the same type multiple times will randomize the secondary or tertiary type"""
     display_name = "Pack Types"
     option_fire = 0
     option_grass = 1
@@ -39,7 +41,8 @@ class StartingDeck2(Choice):
     default = 1
 
 class StartingDeck3(Choice):
-    """"""
+    """Select the tertiary type for your starting deck.
+    Selecting the same type multiple times will randomize the secondary or tertiary type"""
     display_name = "Pack Types"
     option_fire = 0
     option_grass = 1
@@ -50,7 +53,7 @@ class StartingDeck3(Choice):
     default = 2
 
 class GrandMasterMedalCount(Range):
-    """"""
+    """How many medals do you need to open the Grand Master fights"""
     display_name = "Grand Master Medal Count"
     range_start = 0
     range_end = 8
@@ -103,6 +106,11 @@ class ScienceClubUnlock(FreeText):
     visibility = Visibility.all & ~Visibility.simple_ui
     default = "random"
 
+class SpecialDeck(FreeText):
+    """"""
+    visibility = Visibility.none
+    default = "Nothing to see here"
+
 @dataclass
 class PokemonTCGOptions(PerGameCommonOptions):
     accessibility: ItemsAccessibility
@@ -121,3 +129,4 @@ class PokemonTCGOptions(PerGameCommonOptions):
     science_club_unlock: ScienceClubUnlock
     grand_master_medal_count: GrandMasterMedalCount
     open_doors: OpenDoors
+    special_deck: SpecialDeck

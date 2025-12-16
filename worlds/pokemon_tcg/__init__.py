@@ -64,7 +64,7 @@ class PokemonTCGWorld(World):
 
     settings: typing.ClassVar[PokemonSettings]
 
-    required_client_version = (0, 4, 2)
+    required_client_version = (0, 6, 4)
 
     topology_present = True
 
@@ -110,106 +110,98 @@ class PokemonTCGWorld(World):
         self.pack_types = "Evoline"
         self.trade_rando = "vanilla"
 
-    @classmethod
-    def stage_generate_early(cls, multiworld: MultiWorld):
-
-        seed_groups = {}
-        pokemon_tcg_worlds = multiworld.get_game_worlds("Pokemon TCG")
-
-        # for world in pokemon_TCG_worlds:
-        #     if not (world.options.type_chart_seed.value.isdigit() or world.options.type_chart_seed.value == "random"):
-        #         seed_groups[world.options.type_chart_seed.value] = seed_groups.get(world.options.type_chart_seed.value,
-        #                                                                            []) + [world]
-
-        # copy_chart_worlds = {}
-        #
-        # for worlds in seed_groups.values():
-        #     chosen_world = multiworld.random.choice(worlds)
-        #     for world in worlds:
-        #         if world is not chosen_world:
-        #             copy_chart_worlds[world.player] = chosen_world
-        #
-        # for world in pokemon_TCG_worlds:
-        #     if world.player in copy_chart_worlds:
-        #         continue
-        #     tc_random = world.random
-        #     if world.options.type_chart_seed.value.isdigit():
-        #         tc_random = random.Random()
-        #         tc_random.seed(int(world.options.type_chart_seed.value))
-        #
-        #     if world.options.randomize_type_chart == "vanilla":
-        #         chart = deepcopy(poke_data.type_chart)
-        #     elif world.options.randomize_type_chart == "randomize":
-        #         types = poke_data.type_names.values()
-        #         matchups = []
-        #         for type1 in types:
-        #             for type2 in types:
-        #                 matchups.append([type1, type2])
-        #         tc_random.shuffle(matchups)
-        #         immunities = world.options.immunity_matchups.value
-        #         super_effectives = world.options.super_effective_matchups.value
-        #         not_very_effectives = world.options.not_very_effective_matchups.value
-        #         normals = world.options.normal_matchups.value
-        #         while super_effectives + not_very_effectives + normals < 225 - immunities:
-        #             if super_effectives == not_very_effectives == normals == 0:
-        #                 super_effectives = 225
-        #                 not_very_effectives = 225
-        #                 normals = 225
-        #             else:
-        #                 super_effectives += world.options.super_effective_matchups.value
-        #                 not_very_effectives += world.options.not_very_effective_matchups.value
-        #                 normals += world.options.normal_matchups.value
-        #         if super_effectives + not_very_effectives + normals > 225 - immunities:
-        #             total = super_effectives + not_very_effectives + normals
-        #             excess = total - (225 - immunities)
-        #             subtract_amounts = (
-        #                 int((excess / (super_effectives + not_very_effectives + normals)) * super_effectives),
-        #                 int((excess / (super_effectives + not_very_effectives + normals)) * not_very_effectives),
-        #                 int((excess / (super_effectives + not_very_effectives + normals)) * normals))
-        #             super_effectives -= subtract_amounts[0]
-        #             not_very_effectives -= subtract_amounts[1]
-        #             normals -= subtract_amounts[2]
-        #             while super_effectives + not_very_effectives + normals > 225 - immunities:
-        #                 r = tc_random.randint(0, 2)
-        #                 if r == 0 and super_effectives:
-        #                     super_effectives -= 1
-        #                 elif r == 1 and not_very_effectives:
-        #                     not_very_effectives -= 1
-        #                 elif normals:
-        #                     normals -= 1
-        #         chart = []
-        #         for matchup_list, matchup_value in zip([immunities, normals, super_effectives, not_very_effectives],
-        #                                                [0, 10, 20, 5]):
-        #             for _ in range(matchup_list):
-        #                 matchup = matchups.pop()
-        #                 matchup.append(matchup_value)
-        #                 chart.append(matchup)
-        #     elif world.options.randomize_type_chart == "chaos":
-        #         types = poke_data.type_names.values()
-        #         matchups = []
-        #         for type1 in types:
-        #             for type2 in types:
-        #                 matchups.append([type1, type2])
-        #         chart = []
-        #         values = list(range(21))
-        #         tc_random.shuffle(matchups)
-        #         tc_random.shuffle(values)
-        #         for matchup in matchups:
-        #             value = values.pop(0)
-        #             values.append(value)
-        #             matchup.append(value)
-        #             chart.append(matchup)
-        #     # sort so that super-effective matchups occur first, to prevent dual "not very effective" / "super effective"
-        #     # matchups from leading to damage being ultimately divided by 2 and then multiplied by 2, which can lead to
-        #     # damage being TCGuced by 1 which leads to a "not very effective" message appearing due to my changes
-        #     # to the way effectiveness messages are generated.
-        #     world.type_chart = sorted(chart, key=lambda matchup: -matchup[2])
-
-        #for player in copy_chart_worlds:
-        #    multiworld.worlds[player].type_chart = copy_chart_worlds[player].type_chart
-
     def generate_early(self): # Set the starting deck types here if there's overlap
         # Use self.random for consistency
+        valid_cards = data.card_list
+# if the player chooses fire, lightning, water, have a chance to have an Eevee deck
+        starter_deck = []
+        if self.options.special_deck == "Prof Special":
+            starter_deck = make_eevee_deck()
+        else:
+            while self.starting_deck_type_2 == self.starting_deck_type_1:
+                self.starting_deck_type_2 = options.StartingDeck2[self.random.sample(0, 5)]
+            while self.starting_deck_type_3 == self.starting_deck_type_2 or self.starting_deck_type_3 == self.starting_deck_type_1:
+                self.starting_deck_type_3 = options.StartingDeck3[self.random.sample(0, 5)]
+            first_type = self.random.sample(0, 99)
+            if first_type < 15 or self.starting_deck_type_1 == options.StartingDeck1.option_lightning and first_type < 50:
+                # 3/2, 3/2
+            elif first_type < 30 or self.starting_deck_type_1 == options.StartingDeck1.option_lightning:
+                # 3/2, 2/1, 1
+            else:
+                # 4/3/2
+
+            second_type = self.random.sample(0, 99)
+            if second_type < 70 or self.starting_deck_type_1 == options.StartingDeck2.option_lightning and second_type < 50:
+                # 3/2, 3
+            elif second_type < 85 or self.starting_deck_type_1 == options.StartingDeck2.option_lightning:
+                # 3/2, 2/1
+            else:
+                # 3/2/1
+
+            third_type = self.random.sample(0, 99)
+            if third_type < 70 or self.starting_deck_type_1 == options.StartingDeck3.option_lightning and third_type < 50:
+                # 3/2, 3
+            elif third_type < 85 or self.starting_deck_type_1 == options.StartingDeck3.option_lightning:
+                # 3/2, 2/1
+            else:
+                # 3/2/1
+
+
+            #
+            # 24 energy cards
+            #
+            # 8 trainers(4 different ones, 2 of each)
+            #
+            # Fill any empty slots with additional copies of trainers or normal type pokemon
+
+
+        doors_to_generate = 0
+        open_doors_to_gen = self.options.open_doors
+        item_list = data.card_list + items.medals + ["Nothing"]
+        if not self.options.water_club_unlock in item_list:
+            doors_to_generate += 1
+            if self.options.water_club_unlock == "Nothing":
+                open_doors_to_gen -= 1
+        if not self.options.grass_club_unlock in item_list:
+            doors_to_generate += 1
+            if self.options.grass_club_unlock == "Nothing":
+                open_doors_to_gen -= 1
+        if not self.options.fire_club_unlock in item_list:
+            doors_to_generate += 1
+            if self.options.fire_club_unlock == "Nothing":
+                open_doors_to_gen -= 1
+        if not self.options.lightning_club_unlock in item_list:
+            doors_to_generate += 1
+            if self.options.lightning_club_unlock == "Nothing":
+                open_doors_to_gen -= 1
+        if not self.options.rock_club_unlock in item_list:
+            doors_to_generate += 1
+            if self.options.rock_club_unlock == "Nothing":
+                open_doors_to_gen -= 1
+        if not self.options.science_club_unlock in item_list:
+            doors_to_generate += 1
+            if self.options.science_club_unlock == "Nothing":
+                open_doors_to_gen -= 1
+        if not self.options.psychic_club_unlock in item_list:
+            doors_to_generate += 1
+            if self.options.psychic_club_unlock == "Nothing":
+                open_doors_to_gen -= 1
+        if not self.options.fighting_club_unlock in item_list:
+            doors_to_generate += 1
+            if self.options.fighting_club_unlock == "Nothing":
+                open_doors_to_gen -= 1
+
+        doors = []
+        while len(doors) < doors_to_generate:
+            if open_doors_to_gen > 0:
+                doors.append("Nothing")
+                open_doors_to_gen -= 1
+            else:
+                if self.random.sample(range(0, 9), 1) < 2:
+                    doors.append(self.random.choice(items.medals))
+                else:
+                    doors.append((self.random.choice(valid_cards)))
+
         # def encode_name(name, t):
         #     try:
         #         if len(encode_text(name)) > 7:
