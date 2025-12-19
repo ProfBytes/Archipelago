@@ -114,50 +114,33 @@ class PokemonTCGWorld(World):
         # Use self.random for consistency
         valid_cards = data.card_list
 # if the player chooses fire, lightning, water, have a chance to have an Eevee deck
-        starter_deck = []
+        starter_deck = {}
         if self.options.special_deck == "Prof Special":
-            starter_deck = make_eevee_deck()
+            starter_deck = data.eevee_deck
+            self.starting_deck_type_1 = options.StartingDeck1.option_fire
+            self.starting_deck_type_2 = options.StartingDeck1.option_water
+            self.starting_deck_type_3 = options.StartingDeck1.option_lightning
         else:
             while self.starting_deck_type_2 == self.starting_deck_type_1:
                 self.starting_deck_type_2 = options.StartingDeck2[self.random.sample(0, 5)]
             while self.starting_deck_type_3 == self.starting_deck_type_2 or self.starting_deck_type_3 == self.starting_deck_type_1:
                 self.starting_deck_type_3 = options.StartingDeck3[self.random.sample(0, 5)]
-            first_type = self.random.sample(0, 99)
-            if first_type < 15 or self.starting_deck_type_1 == options.StartingDeck1.option_lightning and first_type < 50:
-                # 3/2, 3/2
-            elif first_type < 30 or self.starting_deck_type_1 == options.StartingDeck1.option_lightning:
-                # 3/2, 2/1, 1
-            else:
-                # 4/3/2
+            starter_deck.update(self.random.choice(data.primary[self.options.starting_deck_1]))
+            starter_deck.update(self.random.choice(data.secondary[self.options.starting_deck_2]))
+            starter_deck.update(self.random.choice(data.tertiary[self.options.starting_deck_3]))
+            starter_deck.update(self.random.choice(data.colorless_pokemon))
+            trainers = {}
+            while trainers.__sizeof__() < 3:
+                trainers[self.random.choice] = 3
+            starter_deck.update(trainers)
 
-            second_type = self.random.sample(0, 99)
-            if second_type < 70 or self.starting_deck_type_1 == options.StartingDeck2.option_lightning and second_type < 50:
-                # 3/2, 3
-            elif second_type < 85 or self.starting_deck_type_1 == options.StartingDeck2.option_lightning:
-                # 3/2, 2/1
-            else:
-                # 3/2/1
-
-            third_type = self.random.sample(0, 99)
-            if third_type < 70 or self.starting_deck_type_1 == options.StartingDeck3.option_lightning and third_type < 50:
-                # 3/2, 3
-            elif third_type < 85 or self.starting_deck_type_1 == options.StartingDeck3.option_lightning:
-                # 3/2, 2/1
-            else:
-                # 3/2/1
-
-
-            #
-            # 24 energy cards
-            #
-            # 8 trainers(4 different ones, 2 of each)
-            #
-            # Fill any empty slots with additional copies of trainers or normal type pokemon
-
+        for key in starter_deck.keys():
+            if key in valid_cards:
+                valid_cards.remove(key)
 
         doors_to_generate = 0
         open_doors_to_gen = self.options.open_doors
-        item_list = data.card_list + items.medals + ["Nothing"]
+        item_list = valid_cards + items.medals + ["Nothing"]
         if not self.options.water_club_unlock in item_list:
             doors_to_generate += 1
             if self.options.water_club_unlock == "Nothing":
