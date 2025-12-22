@@ -184,6 +184,33 @@ class PokemonTCGWorld(World):
                     doors.append(self.random.choice(items.medals))
                 else:
                     doors.append((self.random.choice(valid_cards)))
+        while len(doors) < 8: #If doors have to be all locked or all open
+            doors.append("Fire Energy")
+        self.random.shuffle(doors)
+        if not self.options.water_club_unlock in item_list:
+            self.options.water_club_unlock = doors[0]
+            doors.remove(doors[0])
+        if not self.options.grass_club_unlock in item_list:
+            self.options.grass_club_unlock = doors[0]
+            doors.remove(doors[0])
+        if not self.options.fire_club_unlock in item_list:
+            self.options.fire_club_unlock = doors[0]
+            doors.remove(doors[0])
+        if not self.options.lightning_club_unlock in item_list:
+            self.options.lightning_club_unlock = doors[0]
+            doors.remove(doors[0])
+        if not self.options.rock_club_unlock in item_list:
+            self.options.rock_club_unlock = doors[0]
+            doors.remove(doors[0])
+        if not self.options.science_club_unlock in item_list:
+            self.options.science_club_unlock = doors[0]
+            doors.remove(doors[0])
+        if not self.options.psychic_club_unlock in item_list:
+            self.options.psychic_club_unlock = doors[0]
+            doors.remove(doors[0])
+        if not self.options.fighting_club_unlock in item_list:
+            self.options.fighting_club_unlock = doors[0]
+            doors.remove(doors[0])
 
         # def encode_name(name, t):
         #     try:

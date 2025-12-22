@@ -5,48 +5,8 @@ from . import poke_data
 loc_id_start = 172000000
 
 
-def trainersanity(world, player):
-    include = world.trainersanity_table.pop(0)
-    world.trainersanity_table.append(include)
-    return include
-
-
-def dexsanity(world, player):
-    include = world.dexsanity_table.pop(0)
-    world.dexsanity_table.append(include)
-    return include
-
-
-def hidden_items(world, player):
-    return world.options.randomize_hidden_items
-
-
-def hidden_moon_stones(world, player):
-    return world.options.randomize_hidden_items or world.options.stonesanity
-
-
-def tea(world, player):
-    return world.options.tea
-
-
-def extra_key_items(world, player):
-    return world.options.extra_key_items
-
-
 def always_on(world, player):
     return True
-
-
-def prizesanity(world, player):
-    return world.options.prizesanity
-
-
-def split_card_key(world, player):
-    return world.options.split_card_key.value > 0
-
-
-def not_stonesanity(world, player):
-    return not world.options.stonesanity
 
 
 class LocationData:
@@ -77,35 +37,7 @@ class EventFlag:
         self.flag = flag
 
 
-class Missable:
-    def __init__(self, flag):
-        self.byte = int(flag / 8)
-        self.bit = flag % 8
-        self.flag = flag
-
-
-class Hidden:
-    def __init__(self, flag):
-        self.byte = int(flag / 8)
-        self.bit = flag % 8
-        self.flag = flag
-
-
-class Rod:
-    def __init__(self, flag):
-        self.byte = 0
-        self.bit = flag
-        self.flag = flag
-
-
-class DexSanityFlag:
-    def __init__(self, flag):
-        self.byte = int(flag / 8)
-        self.bit = flag % 8
-        self.flag = flag
-
-
-location_data = [ # TODO add trades/promoes
+location_data = [
     LocationData("Mason Laboratory Center Room", "Sam Reward 1", "Energy Pack", rom_addresses["Sam_Reward_1"]),
     LocationData("Mason Laboratory Center Room", "Sam Reward 2", "Energy Pack", rom_addresses["Sam_Reward_2"]),
     LocationData("Mason Laboratory Center Room", "Beat Sam", "Beat Sam", event=True),

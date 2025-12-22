@@ -111,6 +111,11 @@ class SpecialDeck(FreeText):
     visibility = Visibility.none
     default = "Nothing to see here"
 
+class StarterDeck(OptionDict):
+    """"""
+    visibility = Visibility.none
+    default = "Nothing to see here"
+
 @dataclass
 class PokemonTCGOptions(PerGameCommonOptions):
     accessibility: ItemsAccessibility
@@ -130,3 +135,4 @@ class PokemonTCGOptions(PerGameCommonOptions):
     grand_master_medal_count: GrandMasterMedalCount
     open_doors: OpenDoors
     special_deck: SpecialDeck
+    starter_deck: StarterDeck

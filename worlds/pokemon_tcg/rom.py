@@ -5,11 +5,8 @@ import typing
 import Utils
 from worlds.Files import APProcedurePatch, APTokenMixin, APTokenTypes
 
-from . import poke_data
-from .items import item_table
-from .text import encode_text
-from .pokemon import set_mon_palettes
-from .regions import map_ids
+import data
+import options
 from .rom_addresses import rom_addresses
 
 if typing.TYPE_CHECKING:
@@ -35,231 +32,41 @@ class PokemonTCGProcedurePatch(APProcedurePatch, APTokenMixin):
 
         return base_rom_bytes
 
-def write_quizzes(world: "PokemonTCGWorld", patch: PokemonTCGProcedurePatch):
-    random = world.random
+def get_card_bytes(card_dict: dict):
+    bytes = []
+    for key, value in card_dict:
+        for i in range(value):
+            bytes.append(data.card_Ids[key])
+    return bytes
 
-    def get_quiz(q: int, a: int):
-        if q == 0:
-            r = random.randint(0, 3)
-            if r == 0:
-                mon = world.trade_mons["Trade_Dux"]
-                text = "A woman in<LINE>Vermilion City<CONT>"
-            elif r == 1:
-                mon = world.trade_mons["Trade_Lola"]
-                text = "A man in<LINE>Cerulean City<CONT>"
-            elif r == 2:
-                mon = world.trade_mons["Trade_Marcel"]
-                text = "Someone on Route 2<LINE>"
-            elif r == 3:
-                mon = world.trade_mons["Trade_Spot"]
-                text = "Someone on Route 5<LINE>"
-            if not a:
-                answers.append(0)
-                old_mon = mon
-                while old_mon == mon:
-                    mon = random.choice(list(poke_data.pokemon_data.keys()))
+def get_pack_bytes(card_dict: dict):
+    bytes = []
+    for key, value in card_dict:
+        for i in range(value):
+            bytes.append(data.card_Ids[key])
+    while len(bytes) < 60:
+        bytes.append(b'\xff')
 
-            return encode_text(f"{text}was looking for<CONT>{mon}?<DONE>")
-        elif q == 1:
-            for location in world.multiworld.get_filled_locations():
-                if location.item.name == "Secret Key" and location.item.player == world.player:
-                    break
-            player_name = world.multiworld.player_name[location.player]
-            if not a:
-                if len(world.multiworld.player_name) > 1:
-                    old_name = player_name
-                    while old_name == player_name:
-                        player_name = random.choice(list(world.multiworld.player_name.values()))
-                else:
-                    return encode_text("You're playing<LINE>in a multiworld<CONT>with other<CONT>players?<DONE>")
-            if world.multiworld.get_entrance(
-                    "Cinnabar Island-G to Cinnabar Gym", world.player).connected_region.name == "Cinnabar Gym":
-                if player_name == world.multiworld.player_name[world.player]:
-                    player_name = "yourself"
-                player_name = encode_text(player_name, force=True, safety=True)
-                return encode_text(f"The Secret Key was<LINE>found by<CONT>") + player_name + encode_text("?<DONE>")
-            else:
-                # Might not have found it yet
-                if player_name == world.multiworld.player_name[world.player]:
-                    return encode_text(f"The Secret Key was<LINE>placed in<CONT>your own world?<DONE>")
-                player_name = encode_text(player_name, force=True, safety=True)
-                return (encode_text(f"The Secret Key was<LINE>placed in<CONT>") + player_name
-                        + encode_text("'s<CONT>world?<DONE>"))
-        elif q == 2:
-            if a:
-                return encode_text(f"#mon is<LINE>pronounced<CONT>Po-kay-mon?<DONE>")
-            else:
-                if random.randint(0, 1):
-                    return encode_text(f"#mon is<LINE>pronounced<CONT>Po-key-mon?<DONE>")
-                else:
-                    return encode_text(f"#mon is<LINE>pronounced<CONT>Po-kuh-mon?<DONE>")
-        elif q == 3:
-            starters = [" ".join(world.multiworld.get_location(
-                f"Oak's Lab - Starter {i}", world.player).item.name.split(" ")[1:]) for i in range(1, 4)]
-            mon = random.choice(starters)
-            nots = random.choice(range(8, 16, 2))
-            if random.randint(0, 1):
-                while mon in starters:
-                    mon = random.choice(list(poke_data.pokemon_data.keys()))
-                    if a:
-                        nots += 1
-            elif not a:
-                nots += 1
-            text = f"{mon} was<LINE>"
-            while nots > 0:
-                i = random.randint(1, min(4, nots))
-                text += ("not " * i) + "<CONT>"
-                nots -= i
-            text += "a starter choice?<DONE>"
-            return encode_text(text)
-        elif q == 4:
-            if a:
-                tm_text = world.local_tms[27]
-            else:
-                if world.options.randomize_tm_moves:
-                    wrong_tms = world.local_tms.copy()
-                    wrong_tms.pop(27)
-                    tm_text = random.choice(wrong_tms)
-                else:
-                    tm_text = "TOMBSTONER"
-            return encode_text(f"TM28 contains<LINE>{tm_text.upper()}?<DONE>")
-        elif q == 5:
-            i = 8
-            while not a and i in [1, 8]:
-                i = random.randint(0, int("99999999"[random.randint(0, 7):]))
-            return encode_text(f"There are {i}<LINE>certified #MON<CONT>LEAGUE BADGEs?<DONE>")
-        elif q == 6:
-            i = 2
-            while not a and i in [1, 2]:
-                i = random.randint(0, random.choice([9, 99]))
-            return encode_text(f"POLIWAG evolves {i}<LINE>times?<DONE>")
-        elif q == 7:
-            q2 = random.randint(0, 2)
-            if q2 == 0:
-                entity = "Motor Carrier"
-                if not a:
-                    entity = random.choice(["Driver", "Shipper"])
-                return encode_text("Title 49 of the<LINE>U.S. Code of<CONT>Federal<CONT>Regulations part<CONT>397.67 "
-                                   f"states<CONT>that the<CONT>{entity}<CONT>is responsible<CONT>for planning<CONT>"
-                                   "routes when<CONT>hazardous<CONT>materials are<CONT>transported?<DONE>")
-            elif q2 == 1:
-                if a:
-                    state = random.choice(
-                        ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
-                         "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas",
-                         "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
-                         "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Jersey", "New Mexico",
-                         "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania",
-                         "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
-                         "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"])
-                else:
-                    state = "New Hampshire"
-                return encode_text(
-                    f"As of 2024,<LINE>{state}<CONT>has a law<CONT>requiring all<CONT>front seat vehicle<CONT>occupants to use<CONT>seatbelts?<DONE>")
-            elif q2 == 2:
-                if a:
-                    country = random.choice(["The United States", "Mexico", "Canada", "Germany", "France", "China",
-                                             "Russia", "Spain", "Brazil", "Ukraine", "Saudi Arabia", "Egypt"])
-                else:
-                    country = random.choice(["The U.K.", "Pakistan", "India", "Japan", "Australia",
-                                             "New Zealand", "Thailand"])
-                return encode_text(f"As of 2020,<LINE>drivers in<CONT>{country}<CONT>drive on the<CONT>right side of<CONT>the road?<DONE>")
-        elif q == 8:
-            mon = random.choice(list(poke_data.evolution_levels.keys()))
-            level = poke_data.evolution_levels[mon]
-            if not a:
-                level += random.choice(range(1, 6)) * random.choice((-1, 1))
-            return encode_text(f"{mon} evolves<LINE>at level {level}?<DONE>")
-        elif q == 9:
-            move = random.choice(list(world.local_move_data.keys()))
-            actual_type = world.local_move_data[move]["type"]
-            question_type = actual_type
-            while question_type == actual_type and not a:
-                question_type = random.choice(list(poke_data.type_ids.keys()))
-            return encode_text(f"{move} is<LINE>{question_type} type?<DONE>")
-        elif q == 10:
-            mon = random.choice(list(poke_data.pokemon_data.keys()))
-            actual_type = world.local_poke_data[mon][random.choice(("type1", "type2"))]
-            question_type = actual_type
-            while question_type in [world.local_poke_data[mon]["type1"], world.local_poke_data[mon]["type2"]] and not a:
-                question_type = random.choice(list(poke_data.type_ids.keys()))
-            return encode_text(f"{mon} is<LINE>{question_type} type?<DONE>")
-        elif q == 11:
-            equation = ""
-            while "*" not in equation:
-                equation = f"{random.randint(0, 9)} {random.choice(['+', '-', '*'])} {random.randint(0, 9)} {random.choice(['+', '-', '*'])} {random.randint(0, 9)} {random.choice(['+', '-', '*'])} {random.randint(0, 9)}"
-            result = eval(equation)
-            question_result = result
-            if not a:
-                modifiers = random.sample(range(3), 3)
-                for modifier in modifiers:
-                    question_result = eval(equation[:modifier * 4] + "(" + equation[modifier * 4:(modifier * 4) + 5]
-                                           + ")" + equation[5 + (modifier * 4):])
-                    if question_result != result:
-                        break
-                else:
-                    question_result += random.choice(range(1, 6)) * random.choice((-1, 1))
+def door_string(item: str):
+    string = "a " + item
+    while len(string) < 28:
+        string = string + " "
+    return string
 
-            return encode_text(f"{equation}<LINE>= {question_result}?<DONE>")
-        elif q == 12:
-            route = random.choice((12, 16))
-            actual_mon = world.multiworld.get_location(f"Route {route} - Sleeping Pokemon",
-                                                       world.player).item.name.split("Static ")[1]
-            question_mon = actual_mon
-            while question_mon == actual_mon and not a:
-                question_mon = random.choice(list(poke_data.pokemon_data.keys()))
-            return encode_text(f"{question_mon} was<LINE>sleeping on route<CONT>{route}?<DONE>")
-        elif q == 13:
-            type1 = random.choice(list(poke_data.type_ids.keys()))
-            type2 = random.choice(list(poke_data.type_ids.keys()))
-            eff_msgs = ["super effective<CONT>", "no ", "not very<CONT>effective<CONT>", "normal "]
-            for matchup in world.type_chart:
-                if matchup[0] == type1 and matchup[1] == type2:
-                    if matchup[2] > 10:
-                        eff = eff_msgs[0]
-                    elif matchup[2] == 0:
-                        eff = eff_msgs[1]
-                    elif matchup[2] < 10:
-                        eff = eff_msgs[2]
-                    else:
-                        eff = eff_msgs[3]
-                    break
-            else:
-                eff = eff_msgs[3]
-            if not a:
-                eff_msgs.remove(eff)
-                eff = random.choice(eff_msgs)
-            return encode_text(f"{type1} deals<LINE>{eff}damage to<CONT>{type2} type?<DONE>")
-        elif q == 14:
-            fossil_level = world.multiworld.get_location("Fossil Level - Trainer Parties",
-                                                         world.player).party_data[0]["level"]
-            if not a:
-                fossil_level += random.choice((-5, 5))
-            return encode_text(f"Fossil #MON<LINE>revive at level<CONT>{fossil_level}?<DONE>")
-        elif q == 15:
-            if a:
-                fodmap = random.choice(["garlic", "onion", "milk", "watermelon", "cherries", "wheat", "barley",
-                                        "pistachios", "cashews", "kidney beans", "apples", "honey"])
-            else:
-                fodmap = random.choice(["carrots", "potatoes", "oranges", "pineapple", "blueberries", "parmesan",
-                                        "eggs", "beef", "chicken", "oat", "rice", "maple syrup", "peanuts"])
-            are_is = "are" if fodmap[-1] == "s" else "is"
-            return encode_text(f"According to<LINE>Monash Uni.,<CONT>{fodmap} {are_is}<CONT>considered high<CONT>in FODMAPs?<DONE>")
+def door_bytes(item: str):
+    if item in data.card_list:
+        return [b'\x00', data.card_Ids[item]]
+    else:
+        return [b'\x01', data.medal_Ids[item]]
 
-    answers = [random.randint(0, 1) for _ in range(6)]
-    questions = random.sample((range(0, 16)), 6)
-    question_texts: list[bytearray] = []
-    for i, question in enumerate(questions):
-        question_texts.append(get_quiz(question, answers[i]))
-
-    for i, quiz in enumerate(["A", "B", "C", "D", "E", "F"]):
-        patch.write_token(APTokenTypes.WRITE, rom_addresses[f"Quiz_Answer_{quiz}"], bytes([int(not answers[i]) << 4 | (i + 1)]))
-        patch.write_token(APTokenTypes.WRITE, rom_addresses[f"Text_Quiz_{quiz}"], bytes(question_texts[i]))
+def make_item_string(item: str, player: str):
+    full_string = "Sent {item} to {player}."
+    while len(full_string) < 62:
+        full_string = full_string + " "
+    return "{full_string[:32]}\n{full_string[32:62]]}\0"
 
 
-def generate_output(world: "PokemonTCGWorld", output_directory: str):
-    game_version = world.options.game_version.current_key
-
+def generate_output(world: PokemonTCGWorld, output_directory: str):
     patch_type = PokemonTCGProcedurePatch
     patch = patch_type(player=world.player, player_name=world.player_name)
 
@@ -270,6 +77,52 @@ def generate_output(world: "PokemonTCGWorld", output_directory: str):
             data = bytes(data)
 
         patch.write_token(APTokenTypes.WRITE, address, data)
+
+    deck_bytes = get_card_bytes(world.options.starter_deck)
+    write_bytes(rom_addresses["Starter Deck"], deck_bytes)
+    write_bytes(rom_addresses["Door Setting"], [b'\x01'])
+    write_bytes(rom_addresses["Door Requirements Start"], door_string(world.options.grass_club_unlock))
+    write_bytes(rom_addresses["Door Requirements Start"] + 8, door_string(world.options.science_club_unlock))
+    write_bytes(rom_addresses["Door Requirements Start"] + 16, door_string(world.options.fire_club_unlock))
+    write_bytes(rom_addresses["Door Requirements Start"] + 24, door_string(world.options.water_club_unlock))
+    write_bytes(rom_addresses["Door Requirements Start"] + 32, door_string(world.options.lightning_club_unlock))
+    write_bytes(rom_addresses["Door Requirements Start"] + 40, door_string(world.options.psychic_club_unlock))
+    write_bytes(rom_addresses["Door Requirements Start"] + 48, door_string(world.options.rock_club_unlock))
+    write_bytes(rom_addresses["Door Requirements Start"] + 56, door_string(world.options.fighting_club_unlock))
+    write_bytes(rom_addresses["Door Requirements Start"], door_bytes(world.options.grass_club_unlock))
+    write_bytes(rom_addresses["Door Requirements Start"] + 8, door_bytes(world.options.science_club_unlock))
+    write_bytes(rom_addresses["Door Requirements Start"] + 16, door_bytes(world.options.fire_club_unlock))
+    write_bytes(rom_addresses["Door Requirements Start"] + 24, door_bytes(world.options.water_club_unlock))
+    write_bytes(rom_addresses["Door Requirements Start"] + 32, door_bytes(world.options.lightning_club_unlock))
+    write_bytes(rom_addresses["Door Requirements Start"] + 40, door_bytes(world.options.psychic_club_unlock))
+    write_bytes(rom_addresses["Door Requirements Start"] + 48, door_bytes(world.options.rock_club_unlock))
+    write_bytes(rom_addresses["Door Requirements Start"] + 56, door_bytes(world.options.fighting_club_unlock))
+
+    #"Reward Table": 0x6836a,  # 2 bytes per trainer for first and second matches.  Need more details to fill out
+
+    for location in world.multiworld.get_locations(world.player):
+        write_bytes(rom_addresses[location.name], location.item)
+        write_bytes(rom_addresses[location.name] + 15332, make_item_string(location.item, location.player))
+        write_bytes(rom_addresses[location.name] + 178, location.item.classification)
+
+    if not world.options.medal_sanity:
+        write_bytes(rom_addresses["Grass Medal"], b'\xf0')
+        write_bytes(rom_addresses["Science Medal"], b'\xf1')
+        write_bytes(rom_addresses["Fire Medal"], b'\xf2')
+        write_bytes(rom_addresses["Water Medal"], b'\xf3')
+        write_bytes(rom_addresses["Lightning Medal"], b'\xf4')
+        write_bytes(rom_addresses["Psychic Medal"], b'\xf5')
+        write_bytes(rom_addresses["Rock Medal"], b'\xf6')
+        write_bytes(rom_addresses["Fighting Medal"], b'\xf7')
+
+    if world.options.pack_type == options.PackType.option_evoline:
+        index = 0
+        for pack_name, pack_contents in data.pack_to_card:
+            write_bytes(rom_addresses["Booster Table"] + index*60, get_pack_bytes(pack_contents))
+            index = index + 1
+        while index < 238:
+            write_bytes(rom_addresses["Booster Table"] + index*60, get_pack_bytes({}))
+            index = index + 1
 
     # pallet_connections = {entrance: world.multiworld.get_entrance(f"Pallet Town to {entrance}",
     #                                                               world.player).connected_region.name
