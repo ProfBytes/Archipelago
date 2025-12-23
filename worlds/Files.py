@@ -389,6 +389,7 @@ class APTokenMixin:
         if not isinstance(self._tokens, list):
             assert len(self._tokens) == 0, f"{type(self)}._tokens was tampered with."
             self._tokens = []
+        print(type(data))
         self._tokens.append((token_type, offset, data))
 
 
