@@ -146,7 +146,7 @@ def door_string(item: str):
     return encode_text(string)
 
 def door_bytes(item: str):
-    if item in card_list:
+    if item in card_ids:
         return [b'\x00', card_ids[item]]
     else:
         return [b'\x01', medal_ids[item]]
@@ -177,7 +177,6 @@ def generate_output(world: "PokemonTCGWorld", output_directory: str):
 
         patch.write_token(APTokenTypes.WRITE, address, data)
 
-    print(world.options.starter_deck)
     deck_bytes = get_card_bytes(world.options.starter_deck.value)
     write_ints(rom_addresses["Starter Deck"], deck_bytes)
     write_ints(rom_addresses["Door Setting"], [1])
@@ -201,19 +200,22 @@ def generate_output(world: "PokemonTCGWorld", output_directory: str):
     #"Reward Table": 0x6836a,  # 2 bytes per trainer for first and second matches.  Need more details to fill out
 
     for location in world.multiworld.get_locations(world.player):
-        write_bytes(rom_addresses[location.name], location.item)
-        write_bytes(rom_addresses[location.name] + 15332, make_item_string(location.item, location.player))
-        write_bytes(rom_addresses[location.name] + 178, location.item.classification)
+        if location.is_event:
+            continue
+        trimmed = location.name.split(" - ")[1]
+        write_bytes(rom_addresses[trimmed], location.item)
+        write_bytes(rom_addresses[trimmed] + 15332, make_item_string(location.item, location.player))
+        write_bytes(rom_addresses[trimmed] + 178, location.item.classification)
 
     if not world.options.medal_sanity:
-        write_bytes(rom_addresses["Grass Medal"], 240)
-        write_bytes(rom_addresses["Science Medal"], 241)
-        write_bytes(rom_addresses["Fire Medal"], 242)
-        write_bytes(rom_addresses["Water Medal"], 243)
-        write_bytes(rom_addresses["Lightning Medal"], 244)
-        write_bytes(rom_addresses["Psychic Medal"], 245)
-        write_bytes(rom_addresses["Rock Medal"], 246)
-        write_bytes(rom_addresses["Fighting Medal"], 247)
+        write_bytes(rom_addresses["Grass Medal"], 0xf0)
+        write_bytes(rom_addresses["Science Medal"], 0xf1)
+        write_bytes(rom_addresses["Fire Medal"], 0xf2)
+        write_bytes(rom_addresses["Water Medal"], 0xf3)
+        write_bytes(rom_addresses["Lightning Medal"], 0xf4)
+        write_bytes(rom_addresses["Psychic Medal"], 0xf5)
+        write_bytes(rom_addresses["Rock Medal"], 0xf6)
+        write_bytes(rom_addresses["Fighting Medal"], 0xf7)
 
     if world.options.pack_type == PackType.option_evoline:
         index = 0

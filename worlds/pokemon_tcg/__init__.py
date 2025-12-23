@@ -102,7 +102,7 @@ class PokemonTCGWorld(World):
         self.starting_deck_type_2 = "Water"
         self.starting_deck_type_3 = "Grass"
 
-        self.pack_types = "Evoline"
+        self.pack_type = "Evoline"
         self.trade_rando = "vanilla"
 
     def generate_early(self): # Set the starting deck types here if there's overlap
@@ -132,7 +132,6 @@ class PokemonTCGWorld(World):
         for key in starter_deck.keys():
             if key in valid_cards:
                 valid_cards.remove(key)
-        print(starter_deck)
         self.options.starter_deck = Options.OptionDict(starter_deck)
 
         doors_to_generate = 0
@@ -142,74 +141,84 @@ class PokemonTCGWorld(World):
         item_list.extend(items.medals)
         item_list.append("Nothing")
 
-        if not self.options.water_club_unlock in item_list:
+        if not self.options.water_club_unlock.value in item_list:
             doors_to_generate += 1
-            if self.options.water_club_unlock == "Nothing":
-                open_doors_to_gen -= 1
-        if not self.options.grass_club_unlock in item_list:
+        if self.options.water_club_unlock.value == "Nothing":
+            open_doors_to_gen -= 1
+            self.options.water_club_unlock.value = "Fire Energy"
+        if not self.options.grass_club_unlock.value in item_list:
             doors_to_generate += 1
-            if self.options.grass_club_unlock == "Nothing":
-                open_doors_to_gen -= 1
-        if not self.options.fire_club_unlock in item_list:
+        if self.options.grass_club_unlock.value == "Nothing":
+            open_doors_to_gen -= 1
+            self.options.grass_club_unlock.value = "Fire Energy"
+        if not self.options.fire_club_unlock.value in item_list:
             doors_to_generate += 1
-            if self.options.fire_club_unlock == "Nothing":
-                open_doors_to_gen -= 1
-        if not self.options.lightning_club_unlock in item_list:
+        if self.options.fire_club_unlock.value == "Nothing":
+            open_doors_to_gen -= 1
+            self.options.fire_club_unlock.value = "Fire Energy"
+        if not self.options.lightning_club_unlock.value in item_list:
             doors_to_generate += 1
-            if self.options.lightning_club_unlock == "Nothing":
-                open_doors_to_gen -= 1
-        if not self.options.rock_club_unlock in item_list:
+        if self.options.lightning_club_unlock.value == "Nothing":
+            open_doors_to_gen -= 1
+            self.options.lightning_club_unlock.value = "Fire Energy"
+        if not self.options.rock_club_unlock.value in item_list:
             doors_to_generate += 1
-            if self.options.rock_club_unlock == "Nothing":
-                open_doors_to_gen -= 1
-        if not self.options.science_club_unlock in item_list:
+        if self.options.rock_club_unlock.value == "Nothing":
+            open_doors_to_gen -= 1
+            self.options.rock_club_unlock.value = "Fire Energy"
+        if not self.options.science_club_unlock.value in item_list:
             doors_to_generate += 1
-            if self.options.science_club_unlock == "Nothing":
-                open_doors_to_gen -= 1
-        if not self.options.psychic_club_unlock in item_list:
+        if self.options.science_club_unlock.value == "Nothing":
+            open_doors_to_gen -= 1
+            self.options.science_club_unlock.value = "Fire Energy"
+        if not self.options.psychic_club_unlock.value in item_list:
             doors_to_generate += 1
-            if self.options.psychic_club_unlock == "Nothing":
-                open_doors_to_gen -= 1
-        if not self.options.fighting_club_unlock in item_list:
+        if self.options.psychic_club_unlock.value == "Nothing":
+            open_doors_to_gen -= 1
+            self.options.psychic_club_unlock.value = "Fire Energy"
+        if not self.options.fighting_club_unlock.value in item_list:
             doors_to_generate += 1
-            if self.options.fighting_club_unlock == "Nothing":
-                open_doors_to_gen -= 1
+        if self.options.fighting_club_unlock.value == "Nothing":
+            open_doors_to_gen -= 1
+            self.options.fighting_club_unlock.value = "Fire Energy"
 
         doors = []
         while len(doors) < doors_to_generate:
             if open_doors_to_gen > 0:
-                doors.append("Nothing")
+                doors.append("Fire Energy")
                 open_doors_to_gen -= 1
             else:
                 if self.random.choice(range(0, 9)) < 2:
                     doors.append(self.random.choice(items.medals))
                 else:
                     doors.append((self.random.choice(valid_cards)))
-        while len(doors) < 8: #If doors have to be all locked or all open
+
+        while len(doors) < 8:
             doors.append("Fire Energy")
+
         self.random.shuffle(doors)
-        if not self.options.water_club_unlock in item_list:
+        if not self.options.water_club_unlock.value in item_list:
             self.options.water_club_unlock = Options.FreeText(doors[0])
             doors.remove(doors[0])
-        if not self.options.grass_club_unlock in item_list:
+        if not self.options.grass_club_unlock.value in item_list:
             self.options.grass_club_unlock = Options.FreeText(doors[0])
             doors.remove(doors[0])
-        if not self.options.fire_club_unlock in item_list:
+        if not self.options.fire_club_unlock.value in item_list:
             self.options.fire_club_unlock = Options.FreeText(doors[0])
             doors.remove(doors[0])
-        if not self.options.lightning_club_unlock in item_list:
+        if not self.options.lightning_club_unlock.value in item_list:
             self.options.lightning_club_unlock = Options.FreeText(doors[0])
             doors.remove(doors[0])
-        if not self.options.rock_club_unlock in item_list:
+        if not self.options.rock_club_unlock.value in item_list:
             self.options.rock_club_unlock = Options.FreeText(doors[0])
             doors.remove(doors[0])
-        if not self.options.science_club_unlock in item_list:
+        if not self.options.science_club_unlock.value in item_list:
             self.options.science_club_unlock = Options.FreeText(doors[0])
             doors.remove(doors[0])
-        if not self.options.psychic_club_unlock in item_list:
+        if not self.options.psychic_club_unlock.value in item_list:
             self.options.psychic_club_unlock = Options.FreeText(doors[0])
             doors.remove(doors[0])
-        if not self.options.fighting_club_unlock in item_list:
+        if not self.options.fighting_club_unlock.value in item_list:
             self.options.fighting_club_unlock = Options.FreeText(doors[0])
             doors.remove(doors[0])
 
@@ -513,7 +522,8 @@ class PokemonTCGWorld(World):
     #                 for location in mon_locations[1:]:
     #                     location.item.classification = ItemClassification.useful
 
-    # def create_regions(self):
+    def create_regions(self):
+        create_regions(self)
     #     if (self.options.old_man == "vanilla" or
     #             self.options.door_shuffle in ("full", "insanity")):
     #         fly_map_codes = self.random.sample(range(2, 11), 2)
@@ -541,7 +551,6 @@ class PokemonTCGWorld(World):
     #     self.fly_map_code = fly_map_code
     #     self.town_map_fly_map_code = town_map_fly_map_code
     #
-    #     create_regions(self)
     #     self.multiworld.completion_condition[self.player] = lambda state, player=self.player: state.has("Become Champion", player=player)
 
     def set_rules(self):
@@ -661,7 +670,7 @@ class PokemonTCGItem(Item):
     game = "Pokemon TCG"
     type = None
 
-    def __init__(self, name, player: int = None):
+    def __init__(self, name: str, player: int = None):
         item_data = item_table[name]
         super(PokemonTCGItem, self).__init__(
             name,

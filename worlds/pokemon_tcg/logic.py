@@ -1,9 +1,9 @@
-from .items import packs, medals, pack_counts, masters_talkable
-from .data import card_to_pack
+from .items import packs, medals, masters_talkable
+from .data import card_to_pack, pack_to_card
 
 def has_type(state, world, player, type, number):
     return (len([item for item in packs[type] if state.has(item, player)]) + starting_deck_has_type(type) >= number) or \
-        (world.options.pack_types.value == 'vanilla' and has_enough_packs(state, world, player, number*number))
+        (world.options.pack_type.value == 'vanilla' and has_enough_packs(state, world, player, number*number))
 
 def has_enough_packs(state, world, player, number):
     return number <= (state.count("Colosseum Pack") + state.count("Mystery Pack") +
@@ -11,14 +11,15 @@ def has_enough_packs(state, world, player, number):
 
 def starting_deck_has_type(state, world, player, type):
     if world.options.starting_deck_type_1 == type or world.options.starting_deck_type_2 == type or world.options.starting_deck_type_3 == type:
-        return 1
+        return 2
     return 0
 
 def medal_count(state, world, player):
     return len([item for item in medals if state.has(item, player)])
 
 def card_count(state, world, player):
-    return 540 + sum(value for key, value in pack_counts if state.has(key, player))
+    #TODO FIX
+    return 540 + sum(value for key, value in pack_to_card if state.has(key, player))
 
 def masters_talkable_count(state, world, player):
     return len([event for event in masters_talkable if state.has(event, player)])
@@ -33,27 +34,29 @@ def email_count(state, world, player):
     return emails_available
 
 def club_leader_logic(state, world, player):
-    return good_trainer_count() >= 4
+    return good_trainer_count(state, world, player) >= 4
 
 def grand_master_logic(state, world, player):
-    return good_trainer_count() >= 10
+    return good_trainer_count(state, world, player) >= 10
 
 def ronald_logic(state, world, player):
-    return good_trainer_count() >= 2
+    return good_trainer_count(state, world, player) >= 2
 
 def good_trainer_count(state, world, player):
-    total = state.count("Computer Search Pack")
-    total += state.count("Gust of Wind Pack")
-    total += state.count("Pluspower Pack")
+    total = state.count("Computer Search Pack", player)
+    total += state.count("Gust of Wind Pack", player)
+    total += state.count("Pluspower Pack", player)
 
-    total += state.count("Bill Pack")
-    total += state.count("Professor Oak Pack")
-    total += state.count("Super Energy Removal Pack")
-    total += state.count("Double Colorless Energy Pack")
+    total += state.count("Bill Pack", player)
+    total += state.count("Professor Oak Pack", player)
+    total += state.count("Super Energy Removal Pack", player)
+    total += state.count("Double Colorless Energy Pack", player)
     return total
 
 def has_card(state, world, player, card):
-    if world.options.pack_types == "Evoline":
+    if card == "Fire Energy":
+        return True
+    if world.options.pack_type.value == "Evoline":
         packs = card_to_pack[card]
         return any([pack == "Starter Deck" or state.has(pack) for pack in packs])
     else:
@@ -62,6 +65,6 @@ def has_card(state, world, player, card):
 def has_item(state, world, player, item):
     if item == "Nothing":
         return True
-    if item in items.medals:
-        return state.has(item)
+    if item in medals:
+        return state.has(item, player)
     return has_card(state, world, player, item)

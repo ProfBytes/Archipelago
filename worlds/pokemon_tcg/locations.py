@@ -45,18 +45,18 @@ location_data = [
     LocationData("Mason Laboratory Center Room", "Aaron LF Reward 1", "Energy Pack", rom_addresses["Aaron LF Reward 1"]),
     LocationData("Mason Laboratory Center Room", "Aaron LF Reward 2", "Energy Pack", rom_addresses["Aaron LF Reward 2"]),
     LocationData("Mason Laboratory Center Room", "Beat Aaron LF", "Beat Aaron LF", event=True),
-    LocationData("Mason Laboratory Center Room", "Aaron LF Reward 1", "Energy Pack", rom_addresses["Aaron Rematch LF Reward 1"]),
-    LocationData("Mason Laboratory Center Room", "Aaron LF Reward 2", "Energy Pack", rom_addresses["Aaron Rematch LF Reward 2"]),
+    LocationData("Mason Laboratory Center Room", "Aaron Rematch LF Reward 1", "Energy Pack", rom_addresses["Aaron Rematch LF Reward 1"]),
+    LocationData("Mason Laboratory Center Room", "Aaron Rematch LF Reward 2", "Energy Pack", rom_addresses["Aaron Rematch LF Reward 2"]),
     LocationData("Mason Laboratory Center Room", "Aaron WF Reward 1", "Energy Pack", rom_addresses["Aaron WF Reward 1"]),
     LocationData("Mason Laboratory Center Room", "Aaron WF Reward 2", "Energy Pack", rom_addresses["Aaron WF Reward 2"]),
     LocationData("Mason Laboratory Center Room", "Beat Aaron WF", "Beat Aaron WF", event=True),
-    LocationData("Mason Laboratory Center Room", "Aaron WF Reward 1", "Energy Pack", rom_addresses["Aaron Rematch WF Reward 1"]),
-    LocationData("Mason Laboratory Center Room", "Aaron WF Reward 2", "Energy Pack", rom_addresses["Aaron Rematch WF Reward 2"]),
+    LocationData("Mason Laboratory Center Room", "Aaron Rematch WF Reward 1", "Energy Pack", rom_addresses["Aaron Rematch WF Reward 1"]),
+    LocationData("Mason Laboratory Center Room", "Aaron Rematch WF Reward 2", "Energy Pack", rom_addresses["Aaron Rematch WF Reward 2"]),
     LocationData("Mason Laboratory Center Room", "Aaron GP Reward 1", "Energy Pack", rom_addresses["Aaron GP Reward 1"]),
     LocationData("Mason Laboratory Center Room", "Aaron GP Reward 2", "Energy Pack", rom_addresses["Aaron GP Reward 2"]),
     LocationData("Mason Laboratory Center Room", "Beat Aaron GP", "Beat Aaron GP", event=True),
-    LocationData("Mason Laboratory Center Room", "Aaron GP Reward 1", "Energy Pack", rom_addresses["Aaron Rematch GP Reward 1"]),
-    LocationData("Mason Laboratory Center Room", "Aaron GP Reward 2", "Energy Pack", rom_addresses["Aaron Rematch GP Reward 2"]),
+    LocationData("Mason Laboratory Center Room", "Aaron Rematch GP Reward 1", "Energy Pack", rom_addresses["Aaron Rematch GP Reward 1"]),
+    LocationData("Mason Laboratory Center Room", "Aaron Rematch GP Reward 2", "Energy Pack", rom_addresses["Aaron Rematch GP Reward 2"]),
 
     LocationData("Grass Club Main Hall", "Heather Reward 1", "Colosseum Pack", rom_addresses["Heather Reward 1"]),
     LocationData("Grass Club Main Hall", "Heather Reward 2", "Colosseum Pack", rom_addresses["Heather Reward 2"]),
@@ -240,16 +240,16 @@ location_data = [
     LocationData("Lightning Club Lounge", "Imakuni Rematch Reward 1", "Colosseum Pack", rom_addresses["Imakuni Rematch Reward 1"]),
     LocationData("Water Club Lounge", "Imakuni Rematch Reward 2", "Mystery Pack", rom_addresses["Imakuni Rematch Reward 2"]),
 
-    LocationData("Rock Club Lounge", "Ronald Reward 1", "Promo Mewtwo 1 Pack", rom_addresses["Ronald Reward 1"]), # 2 Medals
-    LocationData("Fire Club Lounge", "Ronald Reward 2", "Promo Jigglypuff Pack", rom_addresses["Ronald Reward 2"]), # 2 Medals
-    LocationData("Grass Club Lounge", "Ronald Rematch Reward 1", "Promo Mew 1 Pack", rom_addresses["Ronald Rematch Reward 1"]), # 5 Medals
+    LocationData("Rock Club Lounge", "Ronald Reward 1", "Promo Mewtwo 1", rom_addresses["Ronald Reward 1"]), # 2 Medals
+    LocationData("Fire Club Lounge", "Ronald Reward 2", "Promo Jigglypuff", rom_addresses["Ronald Reward 2"]), # 2 Medals
+    LocationData("Grass Club Lounge", "Ronald Rematch Reward 1", "Promo Mew 1", rom_addresses["Ronald Rematch Reward 1"]), # 5 Medals
     LocationData("Psychic Club Lounge", "Ronald Rematch Reward 2", "Super Energy Retrieval Pack", rom_addresses["Ronald Rematch Reward 2"]), # 5 Medals
 
-    LocationData("Pokemon Dome Hall of Honor", "Beat Courtney", "Beat Courtney", event=True),
-    LocationData("Pokemon Dome Hall of Honor", "Beat Steve", "Beat Steve", event=True),
-    LocationData("Pokemon Dome Hall of Honor", "Beat Jack", "Beat Jack", event=True),
-    LocationData("Pokemon Dome Hall of Honor", "Beat Rod", "Beat Rod", event=True),
-    LocationData("Pokemon Dome Hall of Honor", "Become Champion", "Become Champion", event=True),
+    LocationData("Pokemon Dome Main Hall", "Beat Courtney", "Beat Courtney", event=True),
+    LocationData("Pokemon Dome Main Hall", "Beat Steve", "Beat Steve", event=True),
+    LocationData("Pokemon Dome Main Hall", "Beat Jack", "Beat Jack", event=True),
+    LocationData("Pokemon Dome Main Hall", "Beat Rod", "Beat Rod", event=True),
+    LocationData("Pokemon Dome Main Hall", "Become Champion", "Become Champion", event=True),
 
     # Open the club main halls as an event
     LocationData("Water Club Lobby", "Open Water Club Door", "Water Club Door", event=True),
@@ -262,15 +262,15 @@ location_data = [
     LocationData("Fighting Club Lobby", "Open Fighting Club Door", "Fighting Club Door", event=True),
 
     # Promo cards
-    LocationData("Water Club Lounge", "Promo Arcanine Trade", "Promo Arcanine Pack", rom_addresses["Promo Arcanine"]),
-    LocationData("Grass Club Lounge", "Promo Pikachu Trade (Grass Club)", "Promo Pikachu 1 Pack", rom_addresses["Promo Pikachu 1"]),
-    LocationData("Fighting Club Lounge", "Promo Pikachu Trade (Fighting Club)", "Promo Pikachu 2 Pack", rom_addresses["Promo Pikachu 2"]),
-    LocationData("Ishihara's House", "Ishihara Trade 1", "Promo Flying Pikachu Pack", rom_addresses["Promo Flying Pikachu"]),
-    LocationData("Ishihara's House", "Ishihara Trade 2", "Promo Surfing Pikachu 1 Pack", rom_addresses["Promo Surfing Pikachu 1"]),
-    LocationData("Ishihara's House", "Ishihara Trade 3", "Promo Surfing Pikachu 2 Pack", rom_addresses["Promo Surfing Pikachu 2"]),
-    LocationData("Lightning Club Lounge", "Promo Electabuzz Trade", "Promo Electabuzz Pack", rom_addresses["Promo Electabuzz"]),
-    LocationData("Fire Club Lounge", "Promo Slowpoke Trade", "Promo Slowpoke Pack", rom_addresses["Promo Slowpoke"]),
-    LocationData("Psychic Club Lounge", "Promo Mewtwo Gift", "Promo Mewtwo 2 Pack", rom_addresses["Promo Mewtwo 2"]),
+    LocationData("Water Club Lounge", "Promo Arcanine Trade", "Promo Arcanine", rom_addresses["Promo Arcanine"]),
+    LocationData("Grass Club Lounge", "Promo Pikachu Trade (Grass Club)", "Promo Pikachu 1", rom_addresses["Promo Pikachu 1"]),
+    LocationData("Fighting Club Lounge", "Promo Pikachu Trade (Fighting Club)", "Promo Pikachu 2", rom_addresses["Promo Pikachu 2"]),
+    LocationData("Ishihara's House", "Ishihara Trade 1", "Promo Flying Pikachu", rom_addresses["Promo Flying Pikachu"]),
+    LocationData("Ishihara's House", "Ishihara Trade 2", "Promo Surfing Pikachu 1", rom_addresses["Promo Surfing Pikachu 1"]),
+    LocationData("Ishihara's House", "Ishihara Trade 3", "Promo Surfing Pikachu 2", rom_addresses["Promo Surfing Pikachu 2"]),
+    LocationData("Lightning Club Lounge", "Promo Electabuzz Trade", "Promo Electabuzz", rom_addresses["Promo Electabuzz"]),
+    LocationData("Fire Club Lounge", "Promo Slowpoke Trade", "Promo Slowpoke", rom_addresses["Promo Slowpoke"]),
+    LocationData("Psychic Club Lounge", "Promo Mewtwo Gift", "Promo Mewtwo 2", rom_addresses["Promo Mewtwo 2"]),
 
     # Email logic
     LocationData("Mason Laboratory Center Room", "Email 1", "Colosseum Pack", rom_addresses["Email 1"]),
@@ -281,13 +281,13 @@ location_data = [
     LocationData("Mason Laboratory Center Room", "Email 6", "Evolution Pack", rom_addresses["Email 6"]),
     LocationData("Mason Laboratory Center Room", "Email 7", "Mystery Pack", rom_addresses["Email 7"]),
     LocationData("Mason Laboratory Center Room", "Email 8", "Laboratory Pack", rom_addresses["Email 8"]),
-    LocationData("Mason Laboratory Center Room", "Email 9", "Promo Articuno Pack", rom_addresses["Email 9"]),
-    LocationData("Mason Laboratory Center Room", "Email 10", "Promo Zapdos Pack", rom_addresses["Email 10"]),
-    LocationData("Mason Laboratory Center Room", "Email 11", "Promo Moltres Pack", rom_addresses["Email 11"]),
-    LocationData("Mason Laboratory Center Room", "Email 12", "Promo Dragonite Pack", rom_addresses["Email 12"]),
-    LocationData("Mason Laboratory Center Room", "Email 13", "Promo Imakuni Pack", rom_addresses["Email 13"]),
-    LocationData("Mason Laboratory Center Room", "Email 14", "Promo Venusaur Pack", rom_addresses["Email 14"]),
-    LocationData("Mason Laboratory Center Room", "Email 15", "Promo Mew 2 Pack", rom_addresses["Email 15"]),
+    LocationData("Mason Laboratory Center Room", "Email 9", "Promo Articuno", rom_addresses["Email 9"]),
+    LocationData("Mason Laboratory Center Room", "Email 10", "Promo Zapdos", rom_addresses["Email 10"]),
+    LocationData("Mason Laboratory Center Room", "Email 11", "Promo Moltres", rom_addresses["Email 11"]),
+    LocationData("Mason Laboratory Center Room", "Email 12", "Promo Dragonite", rom_addresses["Email 12"]),
+    LocationData("Mason Laboratory Center Room", "Email 13", "Promo Imakuni", rom_addresses["Email 13"]),
+    LocationData("Mason Laboratory Center Room", "Email 14", "Promo Venusaur", rom_addresses["Email 14"]),
+    LocationData("Mason Laboratory Center Room", "Email 15", "Promo Mew 2", rom_addresses["Email 15"]),
 ]
 
 class PokemonTCGLocation(Location):

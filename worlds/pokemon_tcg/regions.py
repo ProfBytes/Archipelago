@@ -1,6 +1,6 @@
 from copy import deepcopy
 from BaseClasses import MultiWorld, Region, Entrance, LocationProgressType, ItemClassification
-from .items import item_table, item_groups
+from .items import item_table, item_groups, evoline_pack_list, vanilla_items
 from .locations import location_data, PokemonTCGLocation
 from . import logic
 
@@ -19,26 +19,64 @@ map_ids = {
     "Lightning Club Lounge": 0x0C,
     "Lightning Club Main Hall": 0x0D,
     "Grass Club Lobby": 0x0E,
-    "Grass Club Lounge": 0x10,
-    "Grass Club Main Hall": 0x11,
-    "Rock Club Lobby": 0x12,
-    "Rock Club Lounge": 0x13,
-    "Rock Club Main Hall": 0x14,
-    "Fighting Club Lobby": 0x15,
-    "Fighting Club Lounge": 0x16,
-    "Fighting Club Main Hall": 0x17,
-    "Psychic Club Lobby": 0x18,
-    "Psychic Club Lounge": 0x19,
-    "Psychic Club Main Hall": 0x1A,
-    "Science Club Lobby": 0x1B,
-    "Science Club Lounge": 0x1C,
-    "Science Club Main Hall": 0x1D,
-    "Challenge Hall Lobby": 0x1E,
-    "Challenge Hall Lounge": 0x20,
-    "Challenge Hall Main Hall": 0x21,
-    "Pokemon Dome Lobby": 0x22,
-    "Pokemon Dome Main Hall": 0x23,
-    "Pokemon Dome Hall of Honor": 0x24,
+    "Grass Club Lounge": 0x0F,
+    "Grass Club Main Hall": 0x10,
+    "Rock Club Lobby": 0x11,
+    "Rock Club Lounge": 0x12,
+    "Rock Club Main Hall": 0x13,
+    "Fighting Club Lobby": 0x14,
+    "Fighting Club Lounge": 0x15,
+    "Fighting Club Main Hall": 0x16,
+    "Psychic Club Lobby": 0x17,
+    "Psychic Club Lounge": 0x18,
+    "Psychic Club Main Hall": 0x9A,
+    "Science Club Lobby": 0x1A,
+    "Science Club Lounge": 0x1B,
+    "Science Club Main Hall": 0x1C,
+    "Challenge Hall Lobby": 0x1D,
+    "Challenge Hall Lounge": 0x1E,
+    "Challenge Hall Main Hall": 0x1F,
+    "Pokemon Dome Lobby": 0x20,
+    "Pokemon Dome Main Hall": 0x21,
+    "Pokemon Dome Hall of Honor": 0x22,
+}
+
+warp_data = {
+    'Menu': [],
+    'Overworld': [],
+    'Mason Laboratory Center Room': [],
+    'Mason Laboratory Right Room': [],
+    'Ishihara\'s House': [],
+    'Water Club Lobby': [],
+    'Water Club Lounge': [],
+    'Water Club Main Hall': [],
+    'Fire Club Lobby': [],
+    'Fire Club Lounge': [],
+    'Fire Club Main Hall': [],
+    'Lightning Club Lobby': [],
+    'Lightning Club Lounge': [],
+    'Lightning Club Main Hall': [],
+    'Grass Club Lobby': [],
+    'Grass Club Lounge': [],
+    'Grass Club Main Hall': [],
+    'Rock Club Lobby': [],
+    'Rock Club Lounge': [],
+    'Rock Club Main Hall': [],
+    'Fighting Club Lobby': [],
+    'Fighting Club Lounge': [],
+    'Fighting Club Main Hall': [],
+    'Psychic Club Lobby': [],
+    'Psychic Club Lounge': [],
+    'Psychic Club Main Hall': [],
+    'Science Club Lobby': [],
+    'Science Club Lounge': [],
+    'Science Club Main Hall': [],
+    'Challenge Hall Lobby': [],
+    'Challenge Hall Lounge': [],
+    'Challenge Hall Main Hall': [],
+    'Pokemon Dome Lobby': [],
+    'Pokemon Dome Main Hall': [],
+    'Pokemon Dome Hall of Honor': [],
 }
 
 
@@ -57,8 +95,6 @@ def create_region(multiworld: MultiWorld, player: int, name: str, locations_per_
     for location in locations_per_region.get(name, []):
         location.parent_region = ret
         ret.locations.append(location)
-        if multiworld.worlds[player].options.randomize_hidden_items == "exclude" and "Hidden" in location.name:
-            location.progress_type = LocationProgressType.EXCLUDED
     if exits:
         for exit in exits:
             ret.exits.append(Entrance(player, exit, ret))
@@ -66,8 +102,14 @@ def create_region(multiworld: MultiWorld, player: int, name: str, locations_per_
     return ret
 
 
-def is_pack(original_item):
-    return original_item in "Energy Pack", "Mystery Pack", "Laboratory Pack", "Colosseum Pack", "Evolution Pack"
+def is_vanilla_pack(original_item):
+    return original_item in vanilla_items
+
+
+def next_evoline(evoline_index: int):
+    if evoline_index >= len(evoline_pack_list):
+        return "Energy Pack"
+    return evoline_pack_list[evoline_index]
 
 
 def create_regions(world):
@@ -76,18 +118,19 @@ def create_regions(world):
     locations_per_region = {}
 
     start_inventory = world.options.start_inventory.value.copy()
+    evoline_index = 0
 
     for location in location_data:
         locations_per_region.setdefault(location.region, [])
         # The check for list is so that we don't try to check the item table with a list as a key
-        if location.inclusion(world, player) and isinstance(location.original_item, list):
-            location_object = PokemonTCGLocation(player, location.name, location.address, location.rom_address,
-                                                 location.type, location.level, location.level_address)
+        if location.inclusion(world, player):
+            location_object = PokemonTCGLocation(player, location.name, location.address, location.rom_address)
             locations_per_region[location.region].append(location_object)
             if location.event:
-                location_object.place_locked_item(location.item)
-            elif world.options.pack_type and is_pack(location.original_item):
-                world.item_pool.append(world.create_item(world.next_evoline))
+                location_object.place_locked_item(world.create_item(location.original_item))
+            elif world.options.pack_type and is_vanilla_pack(location.original_item):
+                world.item_pool.append(world.create_item(next_evoline(evoline_index)))
+                evoline_index += 1
             else:
                 world.item_pool.append(world.create_item(location.original_item))
 
@@ -105,41 +148,49 @@ def create_regions(world):
     connect(multiworld, player, "Overworld", "Ishihara's House")
     connect(multiworld, player, "Overworld", "Water Club Lobby")
     connect(multiworld, player, "Water Club Lobby", "Water Club Lounge")
+    print(world.options.water_club_unlock.value)
     connect(multiworld, player, "Water Club Lobby", "Water Club Main Hall",
-            lambda state: logic.has_item(state, world.options.water_club_unlock))
+            lambda state: logic.has_item(state, world, player, world.options.water_club_unlock.value))
     connect(multiworld, player, "Overworld", "Fire Club Lobby")
     connect(multiworld, player, "Fire Club Lobby", "Fire Club Lounge")
+    print(world.options.fire_club_unlock.value)
     connect(multiworld, player, "Fire Club Lobby", "Fire Club Main Hall",
-            lambda state: logic.has_item(state, world.options.fire_club_unlock))
+            lambda state: logic.has_item(state, world, player, world.options.fire_club_unlock.value))
     connect(multiworld, player, "Overworld", "Lightning Club Lobby")
     connect(multiworld, player, "Lightning Club Lobby", "Lightning Club Lounge")
+    print(world.options.lightning_club_unlock.value)
     connect(multiworld, player, "Lightning Club Lobby", "Lightning Club Main Hall",
-            lambda state: logic.has_item(state, world.options.lightning_club_unlock))
+            lambda state: logic.has_item(state, world, player, world.options.lightning_club_unlock.value))
     connect(multiworld, player, "Overworld", "Grass Club Lobby")
     connect(multiworld, player, "Grass Club Lobby", "Grass Club Lounge")
+    print(world.options.grass_club_unlock.value)
     connect(multiworld, player, "Grass Club Lobby", "Grass Club Main Hall",
-            lambda state: logic.has_item(state, world.options.grass_club_unlock))
+            lambda state: logic.has_item(state, world, player, world.options.grass_club_unlock.value))
     connect(multiworld, player, "Overworld", "Rock Club Lobby")
     connect(multiworld, player, "Rock Club Lobby", "Rock Club Lounge")
+    print(world.options.rock_club_unlock.value)
     connect(multiworld, player, "Rock Club Lobby", "Rock Club Main Hall",
-            lambda state: logic.has_item(state, world.options.rock_club_unlock))
+            lambda state: logic.has_item(state, world, player, world.options.rock_club_unlock.value))
     connect(multiworld, player, "Overworld", "Fighting Club Lobby")
     connect(multiworld, player, "Fighting Club Lobby", "Fighting Club Lounge")
+    print(world.options.fighting_club_unlock.value)
     connect(multiworld, player, "Fighting Club Lobby", "Fighting Club Main Hall",
-            lambda state: logic.has_item(state, world.options.fighting_club_unlock))
+            lambda state: logic.has_item(state, world, player, world.options.fighting_club_unlock.value))
     connect(multiworld, player, "Overworld", "Psychic Club Lobby")
     connect(multiworld, player, "Psychic Club Lobby", "Psychic Club Lounge")
+    print(world.options.psychic_club_unlock.value)
     connect(multiworld, player, "Psychic Club Lobby", "Psychic Club Main Hall",
-            lambda state: logic.has_item(state, world.options.psychic_club_unlock))
+            lambda state: logic.has_item(state, world, player, world.options.psychic_club_unlock.value))
     connect(multiworld, player, "Overworld", "Science Club Lobby")
     connect(multiworld, player, "Science Club Lobby", "Science Club Lounge")
+    print(world.options.science_club_unlock.value)
     connect(multiworld, player, "Science Club Lobby", "Science Club Main Hall",
-            lambda state: logic.has_item(state, world.options.science_club_unlock))
+            lambda state: logic.has_item(state, world, player, world.options.science_club_unlock.value))
     connect(multiworld, player, "Overworld", "Pokemon Dome Lobby")
     connect(multiworld, player, "Pokemon Dome Lobby", "Pokemon Dome Main Hall",
-            lambda state: logic.medal_count(state) >= world.options.grand_master_medal_count)
+            lambda state: logic.medal_count(state, world, player) >= world.options.grand_master_medal_count.value)
     connect(multiworld, player, "Pokemon Dome Main Hall", "Pokemon Dome Hall of Honor",
-            lambda state: state.has("Become Champion"))
+            lambda state: state.has("Become Champion", player))
 
 
 def connect(multiworld: MultiWorld, player: int, source: str, target: str, rule: callable = lambda state: True,
