@@ -5,18 +5,14 @@ import typing
 import Utils
 from worlds.Files import APProcedurePatch, APTokenMixin, APTokenTypes
 
-import data
-import options
+from .data import card_ids, medal_ids, pack_to_card, card_list
+from .options import PackType
 from .rom_addresses import rom_addresses
-
-if typing.TYPE_CHECKING:
-    from . import PokemonTCGWorld
-
 
 class PokemonTCGProcedurePatch(APProcedurePatch, APTokenMixin):
     game = "Pokemon TCG"
     hash = "219b2cc64e5a052003015d4bd4c622cd"
-    patch_file_ending = ".appokemontcg"
+    patch_file_ending = ".apptcg"
     result_file_ending = ".gbc"
 
     procedure = [
@@ -32,18 +28,114 @@ class PokemonTCGProcedurePatch(APProcedurePatch, APTokenMixin):
 
         return base_rom_bytes
 
+
+char_map = {
+    "\0": 0x00,  # String terminator
+    "<": 0x05,
+    ">": 0x20,
+    "?": 0x3F,
+    "!": 0x21,
+    "&": 0x26,
+    ",": 0x2C,
+    ".": 0x2E,
+    "'": 0x27,
+    ";": 0x3B,
+    "(": 0x28,
+    ")": 0x29,
+    "é": 0x60,
+    "\n": 0x0A,
+
+    "A": 0x41,
+    "B": 0x42,
+    "C": 0x43,
+    "D": 0x44,
+    "E": 0x45,
+    "F": 0x46,
+    "G": 0x47,
+    "H": 0x48,
+    "I": 0x49,
+    "J": 0x4A,
+    "K": 0x4B,
+    "L": 0x4C,
+    "M": 0x4D,
+    "N": 0x4E,
+    "O": 0x4F,
+    "P": 0x50,
+    "Q": 0x51,
+    "R": 0x52,
+    "S": 0x53,
+    "T": 0x54,
+    "U": 0x55,
+    "V": 0x56,
+    "W": 0x57,
+    "X": 0x58,
+    "Y": 0x59,
+    "Z": 0x5A,
+
+    "a": 0x61,
+    "b": 0x62,
+    "c": 0x63,
+    "d": 0x64,
+    "e": 0x65,
+    "f": 0x66,
+    "g": 0x67,
+    "h": 0x68,
+    "i": 0x69,
+    "j": 0x6A,
+    "k": 0x6B,
+    "l": 0x6C,
+    "m": 0x6D,
+    "n": 0x6E,
+    "o": 0x6F,
+    "p": 0x70,
+    "q": 0x71,
+    "r": 0x72,
+    "s": 0x73,
+    "t": 0x74,
+    "u": 0x75,
+    "v": 0x76,
+    "w": 0x77,
+    "x": 0x78,
+    "y": 0x79,
+    "z": 0x7A,
+
+    "0": 0x30,
+    "1": 0x31,
+    "2": 0x32,
+    "3": 0x33,
+    "4": 0x34,
+    "5": 0x35,
+    "6": 0x36,
+    "7": 0x37,
+    "8": 0x38,
+    "9": 0x39,
+}
+
+def encode_text(text: str, length: int=0, whitespace=False, force=False, safety=False):
+    encoded_text = bytearray()
+    for char in text:
+        if char in char_map:
+            encoded_text.append(char_map[char])
+        else:
+            encoded_text.append(char_map["é"])
+    if length > 0:
+        encoded_text = encoded_text[:length]
+    while whitespace and len(encoded_text) < length:
+        encoded_text.append(char_map[" " if whitespace is True else whitespace])
+    return encoded_text
+
 def get_card_bytes(card_dict: dict):
     bytes = []
-    for key, value in card_dict:
+    for key, value in card_dict.items():
         for i in range(value):
-            bytes.append(data.card_Ids[key])
+            bytes.append(card_ids[key])
     return bytes
 
 def get_pack_bytes(card_dict: dict):
     bytes = []
-    for key, value in card_dict:
+    for key, value in card_dict.items():
         for i in range(value):
-            bytes.append(data.card_Ids[key])
+            bytes.append(card_ids[key])
     while len(bytes) < 60:
         bytes.append(b'\xff')
 
@@ -51,26 +143,27 @@ def door_string(item: str):
     string = "a " + item
     while len(string) < 28:
         string = string + " "
-    return string
+    return encode_text(string)
 
 def door_bytes(item: str):
-    if item in data.card_list:
-        return [b'\x00', data.card_Ids[item]]
+    if item in card_list:
+        return [b'\x00', card_ids[item]]
     else:
-        return [b'\x01', data.medal_Ids[item]]
+        return [b'\x01', medal_ids[item]]
 
 def make_item_string(item: str, player: str):
     full_string = "Sent {item} to {player}."
     while len(full_string) < 62:
         full_string = full_string + " "
-    return "{full_string[:32]}\n{full_string[32:62]]}\0"
+    return encode_text("{full_string[:32]}\n{full_string[32:62]]}\0")
 
 
-def generate_output(world: PokemonTCGWorld, output_directory: str):
+def generate_output(world: "PokemonTCGWorld", output_directory: str):
     patch_type = PokemonTCGProcedurePatch
     patch = patch_type(player=world.player, player_name=world.player_name)
+    patch.write_file("base_patch.bsdiff4", pkgutil.get_data(__name__, f"base_patch.bsdiff4"))
 
-    def write_bytes(address: int, data: typing.Sequence[int] | int):
+    def write_ints(address: int, data: typing.Sequence[int] | int):
         if isinstance(data, int):
             data = bytes([data])
         else:
@@ -78,25 +171,32 @@ def generate_output(world: PokemonTCGWorld, output_directory: str):
 
         patch.write_token(APTokenTypes.WRITE, address, data)
 
-    deck_bytes = get_card_bytes(world.options.starter_deck)
-    write_bytes(rom_addresses["Starter Deck"], deck_bytes)
-    write_bytes(rom_addresses["Door Setting"], [b'\x01'])
-    write_bytes(rom_addresses["Door Requirements Start"], door_string(world.options.grass_club_unlock))
-    write_bytes(rom_addresses["Door Requirements Start"] + 8, door_string(world.options.science_club_unlock))
-    write_bytes(rom_addresses["Door Requirements Start"] + 16, door_string(world.options.fire_club_unlock))
-    write_bytes(rom_addresses["Door Requirements Start"] + 24, door_string(world.options.water_club_unlock))
-    write_bytes(rom_addresses["Door Requirements Start"] + 32, door_string(world.options.lightning_club_unlock))
-    write_bytes(rom_addresses["Door Requirements Start"] + 40, door_string(world.options.psychic_club_unlock))
-    write_bytes(rom_addresses["Door Requirements Start"] + 48, door_string(world.options.rock_club_unlock))
-    write_bytes(rom_addresses["Door Requirements Start"] + 56, door_string(world.options.fighting_club_unlock))
-    write_bytes(rom_addresses["Door Requirements Start"], door_bytes(world.options.grass_club_unlock))
-    write_bytes(rom_addresses["Door Requirements Start"] + 8, door_bytes(world.options.science_club_unlock))
-    write_bytes(rom_addresses["Door Requirements Start"] + 16, door_bytes(world.options.fire_club_unlock))
-    write_bytes(rom_addresses["Door Requirements Start"] + 24, door_bytes(world.options.water_club_unlock))
-    write_bytes(rom_addresses["Door Requirements Start"] + 32, door_bytes(world.options.lightning_club_unlock))
-    write_bytes(rom_addresses["Door Requirements Start"] + 40, door_bytes(world.options.psychic_club_unlock))
-    write_bytes(rom_addresses["Door Requirements Start"] + 48, door_bytes(world.options.rock_club_unlock))
-    write_bytes(rom_addresses["Door Requirements Start"] + 56, door_bytes(world.options.fighting_club_unlock))
+    def write_bytes(address: int, data: typing.Sequence[bytes] | bytes):
+        if isinstance(data, bytes):
+            data = [data]
+
+        patch.write_token(APTokenTypes.WRITE, address, data)
+
+    print(world.options.starter_deck)
+    deck_bytes = get_card_bytes(world.options.starter_deck.value)
+    write_ints(rom_addresses["Starter Deck"], deck_bytes)
+    write_ints(rom_addresses["Door Setting"], [1])
+    write_ints(rom_addresses["Door Requirements Start"], door_string(world.options.grass_club_unlock.value))
+    write_ints(rom_addresses["Door Requirements Start"] + 8, door_string(world.options.science_club_unlock.value))
+    write_ints(rom_addresses["Door Requirements Start"] + 16, door_string(world.options.fire_club_unlock.value))
+    write_ints(rom_addresses["Door Requirements Start"] + 24, door_string(world.options.water_club_unlock.value))
+    write_ints(rom_addresses["Door Requirements Start"] + 32, door_string(world.options.lightning_club_unlock.value))
+    write_ints(rom_addresses["Door Requirements Start"] + 40, door_string(world.options.psychic_club_unlock.value))
+    write_ints(rom_addresses["Door Requirements Start"] + 48, door_string(world.options.rock_club_unlock.value))
+    write_ints(rom_addresses["Door Requirements Start"] + 56, door_string(world.options.fighting_club_unlock.value))
+    write_bytes(rom_addresses["Door Requirements Start"], door_bytes(world.options.grass_club_unlock.value))
+    write_bytes(rom_addresses["Door Requirements Start"] + 8, door_bytes(world.options.science_club_unlock.value))
+    write_bytes(rom_addresses["Door Requirements Start"] + 16, door_bytes(world.options.fire_club_unlock.value))
+    write_bytes(rom_addresses["Door Requirements Start"] + 24, door_bytes(world.options.water_club_unlock.value))
+    write_bytes(rom_addresses["Door Requirements Start"] + 32, door_bytes(world.options.lightning_club_unlock.value))
+    write_bytes(rom_addresses["Door Requirements Start"] + 40, door_bytes(world.options.psychic_club_unlock.value))
+    write_bytes(rom_addresses["Door Requirements Start"] + 48, door_bytes(world.options.rock_club_unlock.value))
+    write_bytes(rom_addresses["Door Requirements Start"] + 56, door_bytes(world.options.fighting_club_unlock.value))
 
     #"Reward Table": 0x6836a,  # 2 bytes per trainer for first and second matches.  Need more details to fill out
 
@@ -106,18 +206,18 @@ def generate_output(world: PokemonTCGWorld, output_directory: str):
         write_bytes(rom_addresses[location.name] + 178, location.item.classification)
 
     if not world.options.medal_sanity:
-        write_bytes(rom_addresses["Grass Medal"], b'\xf0')
-        write_bytes(rom_addresses["Science Medal"], b'\xf1')
-        write_bytes(rom_addresses["Fire Medal"], b'\xf2')
-        write_bytes(rom_addresses["Water Medal"], b'\xf3')
-        write_bytes(rom_addresses["Lightning Medal"], b'\xf4')
-        write_bytes(rom_addresses["Psychic Medal"], b'\xf5')
-        write_bytes(rom_addresses["Rock Medal"], b'\xf6')
-        write_bytes(rom_addresses["Fighting Medal"], b'\xf7')
+        write_bytes(rom_addresses["Grass Medal"], 240)
+        write_bytes(rom_addresses["Science Medal"], 241)
+        write_bytes(rom_addresses["Fire Medal"], 242)
+        write_bytes(rom_addresses["Water Medal"], 243)
+        write_bytes(rom_addresses["Lightning Medal"], 244)
+        write_bytes(rom_addresses["Psychic Medal"], 245)
+        write_bytes(rom_addresses["Rock Medal"], 246)
+        write_bytes(rom_addresses["Fighting Medal"], 247)
 
-    if world.options.pack_type == options.PackType.option_evoline:
+    if world.options.pack_type == PackType.option_evoline:
         index = 0
-        for pack_name, pack_contents in data.pack_to_card:
+        for pack_name, pack_contents in pack_to_card.items():
             write_bytes(rom_addresses["Booster Table"] + index*60, get_pack_bytes(pack_contents))
             index = index + 1
         while index < 238:
@@ -533,6 +633,6 @@ def generate_output(world: PokemonTCGWorld, output_directory: str):
     #         for address in rom_address:
     #             write_bytes(address, 0x2C)  # AP Item
 
-    patch.write_file("token_data.bin", patch.get_token_binary())
+    #patch.write_file("token_data.bin", patch.get_token_binary())
     out_file_name = world.multiworld.get_out_file_name_base(world.player)
     patch.write(os.path.join(output_directory, f"{out_file_name}{patch.patch_file_ending}"))

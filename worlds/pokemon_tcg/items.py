@@ -1,5 +1,4 @@
 from BaseClasses import ItemClassification
-from .poke_data import pokemon_data
 
 
 class ItemData:
@@ -548,7 +547,7 @@ packs = {
     "Double Colorless Energy Pack"],
 }
 
-medals = {
+medals = [
     "Water Medal",
     "Fighting Medal",
     "Rock Medal",
@@ -557,9 +556,9 @@ medals = {
     "Science Medal",
     "Fire Medal",
     "Grass Medal"
-}
+]
 
-doors = {
+doors = [
     "Water Club Door",
     "Fighting Club Door",
     "Rock Club Door",
@@ -568,9 +567,9 @@ doors = {
     "Science Club Door",
     "Fire Club Door",
     "Grass Club Door"
-}
+]
 
-masters_talkable = {
+masters_talkable = [
     "Water Club Talkable",
     "Fighting Club Talkable",
     "Rock Club Talkable",
@@ -579,7 +578,7 @@ masters_talkable = {
     "Science Club Talkable",
     "Fire Club Talkable",
     "Grass Club Talkable"
-}
+]
 
 pack_counts = {
     "Colosseum Pack": 10,

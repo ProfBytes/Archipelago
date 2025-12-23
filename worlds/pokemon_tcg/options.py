@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from Options import (PerGameCommonOptions, Toggle, Choice, Range, NamedRange, FreeText, TextChoice, DeathLink,
-                     ItemsAccessibility)
+from Options import (PerGameCommonOptions, Toggle, Choice, Range, FreeText, ItemsAccessibility, Visibility, OptionDict)
 
 
 class MedalSanity(Toggle):
@@ -16,6 +15,7 @@ class PackType(Choice):
     option_evoline = 1
     default = 1
 
+
 class StartingDeck1(Choice):
     """Select the primary type for your starting deck.
     Selecting the same type multiple times will randomize the secondary or tertiary type"""
@@ -28,6 +28,7 @@ class StartingDeck1(Choice):
     option_fighting = 5
     default = 0
 
+
 class StartingDeck2(Choice):
     """Select the secondary type for your starting deck.
     Selecting the same type multiple times will randomize the secondary or tertiary type"""
@@ -39,6 +40,7 @@ class StartingDeck2(Choice):
     option_psychic = 4
     option_fighting = 5
     default = 1
+
 
 class StartingDeck3(Choice):
     """Select the tertiary type for your starting deck.
@@ -111,7 +113,7 @@ class SpecialDeck(FreeText):
     visibility = Visibility.none
     default = "Nothing to see here"
 
-class StarterDeck(OptionDict):
+class StarterDeck(FreeText):
     """"""
     visibility = Visibility.none
     default = "Nothing to see here"

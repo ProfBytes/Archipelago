@@ -242,18 +242,18 @@ pack_to_card = {
     "Kabutops Pack": {"Kabutops": 4, "Kabuto": 4, "Mysterious Fossil": 4},
     "Machamp Pack": {"Machamp": 4, "Machoke": 4, "Machop": 4},
     "Marowak 1 Pack": {"Marowak Lv26": 4, "Cubone": 4},
-    "Marowak 2 Pack": {"Marowak Lv35": 4, "Cubone": 4},
+    "Marowak 2 Pack": {"Marowak Lv32": 4, "Cubone": 4},
     "Onix Pack": {"Onix": 4},
     "Primeape Pack": {"Primeape": 4, "Mankey": 4},
     "Rhydon Pack": {"Rhydon": 4, "Rhyhorn": 4},
     "Sandslash Pack": {"Sandslash": 4, "Sandshrew": 4},
 
     "Alakazam Pack": {"Alakazam": 4, "Kadabra": 4, "Abra": 4},
-    "Gengar 1 Pack": {"Gengar": 4"Haunter Lv22": 4, "Gastly Lv8": 4},
+    "Gengar 1 Pack": {"Gengar": 4, "Haunter Lv22": 4, "Gastly Lv8": 4},
     "Gengar 2 Pack": {"Gengar": 4, "Haunter Lv17": 4, "Gastly Lv17": 4},
     "Hypno Pack": {"Hypno": 4, "Drowzee": 4},
     "Jynx Pack": {"Jynx": 4},
-    "Mew 1 Pack": {"Mew Lv9": 4},
+    "Mew 1 Pack": {"Mew Lv8": 4},
     "Mew 2 Pack": {"Mew Lv15": 4},
     "Mew 3 Pack": {"Mew Lv23": 4},
     "Mewtwo 1 Pack": {"Mewtwo Lv53": 4},
@@ -287,7 +287,7 @@ pack_to_card = {
     "Flareon 1 Pack": {"Flareon Lv22": 4, "Eevee": 4},
     "Flareon 2 Pack": {"Flareon Lv28": 4, "Eevee": 4},
     "Magmar 1 Pack": {"Magmar Lv24": 4},
-    "Magmar 2 Pack": {"Magmar Lv1": 4},
+    "Magmar 2 Pack": {"Magmar Lv31": 4},
     "Moltres 1 Pack": {"Moltres Lv35": 4},
     "Moltres 2 Pack": {"Moltres Lv37": 4},
     "Ninetales 1 Pack": {"Ninetales Lv32": 4, "Vulpix": 4},
@@ -304,7 +304,7 @@ pack_to_card = {
     "Kingler Pack": {"Kingler": 4, "Krabby": 4},
     "Lapras Pack": {"Lapras": 4},
     "Omastar Pack": {"Omastar": 4, "Omanyte": 4, "Mysterious Fossil": 4},
-    "Poliwrath Pack": {"Poliwrath": 4, "Polwhirl": 4, "Poliwag": 4},
+    "Poliwrath Pack": {"Poliwrath": 4, "Poliwhirl": 4, "Poliwag": 4},
     "Seadra Pack": {"Seadra": 4, "Horsea": 4},
     "Seaking Pack": {"Seaking": 4, "Goldeen": 4},
     "Slowbro Pack": {"Slowbro": 4, "Slowpoke Lv18": 4},
@@ -363,7 +363,7 @@ pack_to_card = {
     "Energy Search Pack": {"Energy Search": 4},
     "Full Heal Pack": {"Full Heal": 4},
     "Gambler Pack": {"Gambler": 4},
-    "Imakuni? Pack": {"Imakuni?": 4},
+    "Imakuni? Pack": {"Imakuni Card": 4},
     "Imposter Professor Oak Pack": {"Imposter Professor Oak": 4},
     "Item Finder Pack": {"Item Finder": 4},
     "Lass Pack": {"Lass": 4},
@@ -374,7 +374,7 @@ pack_to_card = {
     "Pokemon Breeder Pack": {"Pokemon Breeder": 4},
     "Pokemon Center Pack": {"Pokemon Center": 4},
     "Pokemon Flute Pack": {"Pokemon Flute": 4},
-    "Pokemon Trader Pack": {"Pokemon Trainer": 4},
+    "Pokemon Trader Pack": {"Pokemon Trader": 4},
     "Potion Pack": {"Potion": 4},
     "Recycle Pack": {"Recycle": 4},
     "Revive Pack": {"Revive": 4},
@@ -529,7 +529,11 @@ tertiary = {
 #9 trainers
 colorless_pokemon = [
     {"Rattata": 3, "Raticate": 2},
-    {"Meowth": 3, "Persian": 2},
+    {"Meowth Lv14": 3, "Persian": 2},
+    {"Spearow": 3, "Fearow": 2},
+    {"Doduo": 3, "Dodrio": 2},
+    {"Rattata": 3, "Raticate": 2},
+    {"Meowth Lv14": 3, "Persian": 2},
     {"Spearow": 3, "Fearow": 2},
     {"Doduo": 3, "Dodrio": 2}
 ]
@@ -598,7 +602,7 @@ card_list = [
     "Bill", "Professor Oak", "Super Energy Removal", "Double Colorless Energy"
 ]
 
-card_Ids = {
+card_ids = {
     "Grass Energy": 0x01,
     "Fire Energy": 0x02,
     "Water Energy": 0x03,
@@ -817,7 +821,7 @@ card_Ids = {
     "Pluspower": 0xd8,
     "Defender": 0xd9,
     "Item Finder": 0xda,
-    "Gust Of Wind": 0xdb,
+    "Gust of Wind": 0xdb,
     "Devolution Spray": 0xdc,
     "Potion": 0xdd,
     "Super Potion": 0xde,
@@ -829,7 +833,7 @@ card_Ids = {
     "Recycle": 0xe4,
 }
 
-medal_Ids = {
+medal_ids = {
     "Grass Medal": 0xf0,
     "Science Medal": 0xf1,
     "Fire Medal": 0xf2,

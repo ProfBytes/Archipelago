@@ -52,10 +52,10 @@ location_name_to_id = {location.name: location.address for location in location_
                        and location.address is not None}
 
 
-class PokemonRBClient(BizHawkClient):
-    system = ("GB", "SGB")
-    patch_suffix = (".apred", ".apblue")
-    game = "Pokemon Red and Blue"
+class PokemonTCGClient(BizHawkClient):
+    system = ("GBC")
+    patch_suffix = (".apptcg")
+    game = "Pokemon TCG"
 
     def __init__(self):
         super().__init__()
