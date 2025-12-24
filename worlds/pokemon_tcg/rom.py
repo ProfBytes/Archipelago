@@ -144,8 +144,8 @@ def get_pack_bytes(card_dict: dict):
 def get_deck_bytes(card_dict: dict):
     bytes = []
     for key, value in card_dict.items():
-        bytes.append(card_ids[key])
         bytes.append(value)
+        bytes.append(card_ids[key])
     return bytes
 
 def door_string(item: str):

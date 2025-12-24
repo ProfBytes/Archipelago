@@ -1,5 +1,5 @@
 rom_addresses = {
-    "Starter Deck": 0x30428,
+    "Starter Deck": 0x309a0,
     "Door Setting": 0x03ff6,
     "Door Strings Start": 0x64bde, #Must be 28 bytes, all in a row
     "Door Requirements Start": 0x6835a, #first 8 bytes is type (0 = medal, 1 = card), next 8 are the ID
