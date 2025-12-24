@@ -141,21 +141,28 @@ def get_pack_bytes(card_dict: dict):
         bytes.append(0xff)
     return bytes
 
+def get_deck_bytes(card_dict: dict):
+    bytes = []
+    for key, value in card_dict.items():
+        bytes.append(card_ids[key])
+        bytes.append(value)
+    return bytes
+
 def door_string(item: str):
     string = "a " + item
     return encode_text(string, 28)
 
 def door_bytes(item: str):
     if item in card_ids:
-        return [card_ids[item]]
+        return card_ids[item]
     else:
-        return [medal_ids[item]]
+        return medal_ids[item]
 
 def door_requirement(item: str):
     if item in card_ids:
-        return [0x00]
+        return 0x00
     else:
-        return [0x01]
+        return 0x01
 
 
 def make_item_string(item: str, player: str):
@@ -178,18 +185,18 @@ def generate_output(world: "PokemonTCGWorld", output_directory: str):
 
         patch.write_token(APTokenTypes.WRITE, address, data)
 
-    deck_bytes = get_card_bytes(world.options.starter_deck.value)
+    deck_bytes = get_deck_bytes(world.options.starter_deck.value)
     deck_bytes.extend([0x00, 0xdf, 0x01])
     write_bytes(rom_addresses["Starter Deck"], deck_bytes)
     write_bytes(rom_addresses["Door Setting"], [1])
     write_bytes(rom_addresses["Door Strings Start"], door_string(world.options.grass_club_unlock.value))
-    write_bytes(rom_addresses["Door Strings Start"] + 8, door_string(world.options.science_club_unlock.value))
-    write_bytes(rom_addresses["Door Strings Start"] + 16, door_string(world.options.fire_club_unlock.value))
-    write_bytes(rom_addresses["Door Strings Start"] + 24, door_string(world.options.water_club_unlock.value))
-    write_bytes(rom_addresses["Door Strings Start"] + 32, door_string(world.options.lightning_club_unlock.value))
-    write_bytes(rom_addresses["Door Strings Start"] + 40, door_string(world.options.psychic_club_unlock.value))
-    write_bytes(rom_addresses["Door Strings Start"] + 48, door_string(world.options.rock_club_unlock.value))
-    write_bytes(rom_addresses["Door Strings Start"] + 56, door_string(world.options.fighting_club_unlock.value))
+    write_bytes(rom_addresses["Door Strings Start"] + 28, door_string(world.options.science_club_unlock.value))
+    write_bytes(rom_addresses["Door Strings Start"] + 56, door_string(world.options.fire_club_unlock.value))
+    write_bytes(rom_addresses["Door Strings Start"] + 84, door_string(world.options.water_club_unlock.value))
+    write_bytes(rom_addresses["Door Strings Start"] + 112, door_string(world.options.lightning_club_unlock.value))
+    write_bytes(rom_addresses["Door Strings Start"] + 140, door_string(world.options.psychic_club_unlock.value))
+    write_bytes(rom_addresses["Door Strings Start"] + 168, door_string(world.options.rock_club_unlock.value))
+    write_bytes(rom_addresses["Door Strings Start"] + 196, door_string(world.options.fighting_club_unlock.value))
     write_bytes(rom_addresses["Door Requirements Start"], door_requirement(world.options.grass_club_unlock.value))
     write_bytes(rom_addresses["Door Requirements Start"] + 1, door_requirement(world.options.science_club_unlock.value))
     write_bytes(rom_addresses["Door Requirements Start"] + 2, door_requirement(world.options.fire_club_unlock.value))
