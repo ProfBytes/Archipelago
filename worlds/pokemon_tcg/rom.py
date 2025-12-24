@@ -123,8 +123,6 @@ def encode_text(text: str, length: int=0, whitespace=True, force=False, safety=F
         encoded_text = encoded_text[:length]
     while whitespace and len(encoded_text) < length:
         encoded_text.append(char_map[" " if whitespace is True else whitespace])
-    print(encoded_text)
-    input()
     return encoded_text
 
 def get_card_bytes(card_dict: dict):
