@@ -160,9 +160,9 @@ def door_bytes(item: str):
 
 def door_requirement(item: str):
     if item in card_ids:
-        return 0x00
-    else:
         return 0x01
+    else:
+        return 0x00
 
 
 def make_item_string(item: str, player: str):
