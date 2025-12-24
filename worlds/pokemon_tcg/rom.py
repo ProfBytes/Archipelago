@@ -173,6 +173,7 @@ def generate_output(world: "PokemonTCGWorld", output_directory: str):
         patch.write_token(APTokenTypes.WRITE, address, data)
 
     deck_bytes = get_card_bytes(world.options.starter_deck.value)
+    deck_bytes.extend([0x00, 0xdf, 0x01])
     write_bytes(rom_addresses["Starter Deck"], deck_bytes)
     write_bytes(rom_addresses["Door Setting"], [1])
     write_bytes(rom_addresses["Door Requirements Start"], door_string(world.options.grass_club_unlock.value))
