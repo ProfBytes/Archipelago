@@ -5,9 +5,6 @@ https://github.com/PrimePentad/Pokemon-TCG-Rando-Alpha/blob/main/evo_booster_lin
 Location table
 https://github.com/PrimePentad/Pokemon-TCG-Rando-Alpha/blob/main/locations_reference
 
-Get list of ROM addresses
-Write to ROM addresses
-
 Have Murray and Ken's requirements (medals and card count with defaults of 4 and 300) scale based off of the medal requirements for E4
 Setting in the future to set them to specific values
 Add dialogue saying what the requirement is
@@ -18,3 +15,5 @@ Competitive would be the best decks we can make that don't break the theme.  We'
 Then Haymaker is just all haymaker all the time.
 
 Plando starting deck
+
+need ROM addresses for trade requirements

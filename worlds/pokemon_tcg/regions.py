@@ -148,42 +148,34 @@ def create_regions(world):
     connect(multiworld, player, "Overworld", "Ishihara's House")
     connect(multiworld, player, "Overworld", "Water Club Lobby")
     connect(multiworld, player, "Water Club Lobby", "Water Club Lounge")
-    print(world.options.water_club_unlock.value)
     connect(multiworld, player, "Water Club Lobby", "Water Club Main Hall",
             lambda state: logic.has_item(state, world, player, world.options.water_club_unlock.value))
     connect(multiworld, player, "Overworld", "Fire Club Lobby")
     connect(multiworld, player, "Fire Club Lobby", "Fire Club Lounge")
-    print(world.options.fire_club_unlock.value)
     connect(multiworld, player, "Fire Club Lobby", "Fire Club Main Hall",
             lambda state: logic.has_item(state, world, player, world.options.fire_club_unlock.value))
     connect(multiworld, player, "Overworld", "Lightning Club Lobby")
     connect(multiworld, player, "Lightning Club Lobby", "Lightning Club Lounge")
-    print(world.options.lightning_club_unlock.value)
     connect(multiworld, player, "Lightning Club Lobby", "Lightning Club Main Hall",
             lambda state: logic.has_item(state, world, player, world.options.lightning_club_unlock.value))
     connect(multiworld, player, "Overworld", "Grass Club Lobby")
     connect(multiworld, player, "Grass Club Lobby", "Grass Club Lounge")
-    print(world.options.grass_club_unlock.value)
     connect(multiworld, player, "Grass Club Lobby", "Grass Club Main Hall",
             lambda state: logic.has_item(state, world, player, world.options.grass_club_unlock.value))
     connect(multiworld, player, "Overworld", "Rock Club Lobby")
     connect(multiworld, player, "Rock Club Lobby", "Rock Club Lounge")
-    print(world.options.rock_club_unlock.value)
     connect(multiworld, player, "Rock Club Lobby", "Rock Club Main Hall",
             lambda state: logic.has_item(state, world, player, world.options.rock_club_unlock.value))
     connect(multiworld, player, "Overworld", "Fighting Club Lobby")
     connect(multiworld, player, "Fighting Club Lobby", "Fighting Club Lounge")
-    print(world.options.fighting_club_unlock.value)
     connect(multiworld, player, "Fighting Club Lobby", "Fighting Club Main Hall",
             lambda state: logic.has_item(state, world, player, world.options.fighting_club_unlock.value))
     connect(multiworld, player, "Overworld", "Psychic Club Lobby")
     connect(multiworld, player, "Psychic Club Lobby", "Psychic Club Lounge")
-    print(world.options.psychic_club_unlock.value)
     connect(multiworld, player, "Psychic Club Lobby", "Psychic Club Main Hall",
             lambda state: logic.has_item(state, world, player, world.options.psychic_club_unlock.value))
     connect(multiworld, player, "Overworld", "Science Club Lobby")
     connect(multiworld, player, "Science Club Lobby", "Science Club Lounge")
-    print(world.options.science_club_unlock.value)
     connect(multiworld, player, "Science Club Lobby", "Science Club Main Hall",
             lambda state: logic.has_item(state, world, player, world.options.science_club_unlock.value))
     connect(multiworld, player, "Overworld", "Pokemon Dome Lobby")
