@@ -524,18 +524,18 @@ tertiary = {
     ]
 }
 
-#14 cards
-#5 pokemon
+#12 cards
+#3 pokemon
 #9 trainers
 colorless_pokemon = [
-    {"Rattata": 3, "Raticate": 2},
-    {"Meowth Lv14": 3, "Persian": 2},
-    {"Spearow": 3, "Fearow": 2},
-    {"Doduo": 3, "Dodrio": 2},
-    {"Rattata": 3, "Raticate": 2},
-    {"Meowth Lv14": 3, "Persian": 2},
-    {"Spearow": 3, "Fearow": 2},
-    {"Doduo": 3, "Dodrio": 2}
+    {"Rattata": 2, "Raticate": 1},
+    {"Meowth Lv14": 2, "Persian": 1},
+    {"Spearow": 2, "Fearow": 1},
+    {"Doduo": 2, "Dodrio": 1},
+    {"Rattata": 2, "Raticate": 1},
+    {"Meowth Lv14": 2, "Persian": 1},
+    {"Spearow": 2, "Fearow": 1},
+    {"Doduo": 2, "Dodrio": 1}
 ]
 
 starting_deck_trainers = ["Imposter Professor Oak", "Mr Fuji", "Lass", "Imakuni Card",
