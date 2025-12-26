@@ -13,27 +13,27 @@ logger = logging.getLogger("Client")
 BANK_EXCHANGE_RATE = 50000000
 
 DATA_LOCATIONS = {
-    "ItemIndex": (0x1A6E, 0x02),
-    "Deathlink": (0x00FD, 0x01),
-    "APItem": (0x00FF, 0x01),
-    "EventFlag": (0x1735, 0x140),
-    "Missable": (0x161A, 0x20),
-    "Hidden": (0x16DE, 0x0E),
-    "Rod": (0x1716, 0x01),
-    "DexSanityFlag": (0x1A71, 19),
-    "GameStatus": (0x1A84, 0x01),
-    "Money": (0x141F, 3),
-    "CurrentMap": (0x1436, 1),
-    "ResetCheck": (0x0100, 4),
-    # First and second Vermilion Gym trash can selection. Second is not used, so should always be 0.
-    # First should never be above 0x0F. This is just before Event Flags.
-    "CrashCheck1": (0x1731, 2),
-    # Unused, should always be 0. This is just before Missables flags.
-    "CrashCheck2": (0x1617, 1),
-    # Progressive keys, should never be above 10. Just before Dexsanity flags.
-    "CrashCheck3": (0x1A70, 1),
-    # Route 18 Gate script value. Should never be above 3. Just before Hidden items flags.
-    "CrashCheck4": (0x16DD, 1),
+    "ItemIndex": (0xdf2a, 0x02),
+#    "Deathlink": (0x00FD, 0x01),
+    "APItem": (0xdf29, 0x01),
+#    "EventFlag": (0x1735, 0x140),
+#    "Missable": (0x161A, 0x20),
+#    "Hidden": (0x16DE, 0x0E),
+#    "Rod": (0x1716, 0x01),
+#    "DexSanityFlag": (0x1A71, 19),
+    "GameStatus": (0xdf2b, 0x01),
+#    "Money": (0x141F, 3),
+#    "CurrentMap": (0x1436, 1),
+#    "ResetCheck": (0x0100, 4),
+#    # First and second Vermilion Gym trash can selection. Second is not used, so should always be 0.
+#    # First should never be above 0x0F. This is just before Event Flags.
+#    "CrashCheck1": (0x1731, 2),
+#    # Unused, should always be 0. This is just before Missables flags.
+#    "CrashCheck2": (0x1617, 1),
+#    # Progressive keys, should never be above 10. Just before Dexsanity flags.
+#    "CrashCheck3": (0x1A70, 1),
+#    # Route 18 Gate script value. Should never be above 3. Just before Hidden items flags.
+#    "CrashCheck4": (0x16DD, 1),
 }
 
 location_map = {"Rod": {}, "EventFlag": {}, "Missable": {}, "Hidden": {}, "list": {}, "DexSanityFlag": {}}
@@ -55,7 +55,7 @@ location_name_to_id = {location.name: location.address for location in location_
 class PokemonTCGClient(BizHawkClient):
     system = ("GBC")
     patch_suffix = (".apptcg")
-    game = "Pokemon TCG"
+    game = "Pokemon Trading Card Game"
 
     def __init__(self):
         super().__init__()
@@ -69,12 +69,12 @@ class PokemonTCGClient(BizHawkClient):
         self.current_map = 0
 
     async def validate_rom(self, ctx):
-        game_name = await read(ctx.bizhawk_ctx, [(0x134, 12, "ROM")])
+        game_name = await read(ctx.bizhawk_ctx, [(0x134, 8, "ROM")])
         game_name = game_name[0].decode("ascii")
-        if game_name in ("POKEMON RED\00", "POKEMON BLUE"):
+        if game_name == "POKECARD":
             ctx.game = self.game
             ctx.items_handling = 0b001
-            ctx.command_processor.commands["bank"] = cmd_bank
+            #ctx.command_processor.commands["bank"] = cmd_bank
             seed_name = await read(ctx.bizhawk_ctx, [(0xFFDB, 21, "ROM")])
             ctx.seed_name = seed_name[0].split(b"\0")[0].decode("ascii")
             self.set_deathlink = False
@@ -120,7 +120,7 @@ class PokemonTCGClient(BizHawkClient):
               or data["CrashCheck3"][0] > 10
               or data["CrashCheck4"][0] > 3):
             # Should mean game crashed
-            logger.warning("Pokémon Red/Blue game may have crashed. Disconnecting from server.")
+            logger.warning("Pokémon TCG game may have crashed. Disconnecting from server.")
             self.game_state = False
             await ctx.disconnect()
             return
@@ -200,38 +200,6 @@ class PokemonTCGClient(BizHawkClient):
                 self.last_death_link = ctx.last_death_link
                 await write(ctx.bizhawk_ctx, [(DATA_LOCATIONS["Deathlink"][0], [1], "WRAM")])
 
-        # BANK
-
-        if self.banking_command:
-            original_money = data["Money"]
-            # Money is stored as binary-coded decimal.
-            money = int(original_money.hex())
-            if self.banking_command > money:
-                logger.warning(f"You do not have ${self.banking_command} to deposit!")
-            elif (-self.banking_command * BANK_EXCHANGE_RATE) > (ctx.stored_data[f"EnergyLink{ctx.team}"] or 0):
-                logger.warning("Not enough money in the EnergyLink storage!")
-            else:
-                if self.banking_command + money > 999999:
-                    self.banking_command = 999999 - money
-                money = str(money - self.banking_command).zfill(6)
-                money = [int(money[:2], 16), int(money[2:4], 16), int(money[4:], 16)]
-                money_written = await guarded_write(ctx.bizhawk_ctx, [(0x141F, money, "WRAM")],
-                                                    [(0x141F, original_money, "WRAM")])
-                if money_written:
-                    if self.banking_command >= 0:
-                        deposit = self.banking_command - int(self.banking_command / 4)
-                        tax = self.banking_command - deposit
-                        logger.info(f"Deposited ${deposit}, and charged a tax of ${tax}.")
-                        self.banking_command = deposit
-                    else:
-                        logger.info(f"Withdrew ${-self.banking_command}.")
-                    await ctx.send_msgs([{
-                        "cmd": "Set", "key": f"EnergyLink{ctx.team}", "operations":
-                            [{"operation": "add", "value": self.banking_command * BANK_EXCHANGE_RATE},
-                             {"operation": "max", "value": 0}],
-                    }])
-            self.banking_command = None
-
         if data["CurrentMap"][0] != self.current_map:
             await ctx.send_msgs([{"cmd": "Bounce", "slots": [ctx.slot], "data": {"currentMap": data["CurrentMap"][0]}}])
             self.current_map = data["CurrentMap"][0]
@@ -254,31 +222,3 @@ class PokemonTCGClient(BizHawkClient):
                 self.game_state = False
                 self.disconnect_pending = True
         super().on_package(ctx, cmd, args)
-
-
-def cmd_bank(self, cmd: str = "", amount: str = ""):
-    """Deposit or withdraw money with the server's EnergyLink storage.
-    /bank - check server balance.
-    /bank deposit # - deposit money. One quarter of the amount will be lost to taxation.
-    /bank withdraw # - withdraw money."""
-    if self.ctx.game != "Pokemon Red and Blue":
-        logger.warning("This command can only be used while playing Pokémon Red and Blue")
-        return
-    if (not self.ctx.server) or self.ctx.server.socket.closed or not self.ctx.client_handler.game_state:
-        logger.info(f"Must be connected to server and in game.")
-        return
-    elif not cmd:
-        logger.info(f"Money available: {int((self.ctx.stored_data[f'EnergyLink{self.ctx.team}'] or 0) / BANK_EXCHANGE_RATE)}")
-        return
-    elif not amount:
-        logger.warning("You must specify an amount.")
-    elif cmd == "withdraw":
-        self.ctx.client_handler.banking_command = -int(amount)
-    elif cmd == "deposit":
-        if int(amount) < 4:
-            logger.warning("You must deposit at least $4, for tax purposes.")
-            return
-        self.ctx.client_handler.banking_command = int(amount)
-    else:
-        logger.warning(f"Invalid bank command {cmd}")
-        return

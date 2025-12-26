@@ -52,7 +52,7 @@ class PokemonWebWorld(WebWorld):
 
 class PokemonTCGWorld(World):
     """"""
-    game = "Pokemon TCG"
+    game = "Pokemon Trading Card Game"
 
     options_dataclass = PokemonTCGOptions
     options: PokemonTCGOptions
@@ -667,7 +667,7 @@ class PokemonTCGWorld(World):
     #     return ret
 
 class PokemonTCGItem(Item):
-    game = "Pokemon TCG"
+    game = "Pokemon Trading Card Game"
     type = None
 
     def __init__(self, name: str, player: int = None):

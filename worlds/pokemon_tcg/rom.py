@@ -10,7 +10,7 @@ from .options import PackType
 from .rom_addresses import rom_addresses
 
 class PokemonTCGProcedurePatch(APProcedurePatch, APTokenMixin):
-    game = "Pokemon TCG"
+    game = "Pokemon Trading Card Game"
     hash = "219b2cc64e5a052003015d4bd4c622cd"
     patch_file_ending = ".apptcg"
     result_file_ending = ".gbc"

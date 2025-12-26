@@ -547,19 +547,19 @@ starting_deck_trainers = ["Imposter Professor Oak", "Mr Fuji", "Lass", "Imakuni 
                           "Revive", "Maintenance", "Pokemon Flute", "Gambler", "Recycle"]
 
 eevee_deck = {
-    "Eeevee": 4,
+    "Eevee": 4,
     "Flareon Lv22": 1,
     "Vaporeon Lv29": 1,
     "Jolteon Lv24": 1,
     "Flareon Lv28": 1,
-    "Vapoeon Lv42": 1,
+    "Vaporeon Lv42": 1,
     "Jolteon Lv29": 1,
     "Moltres Lv37": 2,
     "Magmar Lv31": 2,
-    "Flying Pikachu Lv13": 2,
+    "Flying Pikachu": 2,
     "Electabuzz Lv20": 2,
     "Lapras": 2,
-    "Surfing Pikachu": 2,
+    "Surfing Pikachu Lv13": 2,
     "Kangaskhan": 2,
     "Tauros": 3,
     "Defender": 3,
