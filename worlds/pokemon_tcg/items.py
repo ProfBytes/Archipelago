@@ -206,9 +206,10 @@ item_table = {
     "Energy Pack": ItemData(180, ItemClassification.filler, ["Energy", "Pack"]),
 
     "Beat Sam": ItemData(None, ItemClassification.progression, []),
-    "Beat Aaron LF": ItemData(None, ItemClassification.progression, []),
-    "Beat Aaron WF": ItemData(None, ItemClassification.progression, []),
-    "Beat Aaron GP": ItemData(None, ItemClassification.progression, []),
+    "Beat Aaron": ItemData(None, ItemClassification.progression, []),
+#    "Beat Aaron LF": ItemData(None, ItemClassification.progression, []),
+#    "Beat Aaron WF": ItemData(None, ItemClassification.progression, []),
+#    "Beat Aaron GP": ItemData(None, ItemClassification.progression, []),
     "Beat Heather": ItemData(None, ItemClassification.progression, []),
     "Beat Kristin": ItemData(None, ItemClassification.progression, []),
     "Beat Brittany": ItemData(None, ItemClassification.progression, []),

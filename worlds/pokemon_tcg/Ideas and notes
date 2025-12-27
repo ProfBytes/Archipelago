@@ -17,3 +17,7 @@ Then Haymaker is just all haymaker all the time.
 Plando starting deck
 
 need ROM addresses for trade requirements
+
+wBoosterCardsDrawn = 0xc400. That would be the place to write booster packs, with more than enough space to hold a full deck.
+
+Nice to have.  Set events on save load from checks done to prevent needing to do pointless fights.

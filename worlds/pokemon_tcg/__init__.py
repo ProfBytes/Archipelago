@@ -77,9 +77,9 @@ class PokemonTCGWorld(World):
         self.water_club_trade = None
         self.grass_club_trade = None
         self.fighting_club_trade = None
-        self.ishihara_1_trade = None
-        self.ishihara_2_trade = None
-        self.ishihara_3_trade = None
+        self.ishihara_trade_1 = None
+        self.ishihara_trade_2 = None
+        self.ishihara_trade_3 = None
         self.lightning_club_trade = None
         self.fire_club_trade = None
         self.psychic_club_trade = None
