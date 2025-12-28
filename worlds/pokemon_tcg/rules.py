@@ -224,11 +224,11 @@ def set_rules(multiworld, world, player):
         "Promo Electabuzz Trade": lambda state: state.has(world.options.lightning_club_trade, player),
         "Promo Arcanine Trade": lambda state: state.has(world.options.water_club_trade, player),
         "Vileplume Trade": lambda state: state.has(world.options.grass_club_trade_1, player),
-        "Promo Pikachu Trade (Grass Club)": lambda state: state.has(world.options.grass_club_trade_2, player),
-        "Blastoise Trade": lambda state: state.has(world.options.grass_club_trade_3, player),
+        "Promo Pikachu Trade (Grass Club)": lambda state: state.has(world.options.grass_club_trade_1, player) and state.has(world.options.grass_club_trade_2, player),
+        "Blastoise Trade": lambda state: state.has(world.options.grass_club_trade_1, player) and state.has(world.options.grass_club_trade_2, player) and state.has(world.options.grass_club_trade_3, player),
         "Ishihara Trade 1": lambda state: state.has(world.options.ishihara_trade_1, player),
-        "Ishihara Trade 2": lambda state: state.has(world.options.ishihara_trade_2, player),
-        "Ishihara Trade 3": lambda state: state.has(world.options.ishihara_trade_3, player),
+        "Ishihara Trade 2": lambda state: state.has(world.options.ishihara_trade_1, player) and state.has(world.options.ishihara_trade_2, player),
+        "Ishihara Trade 3": lambda state: state.has(world.options.ishihara_trade_1, player) and state.has(world.options.ishihara_trade_2, player) and state.has(world.options.ishihara_trade_3, player),
 
         # Email logic
         "Email 1": lambda state: logic.email_count() >= 1,
