@@ -5,6 +5,7 @@ import time
 from NetUtils import ClientStatus
 from worlds._bizhawk.client import BizHawkClient
 from worlds._bizhawk import read, write, guarded_write
+from .rom_addresses import rom_addresses
 
 from .locations import location_data
 
@@ -69,7 +70,7 @@ class PokemonTCGClient(BizHawkClient):
             ctx.game = self.game
             ctx.items_handling = 0b001
             #ctx.command_processor.commands["bank"] = cmd_bank
-            seed_name = await read(ctx.bizhawk_ctx, [(0xFFDB, 21, "ROM")])
+            seed_name = await read(ctx.bizhawk_ctx, [(rom_addresses["Seed Name"], 21, "ROM")])
             ctx.seed_name = seed_name[0].split(b"\0")[0].decode("ascii")
             self.set_deathlink = False
             self.banking_command = None
@@ -82,7 +83,7 @@ class PokemonTCGClient(BizHawkClient):
         auth_name = await read(ctx.bizhawk_ctx, [(0xFFC6, 21, "ROM")])
         if auth_name[0] == bytes([0] * 21):
             # rom was patched before rom names implemented, use player name
-            auth_name = await read(ctx.bizhawk_ctx, [(0xFFF0, 16, "ROM")])
+            auth_name = await read(ctx.bizhawk_ctx, [(rom_addresses["Slot Name"], 16, "ROM")])
             auth_name = auth_name[0].decode("ascii").split("\x00")[0]
         else:
             auth_name = base64.b64encode(auth_name[0]).decode()

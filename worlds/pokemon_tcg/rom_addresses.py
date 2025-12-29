@@ -1,4 +1,6 @@
 rom_addresses = {
+    "Seed Name": 0x7ffdf,
+    "Slot Name": 0x7ffef,
     "Starter Deck": 0x309a0,
     "Door Setting": 0x03ff6,
     "Door Strings Start": 0x64bde, #Must be 28 bytes, all in a row

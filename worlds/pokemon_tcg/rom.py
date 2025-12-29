@@ -243,8 +243,8 @@ def generate_output(world: "PokemonTCGWorld", output_directory: str):
             write_bytes(rom_addresses["Booster Table"] + index*60, get_pack_bytes({}))
             index = index + 1
 
-    write_bytes(, world.multiworld.seed_name.encode())
-    write_bytes(, world.multiworld.player_name[world.player].encode())
+    write_bytes(rom_addresses["Seed Name"], world.multiworld.seed_name.encode())
+    write_bytes(rom_addresses["Slot Name"], world.multiworld.player_name[world.player].encode())
 
     patch.write_file("token_data.bin", patch.get_token_binary())
     out_file_name = world.multiworld.get_out_file_name_base(world.player)
