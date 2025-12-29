@@ -71,7 +71,7 @@ class PokemonTCGClient(BizHawkClient):
             ctx.items_handling = 0b001
             #ctx.command_processor.commands["bank"] = cmd_bank
             seed_name = await read(ctx.bizhawk_ctx, [(rom_addresses["Seed Name"], 21, "ROM")])
-            ctx.seed_name = seed_name[0].split(b"\0")[0].decode("ascii")
+            ctx.seed_name = seed_name[0].split(b"\xff")[0].decode("ascii")
             self.set_deathlink = False
             self.banking_command = None
             self.locations_array = None
@@ -80,11 +80,11 @@ class PokemonTCGClient(BizHawkClient):
         return False
 
     async def set_auth(self, ctx):
-        auth_name = await read(ctx.bizhawk_ctx, [(0xFFC6, 21, "ROM")])
+        auth_name = await read(ctx.bizhawk_ctx, [(rom_addresses["ROM Name"], 21, "ROM")])
         if auth_name[0] == bytes([0] * 21):
             # rom was patched before rom names implemented, use player name
             auth_name = await read(ctx.bizhawk_ctx, [(rom_addresses["Slot Name"], 16, "ROM")])
-            auth_name = auth_name[0].decode("ascii").split("\x00")[0]
+            auth_name = auth_name[0].decode("ascii").split("\xff")[0]
         else:
             auth_name = base64.b64encode(auth_name[0]).decode()
         ctx.auth = auth_name

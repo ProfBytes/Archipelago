@@ -243,6 +243,10 @@ def generate_output(world: "PokemonTCGWorld", output_directory: str):
             write_bytes(rom_addresses["Booster Table"] + index*60, get_pack_bytes({}))
             index = index + 1
 
+    rom_name = bytearray(f"AP{Utils.__version__.replace('.', '')[0:3]}_{world.player}_{world.multiworld.seed:11}\0",
+                         "utf8")[:21]
+    rom_name.extend([0] * (21 - len(rom_name)))
+    write_bytes(rom_addresses["ROM Name"], rom_name)
     write_bytes(rom_addresses["Seed Name"], world.multiworld.seed_name.encode())
     write_bytes(rom_addresses["Slot Name"], world.multiworld.player_name[world.player].encode())
 
