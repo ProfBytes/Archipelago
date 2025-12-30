@@ -128,10 +128,12 @@ class PokemonTCGClient(BizHawkClient):
 
         # SEND ITEMS TO CLIENT
 
-        if data["APItem"][0] == 0:
+        if data["APItem"][0] == 255:
             item_index = int.from_bytes(data["ItemIndex"], "little")
+            print(item_index)
+            print(ctx.items_received)
             if len(ctx.items_received) > item_index:
-                item_code = ctx.items_received[item_index].item - 172000000
+                item_code = ctx.items_received[item_index].item - 17000000000
                 if item_code > 255:
                     item_code -= 256
                 await write(ctx.bizhawk_ctx, [(DATA_LOCATIONS["APItem"][0],
