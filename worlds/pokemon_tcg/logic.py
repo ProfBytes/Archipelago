@@ -62,6 +62,12 @@ def has_card(state, world, player, card):
     else:
         return False
 
+def has_all_cards(state, world, player, card_list):
+    for card in card_list:
+        if not has_card(state, world, player, card):
+            return False
+    return True
+
 def has_item(state, world, player, item):
     if item == "Nothing":
         return True

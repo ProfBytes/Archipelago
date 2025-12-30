@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from Options import (PerGameCommonOptions, Toggle, Choice, Range, FreeText, ItemsAccessibility, Visibility, OptionDict)
+from Options import (PerGameCommonOptions, Toggle, Choice, Range, FreeText, ItemsAccessibility, Visibility, OptionSet)
 
 
 class MedalSanity(Toggle):
@@ -134,67 +134,69 @@ class StarterDeck(FreeText):
 class PsychicClubTrade(FreeText):
     """"""
     visibility = Visibility.none
-    default = "Nothing to see here"
+    default = "Psychic Medal"
 
 
-class FireClubTrade(FreeText):
+class FireClubTrade(Range):
     """"""
     visibility = Visibility.none
-    default = "Nothing to see here"
+    range_start = 0
+    range_end = 8
+    default = 3
 
 
-class FightingClubTrade(FreeText):
+class FightingClubTrade(OptionSet):
     """"""
     visibility = Visibility.none
-    default = "Nothing to see here"
+    default = ["Rapidash", "Omastar", "Graveler", "Parasect", "Weezing"]
 
 
 class LightningClubTrade(FreeText):
     """"""
     visibility = Visibility.none
-    default = "Nothing to see here"
+    default = "Electabuzz Lv35"
 
 
 class WaterClubTrade(FreeText):
     """"""
     visibility = Visibility.none
-    default = "Nothing to see here"
+    default = "Lapras"
 
 
 class GrassClubTrade1(FreeText):
     """"""
     visibility = Visibility.none
-    default = "Nothing to see here"
+    default = "Oddish"
 
 
 class GrassClubTrade2(FreeText):
     """"""
     visibility = Visibility.none
-    default = "Nothing to see here"
+    default = "Clefairy"
 
 
 class GrassClubTrade3(FreeText):
     """"""
     visibility = Visibility.none
-    default = "Nothing to see here"
+    default = "Charizard"
 
 
 class IshiharaTrade1(FreeText):
     """"""
     visibility = Visibility.none
-    default = "Nothing to see here"
+    default = "Clefable"
 
 
 class IshiharaTrade2(FreeText):
     """"""
     visibility = Visibility.none
-    default = "Nothing to see here"
+    default = "Ditto"
 
 
 class IshiharaTrade3(FreeText):
     """"""
     visibility = Visibility.none
-    default = "Nothing to see here"
+    default = "Chansey"
 
 
 @dataclass
