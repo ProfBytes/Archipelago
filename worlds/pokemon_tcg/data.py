@@ -538,7 +538,7 @@ colorless_pokemon = [
     {"Doduo": 2, "Dodrio": 1}
 ]
 
-starting_deck_trainers = ["Imposter Professor Oak", "Mr Fuji", "Lass", "Imakuni Card",
+starting_deck_trainers = ["Imposter Professor Oak", "Mr Fuji", "Lass",
                           "Pokemon Trader", "Pokemon Breeder", "Clefairy Doll",
                           "Mysterious Fossil", "Energy Retrieval", "Super Energy Retrieval",
                           "Energy Search", "Energy Removal", "Switch", "Pokemon Center",
