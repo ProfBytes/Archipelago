@@ -143,6 +143,7 @@ class PokemonTCGClient(BizHawkClient):
 
         locations = set()
 
+        print(data)
         for location_name, found in location_map.items():
             if not found and data["EventFlag"][(location_bytes_bits[location_name]['byte'])-0x13ef] & location_bytes_bits[location_name]['bit'] > 0:
                 locations.add(location_name_to_id[location_name])
