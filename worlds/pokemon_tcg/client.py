@@ -138,7 +138,7 @@ class PokemonTCGClient(BizHawkClient):
             if len(ctx.items_received) > item_index:
                 item_code = ctx.items_received[item_index].item - 17000000000
                 await write(ctx.bizhawk_ctx, [(DATA_LOCATIONS["APItem"][0],
-                                               [item_code-1], "WRAM")])
+                                               [item_code], "WRAM")])
 
         # LOCATION CHECKS
 
@@ -147,10 +147,6 @@ class PokemonTCGClient(BizHawkClient):
         for location_name, found in location_map.items():
             if not found and location_type[location_name] == "duel" and \
                     data["DuelFlags"][(location_bytes_bits[location_name]['byte'])-0x13ef] & location_bytes_bits[location_name]['bit'] > 0:
-                locations.add(location_name_to_id[location_name])
-                location_map[location_name] = True
-            if not found and location_type[location_name] == "medal" and \
-                    data["MedalFlags"][(location_bytes_bits[location_name]['byte'])-0x1402] & location_bytes_bits[location_name]['bit'] > 0:
                 locations.add(location_name_to_id[location_name])
                 location_map[location_name] = True
             if not found and location_type[location_name] == "email" and \
