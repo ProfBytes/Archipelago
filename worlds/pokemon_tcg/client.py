@@ -17,7 +17,10 @@ DATA_LOCATIONS = {
     "ItemIndex": (0x1f2a, 0x02),
 #    "Deathlink": (0x00FD, 0x01),
     "APItem": (0x1f29, 0x01),
-    "EventFlag": (0x13ef, 0x0E),
+    "DuelFlags": (0x13ef, 0x09),
+    "MedalFlags": (0x1402, 0x01),
+    "EmailFlags": (0x1404, 0x02),
+    "TradeFlags": (0x1406, 0x02),
 #    "Missable": (0x161A, 0x20),
 #    "Hidden": (0x16DE, 0x0E),
 #    "Rod": (0x1716, 0x01),
@@ -39,10 +42,12 @@ DATA_LOCATIONS = {
 
 location_map = {}
 location_bytes_bits = {}
+location_type = {}
 for location in location_data:
     if location.ram_address is not None:
         location_map[location.name] = False
         location_bytes_bits[location.name] = {'byte': location.ram_address, 'bit': location.bit_mask}
+        location_type[location.name] = location.check_type
 
 location_name_to_id = {location.name: location.address for location in location_data if location.type == "Item"
                        and location.address is not None}
@@ -145,12 +150,25 @@ class PokemonTCGClient(BizHawkClient):
 
         print(data)
         for location_name, found in location_map.items():
-            if not found and data["EventFlag"][(location_bytes_bits[location_name]['byte'])-0x13ef] & location_bytes_bits[location_name]['bit'] > 0:
+            if not found and location_type[location_name] == "duel" and \
+                    data["DuelFlags"][(location_bytes_bits[location_name]['byte'])-0x13ef] & location_bytes_bits[location_name]['bit'] > 0:
+                locations.add(location_name_to_id[location_name])
+                location_map[location_name] = True
+            if not found and location_type[location_name] == "medal" and \
+                    data["MedalFlags"][(location_bytes_bits[location_name]['byte'])-0x1402] & location_bytes_bits[location_name]['bit'] > 0:
+                locations.add(location_name_to_id[location_name])
+                location_map[location_name] = True
+            if not found and location_type[location_name] == "email" and \
+                    data["EmailFlags"][(location_bytes_bits[location_name]['byte'])-0x1404] & location_bytes_bits[location_name]['bit'] > 0:
+                locations.add(location_name_to_id[location_name])
+                location_map[location_name] = True
+            if not found and location_type[location_name] == "trade" and \
+                    data["TradeFlags"][(location_bytes_bits[location_name]['byte'])-0x1406] & location_bytes_bits[location_name]['bit'] > 0:
                 locations.add(location_name_to_id[location_name])
                 location_map[location_name] = True
             # for flag, loc_id in loc_map.items():
             #     if flag_type == "list":
-            #         if (data["EventFlag"][location_bytes_bits[loc_id][0]['byte']] & 1 <<
+            #         if (data["DuelFlags"][location_bytes_bits[loc_id][0]['byte']] & 1 <<
             #                 location_bytes_bits[loc_id][0]['bit']
             #                 and data["Missable"][location_bytes_bits[loc_id][1]['byte']] & 1 <<
             #                 location_bytes_bits[loc_id][1]['bit']):
@@ -166,15 +184,15 @@ class PokemonTCGClient(BizHawkClient):
         # AUTO HINTS
 
         hints = []
-        # if data["EventFlag"][280] & 16:
+        # if data["DuelFlags"][280] & 16:
         #     hints.append("Cerulean Bicycle Shop")
-        # if data["EventFlag"][280] & 32:
+        # if data["DuelFlags"][280] & 32:
         #     hints.append("Route 2 Gate - Oak's Aide")
-        # if data["EventFlag"][280] & 64:
+        # if data["DuelFlags"][280] & 64:
         #     hints.append("Route 11 Gate 2F - Oak's Aide")
-        # if data["EventFlag"][280] & 128:
+        # if data["DuelFlags"][280] & 128:
         #     hints.append("Route 15 Gate 2F - Oak's Aide")
-        # if data["EventFlag"][281] & 1:
+        # if data["DuelFlags"][281] & 1:
         #     hints += ["Celadon Prize Corner - Item Prize 1", "Celadon Prize Corner - Item Prize 2",
         #               "Celadon Prize Corner - Item Prize 3"]
         # if (location_name_to_id["Fossil - Choice A"] in ctx.checked_locations and location_name_to_id[
@@ -212,7 +230,7 @@ class PokemonTCGClient(BizHawkClient):
 
         # VICTORY
 
-        # if data["EventFlag"][280] & 1 and not ctx.finished_game:
+        # if data["DuelFlags"][280] & 1 and not ctx.finished_game:
         #     await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
         #     ctx.finished_game = True
 
