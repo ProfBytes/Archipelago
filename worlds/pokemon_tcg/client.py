@@ -78,6 +78,7 @@ class PokemonTCGClient(BizHawkClient):
             #ctx.command_processor.commands["bank"] = cmd_bank
             seed_name = await read(ctx.bizhawk_ctx, [(rom_addresses["Seed Name"], 21, "ROM")])
             ctx.seed_name = seed_name[0].split(b"\xff")[0].decode("ascii")
+            ctx.items_handling = 0b111
             self.set_deathlink = False
             self.banking_command = None
             self.locations_array = None
@@ -135,14 +136,10 @@ class PokemonTCGClient(BizHawkClient):
 
         if data["APItem"][0] == 255:
             item_index = int.from_bytes(data["ItemIndex"], "little")
-            print(item_index)
-            print(ctx.items_received)
             if len(ctx.items_received) > item_index:
                 item_code = ctx.items_received[item_index].item - 17000000000
-                if item_code > 255:
-                    item_code -= 256
                 await write(ctx.bizhawk_ctx, [(DATA_LOCATIONS["APItem"][0],
-                                               [item_code], "WRAM")])
+                                               [item_code-1], "WRAM")])
 
         # LOCATION CHECKS
 
