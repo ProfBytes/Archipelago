@@ -116,10 +116,12 @@ class PokemonTCGWorld(World):
             self.starting_deck_type_2 = options.StartingDeck1.option_water
             self.starting_deck_type_3 = options.StartingDeck1.option_lightning
         else:
-            while self.starting_deck_type_2 == self.starting_deck_type_1:
-                self.starting_deck_type_2 = options.StartingDeck2[self.random.sample(0, 5)]
-            while self.starting_deck_type_3 == self.starting_deck_type_2 or self.starting_deck_type_3 == self.starting_deck_type_1:
-                self.starting_deck_type_3 = options.StartingDeck3[self.random.sample(0, 5)]
+            while self.options.starting_deck_2.current_option_name == self.options.starting_deck_1.current_option_name:
+                self.options.starting_deck_2 = options.StartingDeck2(self.random.randint(0, 5))
+            while self.options.starting_deck_3.current_option_name == self.options.starting_deck_2.current_option_name \
+                    or self.options.starting_deck_3.current_option_name == self.options.starting_deck_1.current_option_name:
+                self.options.starting_deck_3 = options.StartingDeck3(self.random.randint(0, 5))
+
             starter_deck.update(self.random.choice(primary[self.options.starting_deck_1.current_option_name]))
             starter_deck.update(self.random.choice(secondary[self.options.starting_deck_2.current_option_name]))
             starter_deck.update(self.random.choice(tertiary[self.options.starting_deck_3.current_option_name]))
@@ -524,6 +526,7 @@ class PokemonTCGWorld(World):
 
     def create_regions(self):
         create_regions(self)
+        self.multiworld.completion_condition[self.player] = lambda state, player=self.player: state.has("Become Champion", player=player)
     #     if (self.options.old_man == "vanilla" or
     #             self.options.door_shuffle in ("full", "insanity")):
     #         fly_map_codes = self.random.sample(range(2, 11), 2)

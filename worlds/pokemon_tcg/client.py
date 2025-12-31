@@ -21,23 +21,8 @@ DATA_LOCATIONS = {
     "MedalFlags": (0x1402, 0x01),
     "EmailFlags": (0x1404, 0x02),
     "TradeFlags": (0x1406, 0x02),
-#    "Missable": (0x161A, 0x20),
-#    "Hidden": (0x16DE, 0x0E),
-#    "Rod": (0x1716, 0x01),
-#    "DexSanityFlag": (0x1A71, 19),
     "GameStatus": (0x1f2b, 0x01),
-#    "Money": (0x141F, 3),
-#    "CurrentMap": (0x1436, 1),
-#    "ResetCheck": (0x0100, 4),
-#    # First and second Vermilion Gym trash can selection. Second is not used, so should always be 0.
-#    # First should never be above 0x0F. This is just before Event Flags.
-#    "CrashCheck1": (0x1731, 2),
-#    # Unused, should always be 0. This is just before Missables flags.
-#    "CrashCheck2": (0x1617, 1),
-#    # Progressive keys, should never be above 10. Just before Dexsanity flags.
-#    "CrashCheck3": (0x1A70, 1),
-#    # Route 18 Gate script value. Should never be above 3. Just before Hidden items flags.
-#    "CrashCheck4": (0x16DD, 1),
+    "Goal": (0x13d8, 0x01)
 }
 
 location_map = {}
@@ -221,9 +206,9 @@ class PokemonTCGClient(BizHawkClient):
 
         # VICTORY
 
-        # if data["DuelFlags"][280] & 1 and not ctx.finished_game:
-        #     await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
-        #     ctx.finished_game = True
+        if data["DuelFlags"][280] & 2 and not ctx.finished_game:
+            await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
+            ctx.finished_game = True
 
     def on_package(self, ctx, cmd, args):
         if cmd == 'Connected':
