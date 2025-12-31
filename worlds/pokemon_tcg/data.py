@@ -407,7 +407,7 @@ primary = {
         {"Bulbasaur": 4, "Ivysaur": 3, "Venusaur Lv64": 2, "Tangela Lv8": 1, "Grass Energy": 10},
         {"Caterpie": 4, "Metapod": 3, "Butterfree": 2, "Pinsir": 1, "Grass Energy": 10},
         {"Oddish": 4, "Gloom": 3, "Vileplume": 2, "Tangela Lv12": 1, "Grass Energy": 10},
-        {"Grimer": 3, "Muk": 2, "Koffing": 3, "Weezing": 2}
+        {"Grimer": 3, "Muk": 2, "Koffing": 3, "Weezing": 2, "Grass Energy": 10}
     ],
     "Fire": [
         {"Charmander": 4, "Charmeleon": 3, "Charizard": 2, "Moltres Lv35": 1, "Fire Energy": 10},

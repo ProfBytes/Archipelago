@@ -96,7 +96,6 @@ class PokemonTCGClient(BizHawkClient):
             auth_name = base64.b64encode(auth_name[0]).decode()
 
         auth_name = await read(ctx.bizhawk_ctx, [(rom_addresses["Slot Name"], 16, "ROM")])
-        print(auth_name)
         auth_name = bytearray([b for b in auth_name[0] if b <= 127]).decode("ascii")
         ctx.auth = auth_name
 
@@ -145,7 +144,6 @@ class PokemonTCGClient(BizHawkClient):
 
         locations = set()
 
-        print(data)
         for location_name, found in location_map.items():
             if not found and location_type[location_name] == "duel" and \
                     data["DuelFlags"][(location_bytes_bits[location_name]['byte'])-0x13ef] & location_bytes_bits[location_name]['bit'] > 0:
