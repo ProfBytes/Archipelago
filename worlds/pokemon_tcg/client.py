@@ -206,7 +206,7 @@ class PokemonTCGClient(BizHawkClient):
 
         # VICTORY
 
-        if data["DuelFlags"][280] & 2 and not ctx.finished_game:
+        if data["Goal"][0] & 2 and not ctx.finished_game:
             await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
             ctx.finished_game = True
 
