@@ -3,7 +3,7 @@ from .data import card_to_pack, pack_to_card
 from .options import PackType
 
 def has_type(state, world, player, type, number):
-    return (len([item for item in packs[type] if state.has(item, player)]) + starting_deck_has_type(type) >= number) or \
+    return (len([item for item in packs[type] if state.has(item, player)]) + starting_deck_has_type(state, world, player, type) >= number) or \
         (world.options.pack_type.value == 'vanilla' and has_enough_packs(state, world, player, number*number))
 
 def has_enough_packs(state, world, player, number):
@@ -11,7 +11,7 @@ def has_enough_packs(state, world, player, number):
                       state.count("Laboratory Pack") + state.count("Evolution Pack"))
 
 def starting_deck_has_type(state, world, player, type):
-    if world.options.starting_deck_type_1 == type or world.options.starting_deck_type_2 == type or world.options.starting_deck_type_3 == type:
+    if world.options.starting_deck_1.value == type or world.options.starting_deck_2.value == type or world.options.starting_deck_3.value == type:
         return 2
     return 0
 
@@ -30,7 +30,7 @@ def email_count(state, world, player):
     emails_available += (medal_count(state, world, player) + 1) // 4
     emails_available += masters_talkable_count(state, world, player)
 
-    if state.has("Defeat Rod"):
+    if state.has("Beat Rod", player):
         emails_available += 4
     return emails_available
 
@@ -59,7 +59,7 @@ def has_card(state, world, player, card):
         return True
     if world.options.pack_type.value == PackType.option_evoline:
         packs = card_to_pack[card]
-        return any([pack == "Starter Deck" or state.has(pack) for pack in packs])
+        return any([pack == "Starter Deck" or state.has(pack, player) for pack in packs])
     else:
         return False
 

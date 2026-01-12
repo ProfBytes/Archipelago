@@ -84,23 +84,23 @@ class PokemonTCGWorld(World):
         self.fire_club_trade = None
         self.psychic_club_trade = None
 
-        self.water_club_door = None
-        self.fire_club_door = None
-        self.lightning_club_door = None
-        self.science_club_door = None
-        self.psychic_club_door = None
-        self.grass_club_door = None
-        self.rock_club_door = None
-        self.fighting_club_door = None
+        self.water_club_unlock = None
+        self.fire_club_unlock = None
+        self.lightning_club_unlock = None
+        self.science_club_unlock = None
+        self.psychic_club_unlock = None
+        self.grass_club_unlock = None
+        self.rock_club_unlock = None
+        self.fighting_club_unlock = None
 
         self.psychic_medal_count = 4
         self.fire_card_count = 650
         self.goal_medal_count = 8
         self.doors_open = 0
 
-        self.starting_deck_type_1 = "Fire"
-        self.starting_deck_type_2 = "Water"
-        self.starting_deck_type_3 = "Grass"
+        self.starting_deck_1 = "Fire"
+        self.starting_deck_2 = "Water"
+        self.starting_deck_3 = "Grass"
 
         self.pack_type = "Evoline"
         self.trade_rando = "vanilla"
@@ -112,9 +112,9 @@ class PokemonTCGWorld(World):
         starter_deck = {}
         if self.options.special_deck == "Prof Special":
             starter_deck = eevee_deck
-            self.starting_deck_type_1 = options.StartingDeck1.option_fire
-            self.starting_deck_type_2 = options.StartingDeck1.option_water
-            self.starting_deck_type_3 = options.StartingDeck1.option_lightning
+            self.starting_deck_1 = options.StartingDeck1.option_fire
+            self.starting_deck_2 = options.StartingDeck1.option_water
+            self.starting_deck_3 = options.StartingDeck1.option_lightning
         else:
             while self.options.starting_deck_2.current_option_name == self.options.starting_deck_1.current_option_name:
                 self.options.starting_deck_2 = options.StartingDeck2(self.random.randint(0, 5))

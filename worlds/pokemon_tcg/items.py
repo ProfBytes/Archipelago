@@ -255,6 +255,14 @@ item_table = {
     "Science Club Door": ItemData(None, ItemClassification.progression, []),
     "Fire Club Door": ItemData(None, ItemClassification.progression, []),
     "Grass Club Door": ItemData(None, ItemClassification.progression, []),
+    "Water Club Talkable": ItemData(None, ItemClassification.progression, []),
+    "Fighting Club Talkable": ItemData(None, ItemClassification.progression, []),
+    "Rock Club Talkable": ItemData(None, ItemClassification.progression, []),
+    "Lightning Club Talkable": ItemData(None, ItemClassification.progression, []),
+    "Psychic Club Talkable": ItemData(None, ItemClassification.progression, []),
+    "Science Club Talkable": ItemData(None, ItemClassification.progression, []),
+    "Fire Club Talkable": ItemData(None, ItemClassification.progression, []),
+    "Grass Club Talkable": ItemData(None, ItemClassification.progression, [])
 }
 
 vanilla_items = [
