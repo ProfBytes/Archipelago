@@ -22,3 +22,5 @@ wBoosterCardsDrawn = 0x1400. That would be the place to write booster packs, wit
 
 Nice to have.  Set events on save load from checks done to prevent needing to do pointless fights.
 Progressive <type> packs that give better and better pokemon cards
+
+Variable number of rewards and matches required

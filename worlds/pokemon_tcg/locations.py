@@ -879,6 +879,16 @@ location_data = [
     LocationData("Rock Club Lobby", "Open Rock Club Door", "Rock Club Door", event=True),
     LocationData("Fighting Club Lobby", "Open Fighting Club Door", "Fighting Club Door", event=True),
 
+    # Can you talk to the Club Master?
+    LocationData("Water Club Main Hall", "Water Club Talkable", "Water Club Talkable", event=True),
+    LocationData("Fire Club Main Hall", "Fire Club Talkable", "Fire Club Talkable", event=True),
+    LocationData("Lightning Club Main Hall", "Lightning Club Talkable", "Lightning Club Talkable", event=True),
+    LocationData("Science Club Main Hall", "Science Club Talkable", "Science Club Talkable", event=True),
+    LocationData("Psychic Club Main Hall", "Psychic Club Talkable", "Psychic Club Talkable", event=True),
+    LocationData("Grass Club Main Hall", "Grass Club Talkable", "Grass Club Talkable", event=True),
+    LocationData("Rock Club Main Hall", "Rock Club Talkable", "Rock Club Talkable", event=True),
+    LocationData("Fighting Club Main Hall", "Fighting Club Talkable", "Fighting Club Talkable", event=True),
+
     # Email logic
     LocationData("Mason Laboratory Center Room", "Email 1", "Colosseum Pack",
                  rom_addresses["Email 1"],

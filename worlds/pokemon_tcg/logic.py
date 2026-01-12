@@ -1,5 +1,6 @@
 from .items import packs, medals, masters_talkable
 from .data import card_to_pack, pack_to_card
+from .options import PackType
 
 def has_type(state, world, player, type, number):
     return (len([item for item in packs[type] if state.has(item, player)]) + starting_deck_has_type(type) >= number) or \
@@ -56,7 +57,7 @@ def good_trainer_count(state, world, player):
 def has_card(state, world, player, card):
     if card == "Fire Energy":
         return True
-    if world.options.pack_type.value == "Evoline":
+    if world.options.pack_type.value == PackType.option_evoline:
         packs = card_to_pack[card]
         return any([pack == "Starter Deck" or state.has(pack) for pack in packs])
     else:
