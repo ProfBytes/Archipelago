@@ -13,6 +13,8 @@ class PackType(Choice):
     display_name = "Pack Types"
     option_vanilla = 0
     option_evoline = 1
+    option_decks = 2
+    option_mixed = 3
     default = 1
 
 
@@ -198,6 +200,13 @@ class IshiharaTrade3(FreeText):
     visibility = Visibility.none
     default = "Chansey"
 
+class PackSeed(Range):
+    """Seed for generating random packs"""
+    display_name = "Pack generator seed"
+    range_start = 0
+    range_end = 1000000000
+    default = "random"
+
 
 @dataclass
 class PokemonTCGOptions(PerGameCommonOptions):
@@ -207,6 +216,7 @@ class PokemonTCGOptions(PerGameCommonOptions):
     starting_deck_1: StartingDeck1
     starting_deck_2: StartingDeck2
     starting_deck_3: StartingDeck3
+    pack_seed: PackSeed
     water_club_unlock: WaterClubUnlock
     fire_club_unlock: FireClubUnlock
     grass_club_unlock: GrassClubUnlock

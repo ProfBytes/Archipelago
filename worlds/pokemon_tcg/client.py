@@ -1,11 +1,13 @@
 import base64
 import logging
+import random
 import time
 
 from NetUtils import ClientStatus
 from worlds._bizhawk.client import BizHawkClient
 from worlds._bizhawk import read, write, guarded_write
 from .rom_addresses import rom_addresses
+from .data import card_ids, medal_ids, pack_to_card, pack_contents
 
 from .locations import location_data
 
@@ -14,9 +16,10 @@ logger = logging.getLogger("Client")
 BANK_EXCHANGE_RATE = 50000000
 
 DATA_LOCATIONS = {
-    "ItemIndex": (0x1f2a, 0x02),
+    "ItemIndex": (0x1f28, 0x02),
 #    "Deathlink": (0x00FD, 0x01),
-    "APItem": (0x1f29, 0x01),
+    "APItem": (0x1f2d, 0x01),
+    "PackContents": (0x0400, 0x3c),
     "DuelFlags": (0x13ef, 0x09),
     "MedalFlags": (0x1402, 0x01),
     "EmailFlags": (0x1404, 0x02),
@@ -37,6 +40,54 @@ for location in location_data:
 location_name_to_id = {location.name: location.address for location in location_data if location.type == "Item"
                        and location.address is not None}
 
+def get_pack_bytes(card_dict: dict):
+    bytes = []
+    for key, value in card_dict.items():
+        for i in range(value):
+            bytes.append(card_ids[key])
+    while len(bytes) < 60:
+        bytes.append(0xff)
+    return bytes
+
+def is_medal(possible_medal: str):
+    return medal_ids.keys().__contains__(possible_medal)
+
+def get_medal_bytes(medal: str):
+    bytes = []
+    bytes.append(medal_ids[medal])
+    while len(bytes) < 60:
+        bytes.append(0xff)
+    return bytes
+
+offsets = {
+    "Colosseum pack": 0,
+    "Evolution pack": 32,
+    "Mystery pack": 95,
+    "Laboratory pack": 1235
+}
+
+common_count = 8
+uncommon_count = 5
+rare_count = 2
+
+def generate_pack(pack: str, count: int, seed: int):
+    offset = offsets[pack]
+    common_list = pack_contents[pack]["common"].copy()
+    uncommon_list = pack_contents[pack]["uncommon"].copy()
+    rare_list = pack_contents[pack]["rare"].copy()
+    random.shuffle(common_list, random.seed(seed+offset))
+    random.shuffle(uncommon_list, random.seed(seed+offset+17))
+    random.shuffle(rare_list, random.seed(seed+offset+68))
+    bytes = []
+    for i in range(count*common_count, (count+1)*common_count):
+        bytes.append(card_ids[common_list[i%len(common_list)]])
+    for i in range(count*uncommon_count, (count+1)*uncommon_count):
+        bytes.append(card_ids[uncommon_list[i%len(uncommon_list)]])
+    for i in range(count*rare_count, (count+1)*rare_count):
+        bytes.append(card_ids[rare_list[i%len(rare_list)]])
+    while len(bytes) < 60:
+        bytes.append(0xff)
+    return bytes
 
 class PokemonTCGClient(BizHawkClient):
     system = ("GBC")
@@ -121,9 +172,20 @@ class PokemonTCGClient(BizHawkClient):
         if data["APItem"][0] == 255:
             item_index = int.from_bytes(data["ItemIndex"], "little")
             if len(ctx.items_received) > item_index:
-                item_code = ctx.items_received[item_index].item - 17000000000
+                item = ctx.items_received[item_index-1]
+                if(is_medal(item)):
+                    bytes = get_medal_bytes(item)
+                else:
+                    if pack_to_card.keys().__contains__(item):
+                        pack_contents = pack_to_card[item]
+                    else:
+                        count = ctx.items_received[:item_index].count(item) - 1
+                        pack_contents = generate_pack(item, count, ctx.slot_data["pack_seed"])
+                    bytes = get_pack_bytes(pack_contents)
+                await write(ctx.bizhawk_ctx, [(DATA_LOCATIONS["PackContents"][0],
+                                               bytes, "WRAM")])
                 await write(ctx.bizhawk_ctx, [(DATA_LOCATIONS["APItem"][0],
-                                               [item_code], "WRAM")])
+                                               0x00, "WRAM")])
 
         # LOCATION CHECKS
 

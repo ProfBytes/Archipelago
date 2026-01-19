@@ -121,7 +121,7 @@ card_to_pack = {
     "Parasect": ["Parasect Pack"],
     "Paras": ["Parasect Pack"],
     "Persian": ["Persian 1 Pack", "Persian 2 Pack"],
-    "Meowth Lv14": ["Persian 1 Pack"],
+    " Meowth Lv13": ["Persian 1 Pack"],
     "Meowth Lv15": ["Persian 2 Pack"],
     "Pidgeot Lv38": ["Pidgeot 1 Pack"],
     "Pidgeotto": ["Pidgeot 1 Pack", "Pidgeot 2 Pack"],
@@ -344,7 +344,7 @@ pack_to_card = {
     "Jigglypuff Promo Pack": {"Jigglypuff Lv12": 4},
     "Kangaskhan Pack": {"Kangaskhan": 4},
     "Lickitung Pack": {"Lickitung": 4},
-    "Persian 1 Pack": {"Persian": 4, "Meowth Lv14": 4},
+    "Persian 1 Pack": {"Persian": 4, " Meowth Lv13": 4},
     "Persian 2 Pack": {"Persian": 4, "Meowth Lv15": 4},
     "Pidgeot 1 Pack": {"Pidgeot Lv38": 4, "Pidgeotto": 4, "Pidgey": 4},
     "Pidgeot 2 Pack": {"Pidgeot Lv40": 4, "Pidgeotto": 4, "Pidgey": 4},
@@ -392,8 +392,154 @@ pack_to_card = {
     "Double Colorless Energy Pack": {"Double Colorless Energy": 1},
 
     "Energy Pack": {"Water Energy": 10, "Fire Energy": 10, "Lightning Energy": 10, "Grass Energy": 10, "Psychic Energy": 10, "Fighting Energy": 10},
+
+    "Promo Arcanine": {"Arcanine Lv34": 4},
+    "Promo Moltres": {"Moltres Lv37": 4},
+    "Promo Articuno": {"Articuno Lv37": 4},
+    "Promo Pikachu 1": {"Pikachu Lv16": 4},
+    "Promo Pikachu 2": {"Pikachu Alt Lv16": 4},
+    "Promo Flying Pikachu": {"Flying Pikachu": 4},
+    "Promo Surfing Pikachu 1": {"Surfing Pikachu Lv13": 4},
+    "Promo Surfing Pikachu 2": {"Surfing Pikachu Alt Lv13": 4},
+    "Promo Electabuzz": {"Electabuzz Lv20": 4},
+    "Promo Zapdos": {"Zapdos Lv68": 4},
+    "Promo Slowpoke": {"Slowpoke Lv9": 4},
+    "Promo Mewtwo 1": {"Mewtwo Lv60": 4},
+    "Promo Mewtwo 2": {"Mewtwo Alt Lv60": 4},
+    "Promo Mew 1": {"Mew Lv8": 4},
+    "Promo Jigglypuff": {"Jigglypuff Lv12": 4},
+    "Promo Dragonite": {"Dragonite Lv41": 4},
+    "Promo Imakuni": {"Imakuni Card": 4},
+    "Promo Super Energy Retrieval": {"Super Energy Retrieval": 4},
+    "Promo Venusaur": {"Venusaur Lv64": 4},
+    "Promo Mew 2": {"Mew Lv15": 4},
 }
 
+pack_contents = {
+    "Colosseum Pack": {
+        "common": [#72 card cycle
+            "Nidoranm", "Tangela Lv12", "Charmander", "Ponyta", "Goldeen", "Staryu", "Pikachu Lv12", "Magnemite Lv13", "Diglett",
+            "Machop", "Abra", "Rattata", "Jigglypuff Lv14", "Meowth Lv13", "Bill", "Switch", "Poke Ball", "Potion",
+            "Nidoranm", "Tangela Lv12", "Charmander", "Ponyta", "Goldeen", "Staryu", "Pikachu Lv12", "Magnemite Lv13", "Diglett",
+            "Machop", "Abra", "Rattata", "Jigglypuff Lv14", "Meowth Lv13", "Bill", "Switch", "Poke Ball", "Potion",
+            "Nidoranm", "Tangela Lv12", "Charmander", "Ponyta", "Goldeen", "Staryu", "Pikachu Lv12", "Magnemite Lv13", "Diglett",
+            "Machop", "Abra", "Rattata", "Jigglypuff Lv14", "Meowth Lv13", "Bill", "Switch", "Poke Ball", "Potion",
+            "Nidoranm", "Tangela Lv12", "Charmander", "Ponyta", "Goldeen", "Staryu", "Pikachu Lv12", "Magnemite Lv13", "Diglett",
+            "Machop", "Abra", "Rattata", "Jigglypuff Lv14", "Meowth Lv13", "Bill", "Switch", "Poke Ball", "Potion",
+        ],
+        "uncommon": [ # 64 card cycle
+            "Nidorino", "Charmeleon", "Growlithe", "Arcanin Lv45", "Magmar Lv24", "Seel", "Dewgong", "Seaking", "Magikarp",
+            "Kadabra", "Raticate", "Professor Oak", "Pluspower", "Defender", "Full Heal", "Revive",
+            "Nidorino", "Charmeleon", "Growlithe", "Arcanin Lv45", "Magmar Lv24", "Seel", "Dewgong", "Seaking", "Magikarp",
+            "Kadabra", "Raticate", "Professor Oak", "Pluspower", "Defender", "Full Heal", "Revive",
+            "Nidorino", "Charmeleon", "Growlithe", "Arcanin Lv45", "Magmar Lv24", "Seel", "Dewgong", "Seaking", "Magikarp",
+            "Kadabra", "Raticate", "Professor Oak", "Pluspower", "Defender", "Full Heal", "Revive",
+            "Nidorino", "Charmeleon", "Growlithe", "Arcanin Lv45", "Magmar Lv24", "Seel", "Dewgong", "Seaking", "Magikarp",
+            "Kadabra", "Raticate", "Professor Oak", "Pluspower", "Defender", "Full Heal", "Revive",
+        ],
+        "rare": [ # 64 card cycle
+            "Scyther", "Pinsir", "Gyarados", "Raichu Lv40", "Magneton Lv28", "Electabuzz Lv35", "Zapdos Lv64", "Dugtrio",
+            "Hitmonchan", "Wigglytuff", "Chansey", "Kangaskhan", "Snorlax", "Scoop Up", "Computer Search", "Item Finder",
+            "Scyther", "Pinsir", "Gyarados", "Raichu Lv40", "Magneton Lv28", "Electabuzz Lv35", "Zapdos Lv64", "Dugtrio",
+            "Hitmonchan", "Wigglytuff", "Chansey", "Kangaskhan", "Snorlax", "Scoop Up", "Computer Search", "Item Finder",
+            "Scyther", "Pinsir", "Gyarados", "Raichu Lv40", "Magneton Lv28", "Electabuzz Lv35", "Zapdos Lv64", "Dugtrio",
+            "Hitmonchan", "Wigglytuff", "Chansey", "Kangaskhan", "Snorlax", "Scoop Up", "Computer Search", "Item Finder",
+            "Scyther", "Pinsir", "Gyarados", "Raichu Lv40", "Magneton Lv28", "Electabuzz Lv35", "Zapdos Lv64", "Dugtrio",
+            "Hitmonchan", "Wigglytuff", "Chansey", "Kangaskhan", "Snorlax", "Scoop Up", "Computer Search", "Item Finder",
+        ]
+    },
+    "Evolution Pack": {
+        "common": [ # 68 cards
+            "Bulbasaur", "Caterpie", "Metapod", "Weedle", "Bellsprout", "Squirtle", "Krabby", "Starmie", "Sandshrew",
+            "Geodude", "Cubone", "Gastly Lv8", "Pidgey", "Jigglypuff Lv13", "Eevee", "Energy Search", "Gust of Wind",
+            "Bulbasaur", "Caterpie", "Metapod", "Weedle", "Bellsprout", "Squirtle", "Krabby", "Starmie", "Sandshrew",
+            "Geodude", "Cubone", "Gastly Lv8", "Pidgey", "Jigglypuff Lv13", "Eevee", "Energy Search", "Gust of Wind",
+            "Bulbasaur", "Caterpie", "Metapod", "Weedle", "Bellsprout", "Squirtle", "Krabby", "Starmie", "Sandshrew",
+            "Geodude", "Cubone", "Gastly Lv8", "Pidgey", "Jigglypuff Lv13", "Eevee", "Energy Search", "Gust of Wind",
+            "Bulbasaur", "Caterpie", "Metapod", "Weedle", "Bellsprout", "Squirtle", "Krabby", "Starmie", "Sandshrew",
+            "Geodude", "Cubone", "Gastly Lv8", "Pidgey", "Jigglypuff Lv13", "Eevee", "Energy Search", "Gust of Wind",
+        ],
+        "uncommon": [ # 68 cards
+            "Ivysaur", "Butterfree", "Kakuna", "Weepinbell", "Rapidash", "Wartortle", "Kingler", "Sandslash", "Machoke",
+            "Graveler", "Golem", "Marowak", "Haunter Lv22", "Jynx", "Energy Retrieval", "Super Potion", "Pokemon Flute",
+            "Ivysaur", "Butterfree", "Kakuna", "Weepinbell", "Rapidash", "Wartortle", "Kingler", "Sandslash", "Machoke",
+            "Graveler", "Golem", "Marowak", "Haunter Lv22", "Jynx", "Energy Retrieval", "Super Potion", "Pokemon Flute",
+            "Ivysaur", "Butterfree", "Kakuna", "Weepinbell", "Rapidash", "Wartortle", "Kingler", "Sandslash", "Machoke",
+            "Graveler", "Golem", "Marowak", "Haunter Lv22", "Jynx", "Energy Retrieval", "Super Potion", "Pokemon Flute",
+            "Ivysaur", "Butterfree", "Kakuna", "Weepinbell", "Rapidash", "Wartortle", "Kingler", "Sandslash", "Machoke",
+            "Graveler", "Golem", "Marowak", "Haunter Lv22", "Jynx", "Energy Retrieval", "Super Potion", "Pokemon Flute",
+        ],
+        "rare": [ # 64 cards
+            "Venusaur Lv67", "Beedrill", "Nidoking", "Victreebel", "Charizard", "Flareon Lv28", "Blastoise",
+            "Vaporeon Lv42", "Jolteon Lv29", "Machamp", "Gengar", "Pidgeotto", "Pidgeot Lv40", "Pokemon Trader",
+            "Pokemon Breeder", "Clefairy Doll",
+            "Venusaur Lv67", "Beedrill", "Nidoking", "Victreebel", "Charizard", "Flareon Lv28", "Blastoise",
+            "Vaporeon Lv42", "Jolteon Lv29", "Machamp", "Gengar", "Pidgeotto", "Pidgeot Lv40", "Pokemon Trader",
+            "Pokemon Breeder", "Clefairy Doll",
+            "Venusaur Lv67", "Beedrill", "Nidoking", "Victreebel", "Charizard", "Flareon Lv28", "Blastoise",
+            "Vaporeon Lv42", "Jolteon Lv29", "Machamp", "Gengar", "Pidgeotto", "Pidgeot Lv40", "Pokemon Trader",
+            "Pokemon Breeder", "Clefairy Doll",
+            "Venusaur Lv67", "Beedrill", "Nidoking", "Victreebel", "Charizard", "Flareon Lv28", "Blastoise",
+            "Vaporeon Lv42", "Jolteon Lv29", "Machamp", "Gengar", "Pidgeotto", "Pidgeot Lv40", "Pokemon Trader",
+            "Pokemon Breeder", "Clefairy Doll",
+        ]
+    },
+    "Mystery pack": {
+        "common": [ # 64 cards
+            "Nidoranf", "Oddish", "Paras", "Exeggcute", "Vulpix", "Shellder", "Omanyte", "Pikachu Lv14", "Voltorb",
+            "Mankey", "Rhyhorn", "Kabuto", "Drowzee", "Meowth Lv15", "Mysterious Fossil", "Energy Removal",
+            "Nidoranf", "Oddish", "Paras", "Exeggcute", "Vulpix", "Shellder", "Omanyte", "Pikachu Lv14", "Voltorb",
+            "Mankey", "Rhyhorn", "Kabuto", "Drowzee", "Meowth Lv15", "Mysterious Fossil", "Energy Removal",
+            "Nidoranf", "Oddish", "Paras", "Exeggcute", "Vulpix", "Shellder", "Omanyte", "Pikachu Lv14", "Voltorb",
+            "Mankey", "Rhyhorn", "Kabuto", "Drowzee", "Meowth Lv15", "Mysterious Fossil", "Energy Removal",
+            "Nidoranf", "Oddish", "Paras", "Exeggcute", "Vulpix", "Shellder", "Omanyte", "Pikachu Lv14", "Voltorb",
+            "Mankey", "Rhyhorn", "Kabuto", "Drowzee", "Meowth Lv15", "Mysterious Fossil", "Energy Removal"
+        ],
+        "uncommon": [ # 76 cards
+            "Nidorina", "Gloom", "Parasect", "Exeggutor", "Flareon Lv22", "Cloyster", "Vaporeon Lv29", "Omastar",
+            "Jolteon Lv24", "Primeape", "Rhydon", "Persian", "Farfetch'd", "Lickitung", "Tauros", "Dratini",
+            "Mr Fuji", "Pokemon Center", "Double Colorless Energy",
+            "Nidorina", "Gloom", "Parasect", "Exeggutor", "Flareon Lv22", "Cloyster", "Vaporeon Lv29", "Omastar",
+            "Jolteon Lv24", "Primeape", "Rhydon", "Persian", "Farfetch'd", "Lickitung", "Tauros", "Dratini",
+            "Mr Fuji", "Pokemon Center", "Double Colorless Energy",
+            "Nidorina", "Gloom", "Parasect", "Exeggutor", "Flareon Lv22", "Cloyster", "Vaporeon Lv29", "Omastar",
+            "Jolteon Lv24", "Primeape", "Rhydon", "Persian", "Farfetch'd", "Lickitung", "Tauros", "Dratini",
+            "Mr Fuji", "Pokemon Center", "Double Colorless Energy",
+            "Nidorina", "Gloom", "Parasect", "Exeggutor", "Flareon Lv22", "Cloyster", "Vaporeon Lv29", "Omastar",
+            "Jolteon Lv24", "Primeape", "Rhydon", "Persian", "Farfetch'd", "Lickitung", "Tauros", "Dratini",
+            "Mr Fuji", "Pokemon Center", "Double Colorless Energy"
+        ],
+        "rare": [ # 64 cards
+            "Nidoqueen", "Vileplume", "Ninetales Lv32", "Moltres Lv35", "Lapras", "Articuno Lv35", "Raichu Lv45",
+            "Electrode Lv42", "Zapdos Lv40", "Kabutops", "Aerodactyl", "Alakazam", "Mew Lv23", "Clefairy", "Dragonair",
+            "Dragonite Lv45",
+            "Nidoqueen", "Vileplume", "Ninetales Lv32", "Moltres Lv35", "Lapras", "Articuno Lv35", "Raichu Lv45",
+            "Electrode Lv42", "Zapdos Lv40", "Kabutops", "Aerodactyl", "Alakazam", "Mew Lv23", "Clefairy", "Dragonair",
+            "Dragonite Lv45",
+            "Nidoqueen", "Vileplume", "Ninetales Lv32", "Moltres Lv35", "Lapras", "Articuno Lv35", "Raichu Lv45",
+            "Electrode Lv42", "Zapdos Lv40", "Kabutops", "Aerodactyl", "Alakazam", "Mew Lv23", "Clefairy", "Dragonair",
+            "Dragonite Lv45",
+            "Nidoqueen", "Vileplume", "Ninetales Lv32", "Moltres Lv35", "Lapras", "Articuno Lv35", "Raichu Lv45",
+            "Electrode Lv42", "Zapdos Lv40", "Kabutops", "Aerodactyl", "Alakazam", "Mew Lv23", "Clefairy", "Dragonair",
+            "Dragonite Lv45"
+        ]
+    },
+    "Laboratory pack": {
+        "common": [ # 68 cards
+            "Ekans", "Zubat", "Venonat", "Grimer", "Koffing", "Tangela Lv8", "Psyduck", "Poliwag", "Tentacool", "Horsea",
+            "Magnemite Lv15", "Onix", "Slowpoke Lv18", "Spearow", "Doduo", "Gambler", "Recycle"
+        ],
+        "uncommon": [ # 64 cards
+            "Arbok", "Golbat", "Weezing", "Magmar Lv31", "Golduck", "Poliwhirl", "Tentacruel", "Seadra", "Marowak",
+            "Slowbro", "Gastly Lv17", "Fearow", "Dodrio", "Porygon", "Pokedex", "Maintenance"
+        ],
+        "rare": [ # 72 cards
+            "Venomoth", "Muk", "Ninetales Lv35", "Poliwrath", "Magneton Lv35", "Electrode Lv35", "Hitmonlee",
+            "Haunter Lv17", "Hypno", "Mr Mime", "Mewtwo Lv53", "Pidgeot Lv38", "Clefable", "Ditto",
+            "Imposter Professor Oak", "Lass", "Super Energy Removal", "Devolution Spray"
+        ]
+    }
+}
 #20 cards
 primary = {
     "Water": [
@@ -405,6 +551,7 @@ primary = {
     "Grass": [
         {"Nidoranm": 4, "Nidorino": 3, "Nidoking": 2, "Pinsir": 1, "Grass Energy": 10},
         {"Bulbasaur": 4, "Ivysaur": 3, "Venusaur Lv64": 2, "Tangela Lv8": 1, "Grass Energy": 10},
+        {"Bulbasaur": 4, "Ivysaur": 3, "Venusaur Lv67": 2, "Tangela Lv8": 1, "Grass Energy": 10},
         {"Caterpie": 4, "Metapod": 3, "Butterfree": 2, "Pinsir": 1, "Grass Energy": 10},
         {"Oddish": 4, "Gloom": 3, "Vileplume": 2, "Tangela Lv12": 1, "Grass Energy": 10},
         {"Grimer": 3, "Muk": 2, "Koffing": 3, "Weezing": 2, "Grass Energy": 10}
@@ -529,11 +676,11 @@ tertiary = {
 #9 trainers
 colorless_pokemon = [
     {"Rattata": 2, "Raticate": 1},
-    {"Meowth Lv14": 2, "Persian": 1},
+    {" Meowth Lv13": 2, "Persian": 1},
     {"Spearow": 2, "Fearow": 1},
     {"Doduo": 2, "Dodrio": 1},
     {"Rattata": 2, "Raticate": 1},
-    {"Meowth Lv14": 2, "Persian": 1},
+    {" Meowth Lv13": 2, "Persian": 1},
     {"Spearow": 2, "Fearow": 1},
     {"Doduo": 2, "Dodrio": 1}
 ]
@@ -585,7 +732,7 @@ card_list = [
     "Marowak Lv32", "Mew Lv8", "Mew Lv15", "Mew Lv23", "Mewtwo Lv53", "Mewtwo Lv60", "Mewtwo Alt Lv60", "Moltres Lv35",
     "Moltres Lv37", "Mr Mime", "Muk", "Grimer", "Nidoking", "Nidorino", "Nidoranm", "Nidoqueen", "Nidorina",
     "Nidoranf", "Ninetales Lv32", "Vulpix", "Ninetales Lv35", "Omastar", "Omanyte", "Onix", "Parasect", "Paras",
-    "Persian", "Meowth Lv14", "Meowth Lv15", "Pidgeot Lv38", "Pidgeotto", "Pidgey", "Pidgeot Lv40", "Pinsir",
+    "Persian", " Meowth Lv13", "Meowth Lv15", "Pidgeot Lv38", "Pidgeotto", "Pidgey", "Pidgeot Lv40", "Pinsir",
     "Poliwrath", "Poliwhirl", "Poliwag", "Porygon", "Primeape", "Mankey", "Raichu Lv40", "Pikachu Lv12", "Raichu Lv45",
     "Pikachu Lv14", "Pikachu Lv16", "Pikachu Alt Lv16", "Rapidash", "Ponyta", "Raticate", "Rattata", "Rhydon",
     "Rhyhorn", "Sandslash", "Sandshrew", "Scyther", "Seadra", "Horsea", "Seaking", "Goldeen", "Slowbro", "Slowpoke Lv18",
@@ -779,7 +926,7 @@ card_ids = {
     "Jigglypuff Lv13": 0xae,
     "Jigglypuff Lv14": 0xaf,
     "Wigglytuff": 0xb0,
-    "Meowth Lv14": 0xb1,
+    " Meowth Lv13": 0xb1,
     "Meowth Lv15": 0xb2,
     "Persian": 0xb3,
     "Farfetchd": 0xb4,
