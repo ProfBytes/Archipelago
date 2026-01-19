@@ -1,0 +1,15 @@
+name: Build apworld
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  zip-files:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: vimtor/action-zip@v1.2
+        with:
+          files: worlds/pokemon_tcg
+          dest: pokemon_tcg.apworld
