@@ -7,7 +7,7 @@ from NetUtils import ClientStatus
 from worlds._bizhawk.client import BizHawkClient
 from worlds._bizhawk import read, write, guarded_write
 from .rom_addresses import rom_addresses
-from .data import card_ids, medal_ids, pack_to_card, pack_contents
+from .data import card_ids, medal_ids, pack_to_card, pack_contents, common_count, uncommon_count, rare_count, offsets
 
 from .locations import location_data
 
@@ -58,17 +58,6 @@ def get_medal_bytes(medal: str):
     while len(bytes) < 60:
         bytes.append(0xff)
     return bytes
-
-offsets = {
-    "Colosseum pack": 0,
-    "Evolution pack": 32,
-    "Mystery pack": 95,
-    "Laboratory pack": 1235
-}
-
-common_count = 8
-uncommon_count = 5
-rare_count = 2
 
 def generate_pack(pack: str, count: int, seed: int):
     offset = offsets[pack]

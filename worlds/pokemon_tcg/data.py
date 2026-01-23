@@ -121,7 +121,7 @@ card_to_pack = {
     "Parasect": ["Parasect Pack"],
     "Paras": ["Parasect Pack"],
     "Persian": ["Persian 1 Pack", "Persian 2 Pack"],
-    " Meowth Lv13": ["Persian 1 Pack"],
+    "Meowth Lv13": ["Persian 1 Pack"],
     "Meowth Lv15": ["Persian 2 Pack"],
     "Pidgeot Lv38": ["Pidgeot 1 Pack"],
     "Pidgeotto": ["Pidgeot 1 Pack", "Pidgeot 2 Pack"],
@@ -344,7 +344,7 @@ pack_to_card = {
     "Jigglypuff Promo Pack": {"Jigglypuff Lv12": 4},
     "Kangaskhan Pack": {"Kangaskhan": 4},
     "Lickitung Pack": {"Lickitung": 4},
-    "Persian 1 Pack": {"Persian": 4, " Meowth Lv13": 4},
+    "Persian 1 Pack": {"Persian": 4, "Meowth Lv13": 4},
     "Persian 2 Pack": {"Persian": 4, "Meowth Lv15": 4},
     "Pidgeot 1 Pack": {"Pidgeot Lv38": 4, "Pidgeotto": 4, "Pidgey": 4},
     "Pidgeot 2 Pack": {"Pidgeot Lv40": 4, "Pidgeotto": 4, "Pidgey": 4},
@@ -413,6 +413,17 @@ pack_to_card = {
     "Promo Super Energy Retrieval": {"Super Energy Retrieval": 4},
     "Promo Venusaur": {"Venusaur Lv64": 4},
     "Promo Mew 2": {"Mew Lv15": 4},
+}
+
+common_count = 8
+uncommon_count = 5
+rare_count = 2
+
+offsets = {
+    "Colosseum pack": 0,
+    "Evolution pack": 32,
+    "Mystery pack": 95,
+    "Laboratory pack": 1235
 }
 
 pack_contents = {
@@ -676,11 +687,11 @@ tertiary = {
 #9 trainers
 colorless_pokemon = [
     {"Rattata": 2, "Raticate": 1},
-    {" Meowth Lv13": 2, "Persian": 1},
+    {"Meowth Lv13": 2, "Persian": 1},
     {"Spearow": 2, "Fearow": 1},
     {"Doduo": 2, "Dodrio": 1},
     {"Rattata": 2, "Raticate": 1},
-    {" Meowth Lv13": 2, "Persian": 1},
+    {"Meowth Lv13": 2, "Persian": 1},
     {"Spearow": 2, "Fearow": 1},
     {"Doduo": 2, "Dodrio": 1}
 ]
@@ -732,7 +743,7 @@ card_list = [
     "Marowak Lv32", "Mew Lv8", "Mew Lv15", "Mew Lv23", "Mewtwo Lv53", "Mewtwo Lv60", "Mewtwo Alt Lv60", "Moltres Lv35",
     "Moltres Lv37", "Mr Mime", "Muk", "Grimer", "Nidoking", "Nidorino", "Nidoranm", "Nidoqueen", "Nidorina",
     "Nidoranf", "Ninetales Lv32", "Vulpix", "Ninetales Lv35", "Omastar", "Omanyte", "Onix", "Parasect", "Paras",
-    "Persian", " Meowth Lv13", "Meowth Lv15", "Pidgeot Lv38", "Pidgeotto", "Pidgey", "Pidgeot Lv40", "Pinsir",
+    "Persian", "Meowth Lv13", "Meowth Lv15", "Pidgeot Lv38", "Pidgeotto", "Pidgey", "Pidgeot Lv40", "Pinsir",
     "Poliwrath", "Poliwhirl", "Poliwag", "Porygon", "Primeape", "Mankey", "Raichu Lv40", "Pikachu Lv12", "Raichu Lv45",
     "Pikachu Lv14", "Pikachu Lv16", "Pikachu Alt Lv16", "Rapidash", "Ponyta", "Raticate", "Rattata", "Rhydon",
     "Rhyhorn", "Sandslash", "Sandshrew", "Scyther", "Seadra", "Horsea", "Seaking", "Goldeen", "Slowbro", "Slowpoke Lv18",
@@ -926,7 +937,7 @@ card_ids = {
     "Jigglypuff Lv13": 0xae,
     "Jigglypuff Lv14": 0xaf,
     "Wigglytuff": 0xb0,
-    " Meowth Lv13": 0xb1,
+    "Meowth Lv13": 0xb1,
     "Meowth Lv15": 0xb2,
     "Persian": 0xb3,
     "Farfetchd": 0xb4,
