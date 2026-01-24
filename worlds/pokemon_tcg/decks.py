@@ -831,3 +831,308 @@ strange_psyshock = {
     "Psychic Energy": 22
 }
 
+squeaking_mouse = {
+    "Pikachu Lv12": 2,
+    "Pikachu Lv14": 2,
+    "Raichu Lv4045": 1,
+    "Raichu Lv": 1,
+    "Sandshrew": 4,
+    "Sandslash": 3,
+    "Rattata": 4,
+    "Raticate": 3,
+    "Professor Oak": 1,
+    "Bill": 2,
+    "Pokemon Trader": 1,
+    "Energy Retrieval": 2,
+    "Computer Search": 1,
+    "PlusPower": 3,
+    "Defender": 2,
+    "Potion": 2,
+    "Super Potion": 1,
+    "Double Colorless Energy": 2,
+    "Fighting Energy": 15,
+    "Lightning Energy": 8
+}
+
+great_quake = {
+    "Diglett": 4,
+    "Dugtrio": 3,
+    "Onix": 4,
+    "Rhyhorn": 3,
+    "Rhydon": 2,
+    "Kangaskhan": 2,
+    "Tauros": 1,
+    "Snorlax": 1,
+    "Bill": 2,
+    "Pokemon Trader": 2,
+    "Professor Oak": 1,
+    "Defender": 4,
+    "Switch": 3,
+    "Potion": 3,
+    "Fighting Energy": 25
+}
+
+bone_attack = {
+    "Sandshrew": 3,
+    "Sandslash": 2,
+    "Geodude": 3,
+    "Graveler": 2,
+    "Golem": 1,
+    "Onix": 4,
+    "Cubon": 4,
+    "Marowak Lv26": 1,
+    "Marowak Lv32": 2,
+    "Rhyhorn": 2,
+    "Rhydon": 1,
+    "Bill": 2,
+    "Defender": 3,
+    "Mr Fuji": 1,
+    "Pokemon Flute": 2,
+    "Pokedex": 1,
+    "Poke Ball": 2,
+    "Fighting Energy": 24
+}
+
+excavation = {
+    "Shellder": 3,
+    "Cloyster": 1,
+    "Omanyte": 3,
+    "Omastar": 2,
+    "Sandshrew": 4,
+    "Sandslash": 2,
+    "Cubone": 3,
+    "Marowak Lv32": 1,
+    "Hitmonchan": 3,
+    "Kabuto": 2,
+    "Kabutops": 1,
+    "Aerodactyl": 2,
+    "Professor Oak": 2,
+    "Bill": 2,
+    "Pokemon Breeder": 2,
+    "Mysterious Fossil": 4,
+    "Fighting Energy": 15,
+    "Water Energy": 8
+}
+
+rock_crucher = {
+    "Diglett": 4,
+    "Dugtrio": 2,
+    "Geodude": 4,
+    "Graveler": 3,
+    "Golem": 2,
+    "Onix": 3,
+    "Rhyhorn": 3,
+    "Professor Oak": 2,
+    "Pokemon Breeder": 1,
+    "Energy Removal": 2,
+    "Switch": 2,
+    "Computer Search": 1,
+    "Defender": 2,
+    "Super Potion": 1,
+    "Potion": 2,
+    "Double Colorless Energy": 2,
+    "Fighting Energy": 24
+}
+
+all_fighting_pokemon = {
+    "Sandshrew": 2,
+    "Sandslash": 1,
+    "Diglett": 2,
+    "Dugtrio": 1,
+    "Mankey": 2,
+    "Primeape": 1,
+    "Machop": 3,
+    "Machoke": 2,
+    "Machamp": 1,
+    "Geodude": 2,
+    "Graveler": 1,
+    "Golem": 1,
+    "Onix": 1,
+    "Cubone": 2,
+    "Marowak Lv26": 1,
+    "Hitmonlee": 1,
+    "Hitmonchan": 1,
+    "Rhyhorn": 2,
+    "Rhydon": 1,
+    "Bill": 2,
+    "Professor Oak": 1,
+    "Switch": 1,
+    "Potion": 2,
+    "Fighting Energy": 26
+}
+
+bench_attack = {
+    "Voltorb": 4,
+    "Electrode Lv42": 2,
+    "Zapdos Lv40": 2,
+    "Hitmonlee": 4,
+    "Hitmonchan": 2,
+    "Meowth Lv": 4,
+    "Bill": 2,
+    "Professor Oak": 1,
+    "Gust of Wind": 1,
+    "Item Finder": 1,
+    "Scoop Up": 1,
+    "Defender": 2,
+    "Energy Retrieval": 2,
+    "Maintenance": 1,
+    "PlusPower": 2,
+    "Mr Fuji": 1,
+    "Switch": 2,
+    "Lightning Energy": 12,
+    "Fighting Energy": 14
+}
+
+battle_contest = {
+    "Mankey": 3,
+    "Machop": 4,
+    "Machoke": 3,
+    "Hitmonlee": 2,
+    "Hitmonchan": 2,
+    "Meowth L13v": 3,
+    "Persian": 2,
+    "Dratini": 3,
+    "Dragonair": 2,
+    "Dragonite Lv45": 1,
+    "Professor Oak": 1,
+    "Defender": 3,
+    "PlusPower": 3,
+    "Potion": 2,
+    "Double Colorless Energy": 2,
+    "Fighting Energy": 24
+}
+
+heated_battle = {
+    "Magmar Lv24": 4,
+    "Electabuzz Lv35": 2,
+    "Mankey": 3,
+    "Primeape": 2,
+    "Hitmonlee": 3,
+    "Hitmonchar": 3,
+    "Kangaskhan": 2,
+    "Energy Search": 2,
+    "Scoop Up": 2,
+    "Defender": 2,
+    "PlusPower": 3,
+    "Potion": 3,
+    "Full Heal": 2,
+    "Fire Energy": 8,
+    "Lightning Energy": 4,
+    "Fighting Energy": 15
+}
+
+first_strike = {
+    "Machop": 4,
+    "Machoke": 3,
+    "Machamp": 2,
+    "Hitmonchan": 4,
+    "Hitmonlee": 3,
+    "Mankey": 4,
+    "Primeape": 1,
+    "Switch": 2,
+    "Bill": 4,
+    "Gust of Wind": 3,
+    "Defender": 2,
+    "PlusPower": 2,
+    "Potion": 2,
+    "Fighting Energy": 25
+}
+
+legendary_moltres = {
+    "Vulpix": 4,
+    "Ninetales Lv35": 3,
+    "Growlithe": 4,
+    "Arcanine Lv45": 2,
+    "Magmar Lv24": 2,
+    "Magmar Lv31": 2,
+    "Moltres Lv35": 2,
+    "Moltres Lv37": 2,
+    "Bill": 3,
+    "Lass": 2,
+    "Pokemon Trader": 1,
+    "Energy Retrieval": 1,
+    "Super Energy Retrieval": 1,
+    "Energy Removal": 2,
+    "Switch": 2,
+    "Potion": 1,
+    "Super Potion": 1,
+    "Fire Energy": 25
+}
+
+legendary_zapdos = {
+    "Voltorb": 4,
+    "Electrode Lv35": 3,
+    "Electabuzz Lv35": 4,
+    "Jolteon Lv29": 2,
+    "Zapdos Lv40": 1,
+    "Zapdos Lv64": 1,
+    "Zapdos Lv68": 2,
+    "Eevee": 3,
+    "Bill": 4,
+    "Energy Retrieval": 2,
+    "Switch": 2,
+    "PlusPower": 3,
+    "Potion": 3,
+    "Gambler": 1,
+    "Lightning Energy": 25
+}
+
+legendary_articuno = {
+    "Seel": 4,
+    "Dewgong": 3,
+    "Lapras": 4,
+    "Articuno Lv35": 2,
+    "Articuno Lv37": 2,
+    "Chansey": 3,
+    "Ditto": 2,
+    "Professor Oak": 2,
+    "Pokemon Trader": 2,
+    "Energy Retrieval": 3,
+    "Switch": 3,
+    "Scoop Up": 4,
+    "Gambler": 1,
+    "Water Energy": 25
+}
+
+legendary_dragonite = {
+    "Charmander": 3,
+    "Charmeleon": 2,
+    "Charizard": 2,
+    "Magikarp": 3,
+    "Gyarados": 2,
+    "Lapras": 2,
+    "Kangaskhan": 2,
+    "Dratini": 4,
+    "Dragonair": 3,
+    "Dragonite Lv41": 2,
+    "Professor Oak": 2,
+    "Pokemon Trader": 2,
+    "Pokemon Breeder": 2,
+    "Energy Retrieval": 1,
+    "Super Energy Retrieval": 1,
+    "Switch": 2,
+    "Gambler": 1,
+    "Double Colorless Energy": 4,
+    "Water Energy": 20
+}
+
+mysterious_pokemon = {
+    "Bulbasaur": 4,
+    "Ivysaur": 3,
+    "Venusaur Lv64": 2,
+    "Scyther": 2,
+    "Abra": 4,
+    "Kadabra": 3,
+    "Alakazam": 2,
+    "Mr Mime": 2,
+    "Mew Lv8": 1,
+    "Mew Lv15": 2,
+    "Professor Oak": 1,
+    "Bill": 2,
+    "Pokemon Breeder": 2,
+    "Energy Removal": 1,
+    "Switch": 2,
+    "Pokemon Center": 1,
+    "Grass Energy": 12,
+    "Psychic Energy": 14
+}
